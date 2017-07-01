@@ -15,7 +15,7 @@ Added cvar for hiding the death model for suriviors who have a custom model
 Added ragdolls to team survivor custom model
 THanks mastermin for the little thirdperson bool update
 Added lmc_hide_defib_model for ragdolls ect
-Added considering spectating a player in first person will hide custom model from the spectator also. 
+Added considering spectating a player in first person will hide custom model from the spectator also.
 Added lmc_spec_hide_bots when spectating bots in first person will hide the custom model
 Updated Survivors sequence switch statment fix any sequence errors and hiding model while in thirdperson
 
@@ -32,7 +32,7 @@ forward Action:LMC_OnClientModelSelected(iClient, String:sModel[PLATFORM_MAX_PAT
 forward LMC_OnClientModelDestroyed(iClient, iEntity);
 native LMC_HideClientOverlayModel(iEntity, bHide);
 
-Made 2 concept plugins
+Made 2 concept pluginsvvv
 LMC_BlackAndWhite.sp
 LMC_RandomWitch.sp
 
@@ -43,7 +43,7 @@ BigThankyou to timocop for helping me with the API setup and everything else
 1.7.1
 fixed crash found by NgBUCKWANGS
 1.7.2
-Fixed issue with only reviving bill with defib, mastermind confirmed 
+Fixed issue with only reviving bill with defib, mastermind confirmed
 1.7.3
 Fixed issue with infected ghosts being shown to survivors, thank NgBUCKWANGS for testing help.
 1.7.4
@@ -54,6 +54,9 @@ And hope i fixed the cookie being overwritten
 remove cvars
 lmc_tpcheckfrequency
 lmc_tpcheck
+
+1.7.6
+Fixed Models not applying while cookies are not cached intime OnSpawn.
 */
 
 
@@ -209,11 +212,11 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 
 public Plugin:myinfo =
 {
-    name = "Left 4 Dead 2 Model Changer",
-    author = "Lux",
-    description = "Left 4 Dead Model Changer for Survivors and Infected",
-    version = PLUGIN_VERSION,
-    url = "https://forums.alliedmods.net/showthread.php?p=2449184#post2449184"
+	name = "Left 4 Dead 2 Model Changer",
+	author = "Lux",
+	description = "Left 4 Dead Model Changer for Survivors and Infected",
+	version = PLUGIN_VERSION,
+	url = "https://forums.alliedmods.net/showthread.php?p=2449184#post2449184"
 };
 
 #define ENABLE_AUTOEXEC true
@@ -367,7 +370,7 @@ CvarsChanged()
 }
 
 //heil timocop he done this before me
-static BeWitched(iClient, const String:sModel[], const bool:bBaseReattach)  
+static BeWitched(iClient, const String:sModel[], const bool:bBaseReattach)
 {
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
 		return;
@@ -385,7 +388,7 @@ static BeWitched(iClient, const String:sModel[], const bool:bBaseReattach)
 	}
 	else if(bBaseReattach)
 		AcceptEntityInput(iEntity, "Kill");
-		
+	
 	
 	iEntity = CreateEntityByName("prop_dynamic_ornament");
 	if(iEntity < 0)
@@ -395,10 +398,10 @@ static BeWitched(iClient, const String:sModel[], const bool:bBaseReattach)
 	
 	DispatchSpawn(iEntity);
 	ActivateEntity(iEntity);
-	 
+	
 	SetVariantString("!activator");
 	AcceptEntityInput(iEntity, "SetParent", iClient);
-	 
+	
 	SetVariantString("!activator");
 	AcceptEntityInput(iEntity, "SetAttached", iClient);
 	AcceptEntityInput(iEntity, "TurnOn");
@@ -420,7 +423,7 @@ static BeWitched(iClient, const String:sModel[], const bool:bBaseReattach)
 	
 	if(IsFakeClient(iClient) && !g_bHideBotsModel)
 		return;
-		
+	
 	SDKHook(iEntity, SDKHook_SetTransmit, HideModel);
 }
 
@@ -431,22 +434,22 @@ public Action:HideModel(iEntity, iClient)
 	
 	if(!IsPlayerAlive(iClient))
 		if(GetEntProp(iClient, Prop_Send, "m_iObserverMode") == 4)
-			if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == GetClientOfUserId(iHiddenOwner[iEntity]))
-				return Plugin_Handled;
+		if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == GetClientOfUserId(iHiddenOwner[iEntity]))
+		return Plugin_Handled;
 	
 	static iOwner;
 	iOwner = GetClientOfUserId(iHiddenOwner[iEntity]);
 	
 	if(iOwner < 1 || !IsClientInGame(iOwner))
-	return Plugin_Continue;
+		return Plugin_Continue;
 	
 	switch(GetClientTeam(iOwner)) {
 		case 2: {
 			if(iOwner != iClient)
-			return Plugin_Continue;
+				return Plugin_Continue;
 			
 			if(!IsSurvivorThirdPerson(iClient))
-			return Plugin_Handled;
+				return Plugin_Handled;
 		}
 		case 3: {
 			static bool:bIsGhost;
@@ -455,7 +458,7 @@ public Action:HideModel(iEntity, iClient)
 			if(iOwner != iClient) {
 				//Hide model for everyone else when is ghost mode exapt me
 				if(bIsGhost)
-				return Plugin_Handled;
+					return Plugin_Handled;
 			}
 			else {
 				// Hide my model when not in thirdperson
@@ -464,7 +467,7 @@ public Action:HideModel(iEntity, iClient)
 					SetEntityRenderMode(iOwner, RENDER_NONE);
 				}
 				if(!IsInfectedThirdPerson(iOwner))
-				return Plugin_Handled;
+					return Plugin_Handled;
 			}
 		}
 	}
@@ -481,7 +484,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 	
 	if(iVictim > 0 && iVictim <= MaxClients && IsClientInGame(iVictim))
 	{
-		iEntity = EntRefToEntIndex(iHiddenIndex[iVictim]);		
+		iEntity = EntRefToEntIndex(iHiddenIndex[iVictim]);
 		if(GetClientTeam(iVictim) == 3 && IsValidEntRef(iHiddenIndex[iVictim]))
 		{
 			SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
@@ -511,11 +514,11 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			
 			SetEntProp(iEnt, Prop_Data, "m_nModelIndex", GetEntProp(iVictim, Prop_Data, "m_nModelIndex"));
 			SetEntProp(iEnt, Prop_Send, "m_nCharacterType", GetEntProp(iVictim, Prop_Send, "m_survivorCharacter"));
-
+			
 			
 			static String:sModel[64];
 			GetClientModel(iVictim, sModel, sizeof(sModel));
-			if(StrContains(sModel, "teenangst", false) > 0) 
+			if(StrContains(sModel, "teenangst", false) > 0)
 				SetEntProp(iEnt, Prop_Send, "m_nSequence", 808);
 			else if(StrContains(sModel, "biker", false) > 0)
 				SetEntProp(iEnt, Prop_Send, "m_nSequence", 774);
@@ -555,7 +558,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			if(iWeapon > MaxClients && iWeapon < 2048 && IsValidEntity(iWeapon))
 				SDKHooks_DropWeapon(iVictim, iWeapon);
 			
-				
+			
 			if(g_iHideDeathModel < 1 && IsValidEntRef(iHiddenIndex[iVictim]))
 			{
 				AcceptEntityInput(iEntity, "Kill");
@@ -587,10 +590,10 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		if(g_iHideDeathModel == 1)
 		{
 			AcceptEntityInput(iEntity, "Detach");
-		
+			
 			SetVariantString("!activator");
 			AcceptEntityInput(iEntity, "SetParent", iEnt);
-			 
+			
 			SetVariantString("!activator");
 			AcceptEntityInput(iEntity, "SetAttached", iEnt);
 			
@@ -612,7 +615,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		
 		if(!IsValidEntRef(iHiddenEntity[iVictim]))
 			return;
-			
+		
 		iEntity = EntRefToEntIndex(iHiddenEntity[iVictim]);
 		
 		SetEntProp(iEntity, Prop_Send, "m_nGlowRange", 0);
@@ -631,7 +634,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 }
 
 public ePlayerSpawn(Handle:hEvent, const String:sEventName[], bool:bDontBroadcast)
-{	
+{
 	static iClient;
 	iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
@@ -652,59 +655,47 @@ public ePlayerSpawn(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 	
 	if(IsFakeClient(iClient))//1.4
 		if(GetClientTeam(iClient) == 3)
+	{
+		switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))//1.4
 		{
-			switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))//1.4
+			case ZOMBIECLASS_SMOKER:
 			{
-				case ZOMBIECLASS_SMOKER:
-				{
-					if(!g_bAllowSmoker)
-						return;
-				}
-				case ZOMBIECLASS_BOOMER:
-				{
-					if(!g_bAllowBoomer)
-						return;
-				}
-				case ZOMBIECLASS_HUNTER:
-				{
-					if(!g_bAllowHunter)
-						return;
-				}
-				case 4, 5, 6, 7: 
+				if(!g_bAllowSmoker)
 					return;
-				case ZOMBIECLASS_TANK:
-				{
-					if(!g_bAllowTank)
-						return;
-				}
+			}
+			case ZOMBIECLASS_BOOMER:
+			{
+				if(!g_bAllowBoomer)
+					return;
+			}
+			case ZOMBIECLASS_HUNTER:
+			{
+				if(!g_bAllowHunter)
+					return;
+			}
+			case 4, 5, 6, 7:
+			return;
+			case ZOMBIECLASS_TANK:
+			{
+				if(!g_bAllowTank)
+					return;
 			}
 		}
+	}
 		else if(GetClientTeam(iClient) == 2)
 			if(!g_bAllowSurvivors)
 				return;
 	
 	if(!IsFakeClient(iClient))
 	{
-		//1.4
-		if(iSavedModel[iClient] < 1 && AreClientCookiesCached(iClient))
-		{
-			decl String:sCookie[3];
-			GetClientCookie(iClient, hCookie_LmcCookie, sCookie, sizeof(sCookie));
-			if(StrEqual(sCookie, "\0", false))
-				return;
-			
-			iSavedModel[iClient] = StringToInt(sCookie);
-		}
-		else if(iSavedModel[iClient] < 2)
+		if(iSavedModel[iClient] < 2)
 			return;
-			
+		
 		ModelIndex(iClient, iSavedModel[iClient], false);
 		return;
 	}
 	else
-	{
 		RequestFrame(NextFrame, iClient);
-	}
 }
 
 public NextFrame(any:iClient)
@@ -716,7 +707,7 @@ public NextFrame(any:iClient)
 	{
 		if(GetRandomInt(1, 100) < g_iAiChanceSurvivor)
 			ModelIndex(iClient, GetRandomInt(1, 25), false);
-			
+		
 		return;
 	}
 	else if(GetClientTeam(iClient) == 3)
@@ -731,7 +722,7 @@ public eSetColour(Handle:hEvent, const String:sEventName[], bool:bDontBroadcast)
 	new iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
 	if(iClient < 1 || iClient > MaxClients || !IsClientInGame(iClient))
-	return;
+		return;
 	
 	new iEntity = iHiddenIndex[iClient];
 	
@@ -747,7 +738,7 @@ public eTeamChange(Handle:hEvent, const String:sEventName[], bool:bDontBroadcast
 	
 	if(iClient < 1 || iClient > MaxClients || !IsClientInGame(iClient))
 		return;
-		
+	
 	new iEntity = iHiddenIndex[iClient];
 	
 	if(!IsValidEntRef(iEntity))
@@ -770,7 +761,7 @@ public OnClientDisconnect(iClient)
 	bAutoApplyMsg[iClient] = true;//1.4
 	for(new b = 0; b < sizeof(bAutoBlockedMsg[]); b++)//1.4
 		bAutoBlockedMsg[iClient][b] = true;
-
+	
 	
 	new iEntity = iHiddenIndex[iClient];
 	
@@ -778,15 +769,15 @@ public OnClientDisconnect(iClient)
 	iSavedModel[iClient] = 0;
 	
 	if(!IsValidEntRef(iEntity))
-	return;
+		return;
 	
 	AcceptEntityInput(iEntity, "kill");
 }
 
 /*borrowed some code from csm*/
-public Action:ShowMenu(iClient, iArgs) 
+public Action:ShowMenu(iClient, iArgs)
 {
-	if(iClient == 0) 
+	if(iClient == 0)
 	{
 		ReplyToCommand(iClient, "[LMC] Menu is in-game only.");
 		return Plugin_Continue;
@@ -796,14 +787,14 @@ public Action:ShowMenu(iClient, iArgs)
 		ReplyToCommand(iClient, "\x04[LMC] \x03Model Changer is only available to admins.");
 		return Plugin_Continue;
 	}
-	if(!IsPlayerAlive(iClient) && bAutoBlockedMsg[iClient][8]) 
+	if(!IsPlayerAlive(iClient) && bAutoBlockedMsg[iClient][8])
 	{
 		ReplyToCommand(iClient, "\x04[LMC] \x03Pick a Model to be Applied NextSpawn");
 		bAutoBlockedMsg[iClient][8] = false;
 	}
 	new Handle:hMenu = CreateMenu(CharMenu);
 	SetMenuTitle(hMenu, "Choose a Model");//1.4
-	 
+	
 	AddMenuItem(hMenu, "1", "Normal Models");
 	AddMenuItem(hMenu, "15", "Random Common");
 	AddMenuItem(hMenu, "2", "Witch");
@@ -827,7 +818,7 @@ public Action:ShowMenu(iClient, iArgs)
 	AddMenuItem(hMenu, "21", "Zoey");
 	AddMenuItem(hMenu, "22", "Francis");
 	AddMenuItem(hMenu, "23", "Louis");
-	AddMenuItem(hMenu, "24", "Tank");    
+	AddMenuItem(hMenu, "24", "Tank");
 	AddMenuItem(hMenu, "25", "Tank DLC");
 	SetMenuExitButton(hMenu, true);
 	DisplayMenu(hMenu, iClient, 15);
@@ -835,22 +826,22 @@ public Action:ShowMenu(iClient, iArgs)
 	return Plugin_Continue;
 }
 
-public CharMenu(Handle:hMenu, MenuAction:action, param1, param2) 
+public CharMenu(Handle:hMenu, MenuAction:action, param1, param2)
 {
-	switch(action) 
+	switch(action)
 	{
-		case MenuAction_Select: 
+		case MenuAction_Select:
 		{
-			decl String:sItem[4]; 
+			decl String:sItem[4];
 			GetMenuItem(hMenu, param2, sItem, sizeof(sItem));
 			ModelIndex(param1, StringToInt(sItem), true);
 			ShowMenu(param1, 0);
 		}
 		case MenuAction_Cancel:
 		{
-		    
+			
 		}
-		case MenuAction_End: 
+		case MenuAction_End:
 		{
 			CloseHandle(hMenu);
 		}
@@ -860,13 +851,13 @@ public CharMenu(Handle:hMenu, MenuAction:action, param1, param2)
 static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 {
 	static String:sModel[PLATFORM_MAX_PATH];
-
+	
 	new Action:iResult;
 	Call_StartForward(g_hOnClientModelBlocked);
 	Call_PushCell(iClient);
 	Call_PushStringEx(sModel, sizeof(sModel), SM_PARAM_STRING_UTF8, SP_PARAMFLAG_BYREF);
 	Call_Finish(iResult);
-		
+	
 	switch(iResult)
 	{
 		case Plugin_Handled, Plugin_Stop:
@@ -917,7 +908,7 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 						
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][0])
 							return;
-							
+						
 						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Smoker");
 						bAutoBlockedMsg[iClient][0] = false;
 						return;
@@ -947,20 +938,20 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 						
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][2])
 							return;
-							
+						
 						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Hunter");
 						bAutoBlockedMsg[iClient][2] = false;
 						return;
 					}
 				}
-				case ZOMBIECLASS_SPITTER: 
+				case ZOMBIECLASS_SPITTER:
 				{//1.4
 					if(IsFakeClient(iClient))
-							return;
-						
+						return;
+					
 					if(!bUsingMenu && !bAutoBlockedMsg[iClient][3])
 						return;
-						
+					
 					PrintToChat(iClient, "\x04[LMC] \x03Models Don't Work for \x04Spitter");
 					bAutoBlockedMsg[iClient][3] = false;
 					return;
@@ -969,7 +960,7 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 				{//1.4
 					if(IsFakeClient(iClient))
 						return;
-						
+					
 					if(!bUsingMenu && !bAutoBlockedMsg[iClient][4])
 						return;
 					
@@ -980,11 +971,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 				case ZOMBIECLASS_CHARGER:
 				{//1.4
 					if(IsFakeClient(iClient))
-							return;
-						
+						return;
+					
 					if(!bUsingMenu && !bAutoBlockedMsg[iClient][5])
 						return;
-						
+					
 					PrintToChat(iClient, "\x04[LMC] \x03Models Don't Work for \x04Charger");
 					bAutoBlockedMsg[iClient][5] = false;
 					return;
@@ -1060,10 +1051,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Models will be default");
 			bAutoApplyMsg[iClient] = false;
 			
@@ -1076,24 +1067,24 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			return;
 		}
 		case 2: {
-			BeWitched(iClient, Witch_Normal, false); 
+			BeWitched(iClient, Witch_Normal, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Witch");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 3: {
-			BeWitched(iClient, Witch_Bride, false); 
+			BeWitched(iClient, Witch_Bride, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Witch Bride");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1101,10 +1092,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Boomer, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Boomer");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1112,10 +1103,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Boomette, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Boomette");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1123,7 +1114,7 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Hunter, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Hunter");
@@ -1133,10 +1124,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Smoker, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Smoker");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1144,10 +1135,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_RiotCop, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04RiotCop");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1155,10 +1146,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Mudder, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04MudMen");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1166,10 +1157,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, NPC_Pilot, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Chopper Pilot");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1177,10 +1168,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Ceda, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04CEDA Suit");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1188,10 +1179,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Clown, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Clown");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1199,10 +1190,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Jimmy, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Jimmy Gibs");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1210,10 +1201,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_Fallen, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Fallen Survivor");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1258,10 +1249,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			}
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Common Infected");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1269,10 +1260,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, MODEL_NICK, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Nick");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1280,10 +1271,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, MODEL_ROCHELLE, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Rochelle");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1291,10 +1282,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, MODEL_COACH, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Coach");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1302,10 +1293,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, MODEL_ELLIS, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Ellis");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1313,10 +1304,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, MODEL_BILL, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Bill");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1327,10 +1318,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 				BeWitched(iClient, MODEL_ZOEYLIGHT, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Zoey");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1341,10 +1332,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 				BeWitched(iClient, MODEL_FRANCISLIGHT, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Francis");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1352,14 +1343,14 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, MODEL_LOUIS, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Louis");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 24: 
+		case 24:
 		{
 			if(!g_bTankModel)
 			{
@@ -1368,22 +1359,22 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 				
 				if(!bUsingMenu && !bAutoApplyMsg[iClient])
 					return;
-					
+				
 				PrintToChat(iClient, "\x04[LMC] \x03Tank Models are Disabled");
 				bAutoApplyMsg[iClient] = false;
 				return;
-			}	
+			}
 			BeWitched(iClient, Infected_TankNorm, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Tank");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 25: 
+		case 25:
 		{
 			if(!g_bTankModel)
 			{
@@ -1392,7 +1383,7 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 				
 				if(!bUsingMenu && !bAutoApplyMsg[iClient])
 					return;
-					
+				
 				PrintToChat(iClient, "\x04[LMC] \x03Tank Models are Disabled");
 				bAutoApplyMsg[iClient] = false;
 				return;
@@ -1400,10 +1391,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			BeWitched(iClient, Infected_TankSac, false);
 			if(IsFakeClient(iClient))
 				return;
-				
+			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-				
+			
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Tank DLC");
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -1412,16 +1403,16 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 }
 
 public OnClientPostAdminCheck(iClient)
-{  
+{
 	if(IsFakeClient(iClient))
 		return;
 	
 	if(g_iAnnounceMode != 0 && !g_bAdminOnly)
-		CreateTimer(g_fAnnounceDelay, iClientInfo, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);   
+		CreateTimer(g_fAnnounceDelay, iClientInfo, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
 }
- 
+
 public Action:iClientInfo(Handle:hTimer, any:iUserID)
-{  
+{
 	new iClient = GetClientOfUserId(iUserID);
 	
 	if(iClient < 1 || iClient > MaxClients || !IsClientInGame(iClient))
@@ -1460,7 +1451,7 @@ public Action:iClientInfo(Handle:hTimer, any:iUserID)
 			SetVariantString(sValues);
 			AcceptEntityInput(iEntity, "AddOutput");
 			AcceptEntityInput(iEntity, "FireUser1");
-		}           
+		}
 	}
 	return Plugin_Stop;
 }
@@ -1473,7 +1464,7 @@ public OnGameFrame()
 	iFrameskip = (iFrameskip + 1) % MAX_FRAMECHECK;
 	
 	if(iFrameskip != 0 || !IsServerProcessing())
-	return;
+		return;
 	
 	iFrameskipColour = (iFrameskipColour + 1) % 480;
 	
@@ -1482,10 +1473,10 @@ public OnGameFrame()
 		for(new i = 1;i <= MaxClients;i++)
 		{
 			if(!IsClientInGame(i) || !IsPlayerAlive(i))
-			continue;
+				continue;
 			
 			static iEnt;
-			if(!IsValidEntRef(iHiddenIndex[i]))
+			if(!IsValidEntRef(iHiddenIndex[i]) || !IsValidEntRef(iHiddenEntityRef[i]))
 				SetEntityRenderMode(i, RENDER_NORMAL);
 			
 			if(IsValidEntRef(iHiddenIndex[i]))
@@ -1508,9 +1499,9 @@ public OnGameFrame()
 				SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(i, Prop_Send, "m_nGlowRangeMin"));
 			}
 			
-			static iModelIndex[MAXPLAYERS+1] = {0, ...};		
+			static iModelIndex[MAXPLAYERS+1] = {0, ...};
 			if(iModelIndex[i] == GetEntProp(i, Prop_Data, "m_nModelIndex", 2))
-			continue;
+				continue;
 			
 			iModelIndex[i] = GetEntProp(i, Prop_Data, "m_nModelIndex", 2);
 			
@@ -1532,10 +1523,10 @@ public OnGameFrame()
 		for(i = MaxClients+1;i <= 2048;i++)
 		{
 			if(!IsValidEntRef(iHiddenEntityRef[i]))
-			continue;
+				continue;
 			
 			if(!IsValidEntRef(iHiddenEntity[i]))
-			continue;
+				continue;
 			
 			static iEnt;
 			iEnt = EntRefToEntIndex(iHiddenEntity[i]);
@@ -1563,7 +1554,7 @@ static bool:IsValidEntRef(iEntRef)
 {
 	return (iEntRef != 0 && EntRefToEntIndex(iEntRef) != INVALID_ENT_REFERENCE);
 }
-static bool:IsSurvivorThirdPerson(iClient) 
+static bool:IsSurvivorThirdPerson(iClient)
 {
 	if(bThirdPerson[iClient])
 		return true;
@@ -1580,13 +1571,13 @@ static bool:IsSurvivorThirdPerson(iClient)
 	if(GetEntPropEnt(iClient, Prop_Send, "m_pounceAttacker") > 0)
 		return true;
 	if(GetEntPropEnt(iClient, Prop_Send, "m_jockeyAttacker") > 0)
-		return true; 
+		return true;
 	if(GetEntProp(iClient, Prop_Send, "m_isHangingFromLedge") > 0)
 		return true;
 	if(GetEntPropEnt(iClient, Prop_Send, "m_reviveTarget") > 0)
-		return true;  
+		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
-		return true; 
+		return true;
 	switch(GetEntProp(iClient, Prop_Send, "m_iCurrentUseAction"))
 	{
 		case 1:
@@ -1600,7 +1591,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 				return true;
 		}
 		case 4, 6, 7, 8, 9, 10:
-			return true;
+		return true;
 	}
 	
 	static String:sModel[31];
@@ -1613,7 +1604,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 626, 625, 624, 623, 622, 621, 661, 662, 664, 665, 666, 667, 668, 670, 671, 672, 673, 674, 620, 680, 616:
-					return true;
+				return true;
 			}
 		}
 		case 'd'://rochelle
@@ -1621,7 +1612,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 674, 678, 679, 630, 631, 632, 633, 634, 668, 677, 681, 680, 676, 675, 673, 672, 671, 670, 687, 629, 625, 616:
-					return true;
+				return true;
 			}
 		}
 		case 'c'://coach
@@ -1629,7 +1620,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 656, 622, 623, 624, 625, 626, 663, 662, 661, 660, 659, 658, 657, 654, 653, 652, 651, 621, 620, 669, 615:
-					return true;
+				return true;
 			}
 		}
 		case 'h'://ellis
@@ -1637,7 +1628,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 625, 675, 626, 627, 628, 629, 630, 631, 678, 677, 676, 575, 674, 673, 672, 671, 670, 669, 668, 667, 666, 665, 684, 621:
-					return true;
+				return true;
 			}
 		}
 		case 'v'://bill
@@ -1645,7 +1636,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 528, 759, 763, 764, 529, 530, 531, 532, 533, 534, 753, 676, 675, 761, 758, 757, 756, 755, 754, 527, 772, 762, 522:
-					return true;
+				return true;
 			}
 		}
 		case 'n'://zoey
@@ -1653,7 +1644,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 537, 819, 823, 824, 538, 539, 540, 541, 542, 543, 813, 828, 825, 822, 821, 820, 818, 817, 816, 815, 814, 536, 809, 572:
-					return true;
+				return true;
 			}
 		}
 		case 'e'://francis
@@ -1661,7 +1652,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 532, 533, 534, 535, 536, 537, 769, 768, 767, 766, 765, 764, 763, 762, 761, 760, 759, 758, 757, 756, 531, 530, 775, 525:
-					return true;
+				return true;
 			}
 		}
 		case 'a'://louis
@@ -1669,29 +1660,29 @@ static bool:IsSurvivorThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 529, 530, 531, 532, 533, 534, 766, 765, 764, 763, 762, 761, 760, 759, 758, 757, 756, 755, 754, 753, 527, 772, 528, 522:
-					return true;
+				return true;
 			}
 		}
 		case 'w'://adawong
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-			case 674, 678, 679, 630, 631, 632, 633, 634, 668, 677, 681, 680, 676, 675, 673, 672, 671, 670, 687, 629, 625:
-					return true;
+				case 674, 678, 679, 630, 631, 632, 633, 634, 668, 677, 681, 680, 676, 675, 673, 672, 671, 670, 687, 629, 625:
+				return true;
 			}
 		}
 	}
 	
 	return false;
 }
-static bool:IsInfectedThirdPerson(iClient) 
+static bool:IsInfectedThirdPerson(iClient)
 {
 	if(bThirdPerson[iClient])
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
-		return true; 
+		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
-		return true; 
+		return true;
 	
 	switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))
 	{
@@ -1699,56 +1690,56 @@ static bool:IsInfectedThirdPerson(iClient)
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 30, 31, 32, 36, 37, 38, 39: 
-					return true;
+				case 30, 31, 32, 36, 37, 38, 39:
+				return true;
 			}
 		}
 		case 2://boomer
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 30, 31, 32, 33: 
-					return true;
+				case 30, 31, 32, 33:
+				return true;
 			}
 		}
 		case 3://hunter
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49: 
-					return true;
+				case 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49:
+				return true;
 			}
 		}
 		case 4://spitter
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 17, 18, 19, 20: 
-					return true;
+				case 17, 18, 19, 20:
+				return true;
 			}
 		}
 		case 5://jockey
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 8 , 15, 16, 17, 18: 
-					return true;
+				case 8 , 15, 16, 17, 18:
+				return true;
 			}
 		}
 		case 6://charger
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 5, 27, 28, 29, 31, 32, 33, 34, 35, 39, 40, 41, 42: 
-					return true;
+				case 5, 27, 28, 29, 31, 32, 33, 34, 35, 39, 40, 41, 42:
+				return true;
 			}
 		}
 		case 8://tank
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 28, 29, 30, 31, 49, 50, 51, 73, 74, 75, 76 ,77: 
-					return true;
+				case 28, 29, 30, 31, 49, 50, 51, 73, 74, 75, 76 ,77:
+				return true;
 			}
 		}
 	}
@@ -1760,11 +1751,11 @@ public GetOverlayModel(Handle:plugin, numParams)
 {
 	if(numParams < 1)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
-		
+	
 	new iClient = GetNativeCell(1);
 	if(iClient < 1 || iClient > MaxClients)
 		ThrowNativeError(SP_ERROR_PARAM, "Client index out of bounds %i", iClient);
-		
+	
 	if(!IsValidEntRef(iHiddenIndex[iClient]))
 		return -1;
 	
@@ -1775,14 +1766,14 @@ public HideOverlayModel(Handle:plugin, numParams)
 {
 	if(numParams < 2)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
-		
+	
 	new iClient = GetNativeCell(1);
 	if(iClient < 1 || iClient > MaxClients)
 		ThrowNativeError(SP_ERROR_PARAM, "Client index out of bounds %i", iClient);
-		
+	
 	if(!IsValidEntRef(iHiddenIndex[iClient]))
 		return false;
-		
+	
 	new iEntity = EntRefToEntIndex(iHiddenIndex[iClient]);
 	
 	new bool:bHide = GetNativeCell(2);
@@ -1802,12 +1793,13 @@ public SetOverlayModel(Handle:plugin, numParams)
 {
 	if(numParams < 2)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
-		
+	
 	new iClient = GetNativeCell(1);
 	if(iClient < 1 || iClient > MaxClients)
 		ThrowNativeError(SP_ERROR_PARAM, "Client index out of bounds %i", iClient);
-		
-	static String:sModel[PLATFORM_MAX_PATH];
+	
+	new String:sModel[PLATFORM_MAX_PATH];
+	
 	GetNativeString(2, sModel, sizeof(sModel));
 	
 	if(sModel[0] == '\0')
@@ -1820,11 +1812,11 @@ public SetEntityOverlayModel(Handle:plugin, numParams)
 {
 	if(numParams < 2)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
-		
+	
 	new iEntity = GetNativeCell(1);
 	if(iEntity < MaxClients+1 || iEntity > 2048)
 		ThrowNativeError(SP_ERROR_PARAM, "Entity index out of bounds %i", iEntity);
-		
+	
 	static String:sModel[PLATFORM_MAX_PATH];
 	GetNativeString(2, sModel, sizeof(sModel));
 	
@@ -1838,14 +1830,14 @@ public GetEntityOverlayModel(Handle:plugin, numParams)
 {
 	if(numParams < 1)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
-		
+	
 	new iEntity = GetNativeCell(1);
 	if(iEntity < MaxClients+1 || iEntity > 2048+1)
 		ThrowNativeError(SP_ERROR_PARAM, "Entity index out of bounds %i", iEntity);
-		
+	
 	if(!IsValidEntRef(iHiddenEntityRef[iEntity]))
 		return -1;
-		
+	
 	if(!IsValidEntRef(iHiddenEntity[iEntity]))
 		return -1;
 	
@@ -1901,8 +1893,8 @@ public SpawnPost(iEntity)
 	AcceptEntityInput(iEntity, "Kill");
 }
 
-static BeWitchOther(iEntity, const String:sModel[])  
-{  
+static BeWitchOther(iEntity, const String:sModel[])
+{
 	if(iEntity < 1 || iEntity > 2048)
 		return;
 	
@@ -1921,10 +1913,10 @@ static BeWitchOther(iEntity, const String:sModel[])
 	
 	DispatchSpawn(iEnt);
 	ActivateEntity(iEnt);
-	 
+	
 	SetVariantString("!activator");
 	AcceptEntityInput(iEnt, "SetParent", iEntity);
-	 
+	
 	SetVariantString("!activator");
 	AcceptEntityInput(iEnt, "SetAttached", iEntity);
 	AcceptEntityInput(iEnt, "TurnOn");
@@ -1937,10 +1929,10 @@ static BeWitchOther(iEntity, const String:sModel[])
 	SetEntProp(iEntity, Prop_Send, "m_nMaxGPULevel", 1);
 	
 	/*
-		SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(i, Prop_Send, "m_nGlowRange"));
-		SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(i, Prop_Send, "m_iGlowType"));
-		SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(i, Prop_Send, "m_glowColorOverride"));
-		SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(i, Prop_Send, "m_nGlowRangeMin"));
+	SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(i, Prop_Send, "m_nGlowRange"));
+	SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(i, Prop_Send, "m_iGlowType"));
+	SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(i, Prop_Send, "m_glowColorOverride"));
+	SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(i, Prop_Send, "m_nGlowRangeMin"));
 	*/
 }
 
@@ -1968,4 +1960,20 @@ public bool:_TraceFilter(iEntity, contentsMask)
 public TP_OnThirdPersonChanged(iClient, bool:bIsThirdPerson)
 {
 	bThirdPerson[iClient] = bIsThirdPerson;
+}
+
+public OnClientCookiesCached(iClient)
+{
+	if(iClient < 1 || !IsClientInGame(iClient) || !IsPlayerAlive(iClient))
+		return;
+	
+	decl String:sCookie[3];
+	GetClientCookie(iClient, hCookie_LmcCookie, sCookie, sizeof(sCookie));
+	if(StrEqual(sCookie, "\0", false))
+		return;
+	
+	iSavedModel[iClient] = StringToInt(sCookie);
+	
+	if(!IsValidEntRef(iHiddenIndex[iClient]))
+		ModelIndex(iClient, iSavedModel[iClient], false);
 }
