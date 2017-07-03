@@ -47,7 +47,7 @@ native LMC_HideClientOverlayModel(iEntity, bool:bHide);
 *	@note Entity Overlays have different array from Client overlays
 *
 *	@param 	iEntity		Entity Index Gets entity model overlay
-*	@return iEnt		Entity Index, -1 on invalid.
+*	@return 			Entity Index, -1 on invalid.
 */
 native LMC_GetEntityOverlayModel(iEntity);
 
@@ -57,13 +57,13 @@ native LMC_GetEntityOverlayModel(iEntity);
 *
 *	@param 	iEntity		Entity Index.
 *	@param 	sModel		Model Path of the model you wish to apply.
-*	@no return
+*	@return				Overlay Model index, -1 on unable create.					
 */
 native LMC_SetEntityOverlayModel(iEntity, String:sModel[PLATFORM_MAX_PATH]);
 
 /**
 *	@param 	iClient		Client Index.
-*	@return iEntity		Entity Index, -1 on invalid.
+*	@return 			Entity Index, -1 on invalid.
 */
 native LMC_GetClientOverlayModel(iClient);
 
@@ -74,7 +74,7 @@ native LMC_GetClientOverlayModel(iClient);
 *
 *	@param 	iClient		Client Index.
 *	@param 	sModel		Model Path of the model you wish to apply.
-*	@no return
+*	@return				Overlay Model index, -1 on unable create.
 */
 native LMC_SetClientOverlayModel(iClient, String:sModel[PLATFORM_MAX_PATH]);
 

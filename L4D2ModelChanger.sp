@@ -32,7 +32,7 @@ forward Action:LMC_OnClientModelSelected(iClient, String:sModel[PLATFORM_MAX_PAT
 forward LMC_OnClientModelDestroyed(iClient, iEntity);
 native LMC_HideClientOverlayModel(iEntity, bHide);
 
-Made 2 concept pluginsvvv
+Made 2 concept plugins
 LMC_BlackAndWhite.sp
 LMC_RandomWitch.sp
 
@@ -57,6 +57,15 @@ lmc_tpcheck
 
 1.7.6
 Fixed Models not applying while cookies are not cached intime OnSpawn.
+
+1.8 & 1.9
+Added Extended checking for Entity overlay models for clients should now work without issues with hiding.
+Tweaked Traceray for Deathmodel pos
+Added Returns for API calls on
+LMC_SetClientOverlayModel(iClient, String:sModel[PLATFORM_MAX_PATH]) //should now need less API calls to do the same thing
+LMC_SetEntityOverlayModel(iEntity, String:sModel[PLATFORM_MAX_PATH])
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+Legs compatibility testing with API
 */
 
 
@@ -70,7 +79,7 @@ Fixed Models not applying while cookies are not cached intime OnSpawn.
 
 #define MAX_FRAMECHECK 20
 
-#define PLUGIN_VERSION "1.7.5"
+#define PLUGIN_VERSION "1.9"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
@@ -266,7 +275,7 @@ public OnPluginStart()
 	HookEvent("revive_end", eSetColour);
 	
 	#if ENABLE_AUTOEXEC
-	AutoExecConfig(true, "L4D2ModelChanger1.7");
+	AutoExecConfig(true, "L4D2ModelChanger1.9");
 	#endif
 }
 
@@ -434,8 +443,8 @@ public Action:HideModel(iEntity, iClient)
 	
 	if(!IsPlayerAlive(iClient))
 		if(GetEntProp(iClient, Prop_Send, "m_iObserverMode") == 4)
-		if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == GetClientOfUserId(iHiddenOwner[iEntity]))
-		return Plugin_Handled;
+			if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == GetClientOfUserId(iHiddenOwner[iEntity]))
+				return Plugin_Handled;
 	
 	static iOwner;
 	iOwner = GetClientOfUserId(iHiddenOwner[iEntity]);
@@ -1806,6 +1815,7 @@ public SetOverlayModel(Handle:plugin, numParams)
 		ThrowNativeError(SP_ERROR_PARAM, "Error Empty String");
 	
 	BeWitched(iClient, sModel, false);
+	return EntRefToEntIndex(iHiddenIndex[iClient]);
 }
 
 public SetEntityOverlayModel(Handle:plugin, numParams)
@@ -1814,7 +1824,7 @@ public SetEntityOverlayModel(Handle:plugin, numParams)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
 	
 	new iEntity = GetNativeCell(1);
-	if(iEntity < MaxClients+1 || iEntity > 2048)
+	if(iEntity < 1 || iEntity > 2048)
 		ThrowNativeError(SP_ERROR_PARAM, "Entity index out of bounds %i", iEntity);
 	
 	static String:sModel[PLATFORM_MAX_PATH];
@@ -1824,6 +1834,7 @@ public SetEntityOverlayModel(Handle:plugin, numParams)
 		ThrowNativeError(SP_ERROR_PARAM, "Error Empty String");
 	
 	BeWitchOther(iEntity, sModel);
+	return EntRefToEntIndex(iHiddenEntityRef[iEntity]);
 }
 
 public GetEntityOverlayModel(Handle:plugin, numParams)
@@ -1941,11 +1952,15 @@ public bool:_TraceFilter(iEntity, contentsMask)
 	static String:sClassName[32];
 	GetEntityClassname(iEntity, sClassName, sizeof(sClassName));
 	
-	if(sClassName[0] != 'i' || !StrEqual(sClassName, "infected"))
+	if(sClassName[0] != 'i' || !StrEqual(sClassName, "infected", false))
 	{
 		return false;
 	}
-	else if(sClassName[0] != 'w' || !StrEqual(sClassName, "witch") || StrContains(sClassName, "weapon_", false) > 0)
+	else if(sClassName[0] != 'w' || !StrEqual(sClassName, "witch", false))
+	{
+		return false;
+	}
+	else if(StrContains(sClassName, "weapon_", false) == 0)
 	{
 		return false;
 	}
@@ -1963,10 +1978,7 @@ public TP_OnThirdPersonChanged(iClient, bool:bIsThirdPerson)
 }
 
 public OnClientCookiesCached(iClient)
-{
-	if(iClient < 1 || !IsClientInGame(iClient) || !IsPlayerAlive(iClient))
-		return;
-	
+{	
 	decl String:sCookie[3];
 	GetClientCookie(iClient, hCookie_LmcCookie, sCookie, sizeof(sCookie));
 	if(StrEqual(sCookie, "\0", false))
@@ -1974,6 +1986,11 @@ public OnClientCookiesCached(iClient)
 	
 	iSavedModel[iClient] = StringToInt(sCookie);
 	
-	if(!IsValidEntRef(iHiddenIndex[iClient]))
-		ModelIndex(iClient, iSavedModel[iClient], false);
+	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
+		return;
+	
+	if(IsValidEntRef(iHiddenIndex[iClient]))
+		return;
+	
+	ModelIndex(iClient, iSavedModel[iClient], false);
 }
