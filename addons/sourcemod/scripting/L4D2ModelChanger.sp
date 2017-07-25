@@ -79,7 +79,7 @@ Legs compatibility testing with API
 
 #define MAX_FRAMECHECK 20
 
-#define PLUGIN_VERSION "1.9"
+#define PLUGIN_VERSION "1.9.1"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
@@ -1676,7 +1676,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 674, 678, 679, 630, 631, 632, 633, 634, 668, 677, 681, 680, 676, 675, 673, 672, 671, 670, 687, 629, 625:
+				case 674, 678, 679, 630, 631, 632, 633, 634, 668, 677, 681, 680, 676, 675, 673, 672, 671, 670, 687, 629, 625, 616:
 				return true;
 			}
 		}
