@@ -1,71 +1,20 @@
 /*
-1.7
-optmised the model selection abit
-you can now access the model menu while dead
-Added Lmc Auto copys Glow entprops from base model
-Added lower rendering mode to base models while they have overlay model(lower vertex count timocop's idea)
-Added common_test.mdl to the random common pool
-Added LightModels for francis and zoey
-Added Survivor Ragdolls you may see 2 models if you don't use mr zero's ragdolls.
-Added spawn text block once you have see what model you have once or used the menu will block the message on spawn for 1 round.
-Changed how the overlay model ragdoll's should look more natural
-Added blocked the lmc info txt while lmc is admin only.
-Removed AIteams bool and added ai infected team custom model chance and survivor ai custom model chance
-Added cvar for hiding the death model for suriviors who have a custom model
-Added ragdolls to team survivor custom model
-THanks mastermin for the little thirdperson bool update
-Added lmc_hide_defib_model for ragdolls ect
-Added considering spectating a player in first person will hide custom model from the spectator also.
-Added lmc_spec_hide_bots when spectating bots in first person will hide the custom model
-Updated Survivors sequence switch statment fix any sequence errors and hiding model while in thirdperson
+1.9.2
+Fixed api called returning Entity reference instead of Entity index.
 
-Added LMC API
-native LMC_HideClientOverlayModel(iEntity, bHide);
-native LMC_GetEntityOverlayModel(iEntity);
-native LMC_SetEntityOverlayModel(iEntity, String:sModel[PLATFORM_MAX_PATH]);
-native LMC_GetClientOverlayModel(iClient);you
-native LMC_SetClientOverlayModel(iClient, String:sModel[PLATFORM_MAX_PATH]);
-forward LMC_OnClientModelChanged(iClient, iEntity, const String:sModel[PLATFORM_MAX_PATH]);
-forward LMC_OnClientModelApplied(iClient, iEntity, const String:sModel[PLATFORM_MAX_PATH], bBaseReattach);
-forward Action:LMC_OnClientModelAppliedPre(iClient, &iModel:type);
-forward Action:LMC_OnClientModelSelected(iClient, String:sModel[PLATFORM_MAX_PATH]);
-forward LMC_OnClientModelDestroyed(iClient, iEntity);
-native LMC_HideClientOverlayModel(iEntity, bHide);
+1.9.3
+Common infected model changing nolonger random it will cycle though they 1-34
 
-Made 2 concept plugins
-LMC_BlackAndWhite.sp
-LMC_RandomWitch.sp
+1.9.4
+Updated IsInfectedThirdPerson
 
-should give you an idea on how the API works, use it if you want
+1.9.5
+Fixed some mistakes with code.
+Saved some returns to varables instead of finding it again.
+Optmized code somemore.
 
-BigThankyou to timocop for helping me with the API setup and everything else
-
-1.7.1
-fixed crash found by NgBUCKWANGS
-1.7.2
-Fixed issue with only reviving bill with defib, mastermind confirmed
-1.7.3
-Fixed issue with infected ghosts being shown to survivors, thank NgBUCKWANGS for testing help.
-1.7.4
-Fixed issue with admin only mode where menu was displayed but model was not applied.
-1.7.5
-Updated IsSurvivorThirdPerson
-And hope i fixed the cookie being overwritten
-remove cvars
-lmc_tpcheckfrequency
-lmc_tpcheck
-
-1.7.6
-Fixed Models not applying while cookies are not cached intime OnSpawn.
-
-1.8 & 1.9
-Added Extended checking for Entity overlay models for clients should now work without issues with hiding.
-Tweaked Traceray for Deathmodel pos
-Added Returns for API calls on
-LMC_SetClientOverlayModel(iClient, String:sModel[PLATFORM_MAX_PATH]) //should now need less API calls to do the same thing
-LMC_SetEntityOverlayModel(iEntity, String:sModel[PLATFORM_MAX_PATH])
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-Legs compatibility testing with API
+1.9.6
+Added Deathmodel animations.
 */
 
 
@@ -79,7 +28,7 @@ Legs compatibility testing with API
 
 #define MAX_FRAMECHECK 20
 
-#define PLUGIN_VERSION "1.9.1"
+#define PLUGIN_VERSION "1.9.6"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
@@ -161,6 +110,7 @@ static bool:bThirdPerson[MAXPLAYERS+1] = {false, ...};
 static iSavedModel[MAXPLAYERS+1] = {0, ...};
 static bool:bAutoApplyMsg[MAXPLAYERS+1];//1.4
 static bool:bAutoBlockedMsg[MAXPLAYERS+1][9];//1.4
+static bool:bIsIncapped[MAXPLAYERS+1] = {false, ...};
 
 static Handle:hCvar_AdminOnlyModel = INVALID_HANDLE;
 static bool:g_bAdminOnly = false;
@@ -493,11 +443,16 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 	
 	if(iVictim > 0 && iVictim <= MaxClients && IsClientInGame(iVictim))
 	{
+		static iTeam;
+		iTeam = GetClientTeam(iVictim);
+		
 		iEntity = EntRefToEntIndex(iHiddenIndex[iVictim]);
-		if(GetClientTeam(iVictim) == 3 && IsValidEntRef(iHiddenIndex[iVictim]))
+		if(iTeam == 3 && IsValidEntRef(iHiddenIndex[iVictim]))
 		{
-			SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
 			AcceptEntityInput(iEntity, "ClearParent");
+			
+			SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
+			
 			SetVariantString("OnUser1 !self:Kill::0.1:1");
 			AcceptEntityInput(iEntity, "AddOutput");
 			AcceptEntityInput(iEntity, "FireUser1");
@@ -513,7 +468,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		}
 		
 		static iEnt;
-		if(GetClientTeam(iVictim) == 2)
+		if(iTeam == 2)
 		{
 			bHideDeathModel = true;
 			iEnt = CreateEntityByName("survivor_death_model");
@@ -521,30 +476,84 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			if(iEnt < 0)
 				return;
 			
+			DispatchSpawn(iEnt);
+			ActivateEntity(iEnt);
+			
 			SetEntProp(iEnt, Prop_Data, "m_nModelIndex", GetEntProp(iVictim, Prop_Data, "m_nModelIndex"));
 			SetEntProp(iEnt, Prop_Send, "m_nCharacterType", GetEntProp(iVictim, Prop_Send, "m_survivorCharacter"));
 			
+			static String:sModel[31];
+			GetEntPropString(iVictim, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 			
-			static String:sModel[64];
-			GetClientModel(iVictim, sModel, sizeof(sModel));
-			if(StrContains(sModel, "teenangst", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 808);
-			else if(StrContains(sModel, "biker", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 774);
-			else if(StrContains(sModel, "manager", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 771);
-			else if(StrContains(sModel, "namvet", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 771);
-			else if(StrContains(sModel, "producer", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 686);
-			else if(StrContains(sModel, "mechanic", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 683);
-			else if(StrContains(sModel, "coach", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 668);
-			else if(StrContains(sModel, "gambler", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 679);
-			else if(StrContains(sModel, "adawong", false) > 0)
-				SetEntProp(iEnt, Prop_Send, "m_nSequence", 686);
+			switch(sModel[29])
+			{
+				case 'b'://nick
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 679, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 678, 2);
+				}
+				case 'd'://rochelle
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 686, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 685, 2);
+				}
+				case 'c'://coach
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 668, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 667, 2);
+				}
+				case 'h'://ellis
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 683, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 682, 2);
+				}
+				case 'v'://bill
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 771, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 770, 2);
+				}
+				case 'n'://zoey
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 808, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 807, 2);
+				}
+				case 'e'://francis
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 774, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 773, 2);
+				}
+				case 'a'://louis
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 771, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 770, 2);
+				}
+				case 'w'://adawong
+				{
+					if(bIsIncapped[iVictim])
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 686, 2);
+					else
+						SetEntProp(iEnt, Prop_Send, "m_nSequence", 687, 2);
+				}
+			}
+			
+			SetEntPropFloat(iEnt, Prop_Send, "m_flPlaybackRate", 1.0);
+			SetEntProp(iEnt, Prop_Send, "m_bClientSideAnimation", 1, 1);
 			
 			static Float:fPos[3];
 			static Float:fAng[3];
@@ -560,13 +569,22 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			TR_GetEndPosition(fEnd, trace); // retrieve our trace endpoint
 			CloseHandle(trace);
 			
-			TeleportEntity(iEnt, fEnd, fAng, NULL_VECTOR);
-			DispatchSpawn(iEnt);
+			fAng[0] = 0.0;
+			
+			if(150 > GetVectorDistance(fPos, fEnd))//traceray is from the center not from the 4 corners of the collision box should help with deathmodels teleporting down a ledge or though a prop.
+				TeleportEntity(iEnt, fEnd, fAng, NULL_VECTOR);
+			else
+			{
+				fPos[2]--;
+				TeleportEntity(iEnt, fPos, fAng, NULL_VECTOR);
+			}
+			
+		
+			
 			static iWeapon;
 			iWeapon = GetPlayerWeaponSlot(iVictim, 1);
-			if(iWeapon > MaxClients && iWeapon < 2048 && IsValidEntity(iWeapon))
+			if(iWeapon > MaxClients && iWeapon <= 2048 && IsValidEntity(iWeapon))
 				SDKHooks_DropWeapon(iVictim, iWeapon);
-			
 			
 			if(g_iHideDeathModel < 1 && IsValidEntRef(iHiddenIndex[iVictim]))
 			{
@@ -586,7 +604,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		
 		SDKUnhook(iEntity, SDKHook_SetTransmit, HideModel);
 		
-		if(GetClientTeam(iVictim) != 2)
+		if(iTeam != 2)
 			return;
 		
 		iHiddenIndex[iVictim] = -1;
@@ -610,6 +628,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			return;
 		}
 		
+		SetEntProp(iEntity, Prop_Send, "m_bClientSideAnimation", 1, 1);
 		SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
 		SetVariantString("OnUser1 !self:Kill::0.1:1");
 		AcceptEntityInput(iEntity, "AddOutput");
@@ -632,6 +651,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		SetEntProp(iEntity, Prop_Send, "m_glowColorOverride", 0);
 		SetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin", 0);
 		
+		SetEntProp(iEntity, Prop_Send, "m_bClientSideAnimation", 1, 1);
 		SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
 		SetEntPropFloat(iVictim, Prop_Send, "m_flModelScale", 999.0);
 		
@@ -662,8 +682,11 @@ public ePlayerSpawn(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 	SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 0);
 	SetEntProp(iClient, Prop_Send, "m_nMaxGPULevel", 0);
 	
+	static iTeam;
+	iTeam = GetClientTeam(iClient);
+	
 	if(IsFakeClient(iClient))//1.4
-		if(GetClientTeam(iClient) == 3)
+		if(iTeam == 3)
 	{
 		switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))//1.4
 		{
@@ -691,7 +714,7 @@ public ePlayerSpawn(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			}
 		}
 	}
-		else if(GetClientTeam(iClient) == 2)
+		else if(iTeam == 2)
 			if(!g_bAllowSurvivors)
 				return;
 	
@@ -712,14 +735,17 @@ public NextFrame(any:iClient)
 	if(!IsClientInGame(iClient) || !IsFakeClient(iClient) || !IsPlayerAlive(iClient))
 		return;
 	
-	if(GetClientTeam(iClient) == 2)
+	static iTeam;
+	iTeam = GetClientTeam(iClient);
+	
+	if(iTeam == 2)
 	{
 		if(GetRandomInt(1, 100) < g_iAiChanceSurvivor)
 			ModelIndex(iClient, GetRandomInt(1, 25), false);
 		
 		return;
 	}
-	else if(GetClientTeam(iClient) == 3)
+	else if(iTeam == 3)
 	{
 		if(GetRandomInt(1, 100) < g_iAiChanceInfected)
 			ModelIndex(iClient, GetRandomInt(1, 25), false);
@@ -728,14 +754,13 @@ public NextFrame(any:iClient)
 
 public eSetColour(Handle:hEvent, const String:sEventName[], bool:bDontBroadcast)
 {
-	new iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+	static iClient;
+	iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	
 	if(iClient < 1 || iClient > MaxClients || !IsClientInGame(iClient))
 		return;
 	
-	new iEntity = iHiddenIndex[iClient];
-	
-	if(!IsValidEntRef(iEntity))
+	if(!IsValidEntRef(iHiddenIndex[iClient]))
 		return;
 	
 	SetEntityRenderMode(iClient, RENDER_NONE);
@@ -1219,7 +1244,10 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 		}
 		case 15:
 		{
-			switch(GetRandomInt(1, 34))
+			static iChoice = 1;//+1 each time amy player picks a common infected
+			//maybe ill use the m_iSkin entprop for more variation but im not sure how that will effect stuff with thirdparty models with no variation comment if you do.
+			
+			switch(iChoice)
 			{
 				case 1: BeWitched(iClient, Infected_Common1, false);
 				case 2: BeWitched(iClient, Infected_Common2, false);
@@ -1256,6 +1284,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 				case 33: BeWitched(iClient, Infected_Common33, false);
 				case 34: BeWitched(iClient, Infected_Common34, false);
 			}
+			iChoice++;
+			if(iChoice > 34)
+				iChoice = 1;
+				
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1414,7 +1447,14 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 public OnClientPostAdminCheck(iClient)
 {
 	if(IsFakeClient(iClient))
+	{
+		if(GetClientTeam(iClient) == 2)
+			SDKHook(iClient, SDKHook_OnTakeDamagePost, eOnTakeDamagePost);
+		
 		return;
+	}
+	
+	SDKHook(iClient, SDKHook_OnTakeDamagePost, eOnTakeDamagePost);
 	
 	if(g_iAnnounceMode != 0 && !g_bAdminOnly)
 		CreateTimer(g_fAnnounceDelay, iClientInfo, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
@@ -1485,7 +1525,7 @@ public OnGameFrame()
 				continue;
 			
 			static iEnt;
-			if(!IsValidEntRef(iHiddenIndex[i]) || !IsValidEntRef(iHiddenEntityRef[i]))
+			if(!IsValidEntRef(iHiddenIndex[i]) && !IsValidEntRef(iHiddenEntityRef[i]))
 				SetEntityRenderMode(i, RENDER_NORMAL);
 			
 			if(IsValidEntRef(iHiddenIndex[i]))
@@ -1692,6 +1732,8 @@ static bool:IsInfectedThirdPerson(iClient)
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
 		return true;
+	if(GetEntPropEnt(iClient, Prop_Send, "m_hViewEntity") > 0)
+		return true;
 	
 	switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))
 	{
@@ -1879,7 +1921,7 @@ public OnEntityDestroyed(iEntity)
 	
 	Call_StartForward(g_hOnClientModelDestroyed);
 	Call_PushCell(iClient);
-	Call_PushCell(iEntity);
+	Call_PushCell(EntRefToEntIndex(iHiddenIndex[iClient]));//now returns entity index 
 	Call_Finish();
 }
 
@@ -1993,4 +2035,13 @@ public OnClientCookiesCached(iClient)
 		return;
 	
 	ModelIndex(iClient, iSavedModel[iClient], false);
+}
+
+
+public eOnTakeDamagePost(iVictim, iAttacker, iInflictor, Float:fDamage, iDamagetype)
+{
+	if(!IsClientInGame(iVictim) || GetClientTeam(iVictim) != 2 || !IsPlayerAlive(iVictim))
+		return;
+	
+	bIsIncapped[iVictim] = bool:GetEntProp(iVictim, Prop_Send, "m_isIncapacitated", 1);
 }
