@@ -15,6 +15,9 @@ Optmized code somemore.
 
 1.9.6
 Added Deathmodel animations.
+
+1.9.7
+Added DeathModel forward
 */
 
 
@@ -28,7 +31,7 @@ Added Deathmodel animations.
 
 #define MAX_FRAMECHECK 20
 
-#define PLUGIN_VERSION "1.9.6"
+#define PLUGIN_VERSION "1.9.7"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
@@ -150,6 +153,7 @@ new Handle:g_hOnClientModelAppliedPre = INVALID_HANDLE;
 new Handle:g_hOnClientModelBlocked = INVALID_HANDLE;
 new Handle:g_hOnClientModelChanged = INVALID_HANDLE;
 new Handle:g_hOnClientModelDestroyed = INVALID_HANDLE;
+new Handle:g_hOnClientDeathModelCreated = INVALID_HANDLE;
 
 public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 {
@@ -165,6 +169,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	g_hOnClientModelBlocked  = CreateGlobalForward("LMC_OnClientModelSelected", ET_Event, Param_Cell, Param_String);
 	g_hOnClientModelChanged  = CreateGlobalForward("LMC_OnClientModelChanged", ET_Event, Param_Cell, Param_Cell, Param_String);
 	g_hOnClientModelDestroyed  = CreateGlobalForward("LMC_OnClientModelDestroyed", ET_Event, Param_Cell, Param_Cell);
+	g_hOnClientDeathModelCreated  = CreateGlobalForward("LMC_OnClientDeathModelCreated", ET_Event, Param_Cell, Param_Cell);
 	
 	return APLRes_Success;
 }
@@ -476,6 +481,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			if(iEnt < 0)
 				return;
 			
+			
 			DispatchSpawn(iEnt);
 			ActivateEntity(iEnt);
 			
@@ -579,12 +585,16 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 				TeleportEntity(iEnt, fPos, fAng, NULL_VECTOR);
 			}
 			
-		
 			
 			static iWeapon;
 			iWeapon = GetPlayerWeaponSlot(iVictim, 1);
 			if(iWeapon > MaxClients && iWeapon <= 2048 && IsValidEntity(iWeapon))
 				SDKHooks_DropWeapon(iVictim, iWeapon);
+			
+			Call_StartForward(g_hOnClientDeathModelCreated);
+			Call_PushCell(iVictim);
+			Call_PushCell(iEnt);
+			Call_Finish();
 			
 			if(g_iHideDeathModel < 1 && IsValidEntRef(iHiddenIndex[iVictim]))
 			{

@@ -139,3 +139,12 @@ forward Action LMC_OnClientModelSelected(int iClient, char sModel[PLATFORM_MAX_P
 *   @no return
 */
 forward void LMC_OnClientModelDestroyed(int iClient, int iEntity);
+
+/**
+*	This is called when lmc_hide_defib_model < 0 cvar
+*
+*	@param 	iClient		Client Index who died.
+*	@param 	iEntity		Entity Index of Deathmodel for client who died
+*	@no return
+*/
+forward void LMC_OnClientDeathModelCreated(int iClient, int iDeathModel);
