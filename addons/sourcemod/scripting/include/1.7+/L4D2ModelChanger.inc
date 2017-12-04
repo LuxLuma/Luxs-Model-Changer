@@ -145,6 +145,7 @@ forward void LMC_OnClientModelDestroyed(int iClient, int iEntity);
 *
 *	@param 	iClient		Client Index who died.
 *	@param 	iEntity		Entity Index of Deathmodel for client who died
+*	@param	iOverlayModel 	Entity Index of Deathmodel overlaymodel -1 if don't exist
 *	@no return
 */
-forward void LMC_OnClientDeathModelCreated(int iClient, int iDeathModel);
+forward void LMC_OnClientDeathModelCreated(int iClient, int iDeathModel, int iOverlayModel);

@@ -15,9 +15,6 @@ Optmized code somemore.
 
 1.9.6
 Added Deathmodel animations.
-
-1.9.7
-Added DeathModel forward
 */
 
 
@@ -31,7 +28,7 @@ Added DeathModel forward
 
 #define MAX_FRAMECHECK 20
 
-#define PLUGIN_VERSION "1.9.7"
+#define PLUGIN_VERSION "1.9.6"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
@@ -169,7 +166,7 @@ public APLRes:AskPluginLoad2(Handle:myself, bool:late, String:error[], err_max)
 	g_hOnClientModelBlocked  = CreateGlobalForward("LMC_OnClientModelSelected", ET_Event, Param_Cell, Param_String);
 	g_hOnClientModelChanged  = CreateGlobalForward("LMC_OnClientModelChanged", ET_Event, Param_Cell, Param_Cell, Param_String);
 	g_hOnClientModelDestroyed  = CreateGlobalForward("LMC_OnClientModelDestroyed", ET_Event, Param_Cell, Param_Cell);
-	g_hOnClientDeathModelCreated  = CreateGlobalForward("LMC_OnClientDeathModelCreated", ET_Event, Param_Cell, Param_Cell);
+	g_hOnClientDeathModelCreated  = CreateGlobalForward("LMC_OnClientDeathModelCreated", ET_Event, Param_Cell, Param_Cell, Param_Cell);
 	
 	return APLRes_Success;
 }
@@ -594,7 +591,14 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			Call_StartForward(g_hOnClientDeathModelCreated);
 			Call_PushCell(iVictim);
 			Call_PushCell(iEnt);
+			
+			if(g_iHideDeathModel == 1 && IsValidEntRef(iHiddenIndex[iVictim]))
+				Call_PushCell(iEntity);
+			else
+				Call_PushCell(-1);
+				
 			Call_Finish();
+			
 			
 			if(g_iHideDeathModel < 1 && IsValidEntRef(iHiddenIndex[iVictim]))
 			{
@@ -606,6 +610,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		
 		if(!IsValidEntRef(iHiddenIndex[iVictim]))
 			return;
+		
 		
 		SetEntProp(iEntity, Prop_Send, "m_nGlowRange", 0);
 		SetEntProp(iEntity, Prop_Send, "m_iGlowType", 0);
@@ -635,6 +640,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			AcceptEntityInput(iEntity, "SetAttached", iEnt);
 			
 			SetEntityRenderMode(iEnt, RENDER_NONE);
+			
 			return;
 		}
 		
@@ -644,6 +650,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		AcceptEntityInput(iEntity, "AddOutput");
 		AcceptEntityInput(iEntity, "FireUser1");
 		SetEntityRenderMode(iEnt, RENDER_NONE);
+		
 	}
 	else
 	{
