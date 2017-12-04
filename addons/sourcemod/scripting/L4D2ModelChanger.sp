@@ -15,6 +15,12 @@ Optmized code somemore.
 
 1.9.6
 Added Deathmodel animations.
+
+1.9.7
+Added DeathModel forward
+
+1.9.8
+Updated DeathModel forward params
 */
 
 
@@ -28,7 +34,7 @@ Added Deathmodel animations.
 
 #define MAX_FRAMECHECK 20
 
-#define PLUGIN_VERSION "1.9.6"
+#define PLUGIN_VERSION "1.9.8"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
