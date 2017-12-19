@@ -21,6 +21,9 @@ Added DeathModel forward
 
 1.9.8
 Updated DeathModel forward params
+
+1.9.9
+Updated IsSurvivorThirdPerson bool
 */
 
 
@@ -1662,7 +1665,7 @@ static bool:IsSurvivorThirdPerson(iClient)
 			else if(iTarget != iClient)
 				return true;
 		}
-		case 4, 6, 7, 8, 9, 10:
+		case 4, 5, 6, 7, 8, 9, 10:
 		return true;
 	}
 	
