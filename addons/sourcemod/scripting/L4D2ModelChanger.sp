@@ -24,6 +24,7 @@ Updated DeathModel forward params
 
 1.9.9
 Updated IsSurvivorThirdPerson bool
+fixed issue with female boomers jumping showing overlay models
 */
 
 
@@ -461,9 +462,7 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		if(iTeam == 3 && IsValidEntRef(iHiddenIndex[iVictim]))
 		{
 			AcceptEntityInput(iEntity, "ClearParent");
-			
 			SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
-			
 			SetVariantString("OnUser1 !self:Kill::0.1:1");
 			AcceptEntityInput(iEntity, "AddOutput");
 			AcceptEntityInput(iEntity, "FireUser1");
@@ -653,13 +652,12 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 			return;
 		}
 		
-		SetEntProp(iEntity, Prop_Send, "m_bClientSideAnimation", 1, 1);
 		SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
 		SetVariantString("OnUser1 !self:Kill::0.1:1");
 		AcceptEntityInput(iEntity, "AddOutput");
 		AcceptEntityInput(iEntity, "FireUser1");
-		SetEntityRenderMode(iEnt, RENDER_NONE);
 		
+		SetEntityRenderMode(iEnt, RENDER_NONE);
 	}
 	else
 	{
@@ -677,7 +675,6 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		SetEntProp(iEntity, Prop_Send, "m_glowColorOverride", 0);
 		SetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin", 0);
 		
-		SetEntProp(iEntity, Prop_Send, "m_bClientSideAnimation", 1, 1);
 		SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
 		SetEntPropFloat(iVictim, Prop_Send, "m_flModelScale", 999.0);
 		
@@ -712,37 +709,39 @@ public ePlayerSpawn(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 	iTeam = GetClientTeam(iClient);
 	
 	if(IsFakeClient(iClient))//1.4
-		if(iTeam == 3)
 	{
-		switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))//1.4
+		if(iTeam == 3)
 		{
-			case ZOMBIECLASS_SMOKER:
+			switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))//1.4
 			{
-				if(!g_bAllowSmoker)
-					return;
-			}
-			case ZOMBIECLASS_BOOMER:
-			{
-				if(!g_bAllowBoomer)
-					return;
-			}
-			case ZOMBIECLASS_HUNTER:
-			{
-				if(!g_bAllowHunter)
-					return;
-			}
-			case 4, 5, 6, 7:
-			return;
-			case ZOMBIECLASS_TANK:
-			{
-				if(!g_bAllowTank)
-					return;
+				case ZOMBIECLASS_SMOKER:
+				{
+					if(!g_bAllowSmoker)
+						return;
+				}
+				case ZOMBIECLASS_BOOMER:
+				{
+					if(!g_bAllowBoomer)
+						return;
+				}
+				case ZOMBIECLASS_HUNTER:
+				{
+					if(!g_bAllowHunter)
+						return;
+				}
+				case 4, 5, 6, 7:
+				return;
+				case ZOMBIECLASS_TANK:
+				{
+					if(!g_bAllowTank)
+						return;
+				}
 			}
 		}
-	}
 		else if(iTeam == 2)
 			if(!g_bAllowSurvivors)
 				return;
+	}
 	
 	if(!IsFakeClient(iClient))
 	{
@@ -766,14 +765,14 @@ public NextFrame(any:iClient)
 	
 	if(iTeam == 2)
 	{
-		if(GetRandomInt(1, 100) < g_iAiChanceSurvivor)
+		if(GetRandomInt(1, 100) <= g_iAiChanceSurvivor)
 			ModelIndex(iClient, GetRandomInt(1, 25), false);
 		
 		return;
 	}
 	else if(iTeam == 3)
 	{
-		if(GetRandomInt(1, 100) < g_iAiChanceInfected)
+		if(GetRandomInt(1, 100) <= g_iAiChanceInfected)
 			ModelIndex(iClient, GetRandomInt(1, 25), false);
 	}
 }
@@ -878,8 +877,12 @@ public Action:ShowMenu(iClient, iArgs)
 	AddMenuItem(hMenu, "21", "Zoey");
 	AddMenuItem(hMenu, "22", "Francis");
 	AddMenuItem(hMenu, "23", "Louis");
-	AddMenuItem(hMenu, "24", "Tank");
-	AddMenuItem(hMenu, "25", "Tank DLC");
+	
+	if(g_bTankModel)
+	{
+		AddMenuItem(hMenu, "24", "Tank");
+		AddMenuItem(hMenu, "25", "Tank DLC");
+	}
 	SetMenuExitButton(hMenu, true);
 	DisplayMenu(hMenu, iClient, 15);
 	
@@ -1421,17 +1424,8 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 		case 24:
 		{
 			if(!g_bTankModel)
-			{
-				if(IsFakeClient(iClient))
-					return;
-				
-				if(!bUsingMenu && !bAutoApplyMsg[iClient])
-					return;
-				
-				PrintToChat(iClient, "\x04[LMC] \x03Tank Models are Disabled");
-				bAutoApplyMsg[iClient] = false;
 				return;
-			}
+			
 			BeWitched(iClient, Infected_TankNorm, false);
 			if(IsFakeClient(iClient))
 				return;
@@ -1768,14 +1762,6 @@ static bool:IsInfectedThirdPerson(iClient)
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
 				case 30, 31, 32, 36, 37, 38, 39:
-				return true;
-			}
-		}
-		case 2://boomer
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 30, 31, 32, 33:
 				return true;
 			}
 		}
