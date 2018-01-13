@@ -1,20 +1,4 @@
 /*
-1.9.2
-Fixed api called returning Entity reference instead of Entity index.
-
-1.9.3
-Common infected model changing nolonger random it will cycle though they 1-34
-
-1.9.4
-Updated IsInfectedThirdPerson
-
-1.9.5
-Fixed some mistakes with code.
-Saved some returns to varables instead of finding it again.
-Optmized code somemore.
-
-1.9.6
-Added Deathmodel animations.
 
 1.9.7
 Added DeathModel forward
@@ -25,20 +9,22 @@ Updated DeathModel forward params
 1.9.9
 Updated IsSurvivorThirdPerson bool
 fixed issue with female boomers jumping showing overlay models
+
+2.0
+Changed glowcheck/malformed checking 1 entity and client each frame
+converted defines to enums
+added all model paths to arrays easier adding new models if i missed any
+Added a check to stop basemodel being same as overlay model selection (seems to stop clientside jiggly bones from working)
 */
 
 
-
+#pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
 #include <clientprefs>
-//#include <lmc_modelchanger>
-#pragma semicolon 1
 
-#define MAX_FRAMECHECK 20
-
-#define PLUGIN_VERSION "1.9.8"
+#define PLUGIN_VERSION "2.0"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
@@ -48,68 +34,137 @@ fixed issue with female boomers jumping showing overlay models
 #define ZOMBIECLASS_CHARGER		6
 #define ZOMBIECLASS_TANK		8
 
-#define Witch_Normal			"models/infected/witch.mdl"
-#define Witch_Bride				"models/infected/witch_bride.mdl"
+//Edit me below for admin flags only works if lmc is admin only
+#define COMMAND_ACCESS ADMFLAG_CHAT
 
-#define Infected_TankNorm		"models/infected/hulk.mdl"
-#define Infected_TankSac		"models/infected/hulk_dlc3.mdl"
-#define Infected_Boomer			"models/infected/boomer.mdl"
-#define Infected_Boomette		"models/infected/boomette.mdl"
-#define Infected_Hunter			"models/infected/hunter.mdl"
-#define Infected_Smoker			"models/infected/smoker.mdl"
-#define MODEL_NICK 				"models/survivors/survivor_gambler.mdl"
-#define MODEL_ROCHELLE			"models/survivors/survivor_producer.mdl"
-#define MODEL_COACH				"models/survivors/survivor_coach.mdl"
-#define MODEL_ELLIS				"models/survivors/survivor_mechanic.mdl"
-#define MODEL_BILL				"models/survivors/survivor_namvet.mdl"
-#define MODEL_ZOEY				"models/survivors/survivor_teenangst.mdl"
-#define MODEL_ZOEYLIGHT			"models/survivors/survivor_teenangst_light.mdl"
-#define MODEL_FRANCIS			"models/survivors/survivor_biker.mdl"
-#define MODEL_FRANCISLIGHT		"models/survivors/survivor_biker_light.mdl"
-#define MODEL_LOUIS				"models/survivors/survivor_manager.mdl"
-#define NPC_Pilot				"models/npcs/rescue_pilot_01.mdl"
+#define HUMAN_MODEL_PATH_SIZE 11
+#define SPECIAL_MODEL_PATH_SIZE 8
+#define UNCOMMON_MODEL_PATH_SIZE 6
+#define COMMON_MODEL_PATH_SIZE 34
 
-#define Infected_RiotCop		"models/infected/common_male_riot.mdl"
-#define Infected_Mudder			"models/infected/common_male_mud.mdl"
-#define Infected_Ceda			"models/infected/common_male_ceda.mdl"
-#define Infected_Clown			"models/infected/common_male_clown.mdl"
-#define Infected_Jimmy			"models/infected/common_male_jimmy.mdl"
-#define Infected_Fallen			"models/infected/common_male_fallen_survivor.mdl"
+enum LMCModelSectionType
+{
+	LMCModelSectionType_Human = 0,
+	LMCModelSectionType_Special,
+	LMCModelSectionType_UnCommon,
+	LMCModelSectionType_Common
+}
 
-#define Infected_Common1		"models/infected/common_male_tshirt_cargos.mdl"
-#define Infected_Common2		"models/infected/common_male_tankTop_jeans.mdl"
-#define Infected_Common3		"models/infected/common_male_dressShirt_jeans.mdl"
-#define Infected_Common4		"models/infected/common_female_tankTop_jeans.mdl"
-#define Infected_Common5		"models/infected/common_female_tshirt_skirt.mdl"
-#define Infected_Common6		"models/infected/common_male_roadcrew.mdl"
-#define Infected_Common7		"models/infected/common_male_tankTop_overalls.mdl"
-#define Infected_Common8		"models/infected/common_male_tankTop_jeans_rain.mdl"
-#define Infected_Common9		"models/infected/common_female_tankTop_jeans_rain.mdl"
-#define Infected_Common10		"models/infected/common_male_roadcrew_rain.mdl"
-#define Infected_Common11		"models/infected/common_male_tshirt_cargos_swamp.mdl"
-#define Infected_Common12		"models/infected/common_male_tankTop_overalls_swamp.mdl"
-#define Infected_Common13		"models/infected/common_female_tshirt_skirt_swamp.mdl"
-#define Infected_Common14		"models/infected/common_male_formal.mdl"
-#define Infected_Common15		"models/infected/common_female_formal.mdl"
-#define Infected_Common16		"models/infected/common_military_male01.mdl"
-#define Infected_Common17		"models/infected/common_police_male01.mdl"
-#define Infected_Common18		"models/infected/common_male_baggagehandler_01.mdl"
-#define Infected_Common19		"models/infected/common_tsaagent_male01.mdl"
-#define Infected_Common20		"models/infected/common_shadertest.mdl"
-#define Infected_Common21		"models/infected/common_female_nurse01.mdl"
-#define Infected_Common22		"models/infected/common_surgeon_male01.mdl"
-#define Infected_Common23		"models/infected/common_worker_male01.mdl"
-#define Infected_Common24		"models/infected/common_morph_test.mdl"
-#define Infected_Common25		"models/infected/common_male_biker.mdl"
-#define Infected_Common26		"models/infected/common_female01.mdl"
-#define Infected_Common27		"models/infected/common_male01.mdl"
-#define Infected_Common28		"models/infected/common_male_suit.mdl"
-#define Infected_Common29		"models/infected/common_patient_male01_l4d2.mdl"
-#define Infected_Common30		"models/infected/common_male_polo_jeans.mdl"
-#define Infected_Common31		"models/infected/common_female_rural01.mdl"
-#define Infected_Common32		"models/infected/common_male_rural01.mdl"
-#define Infected_Common33		"models/infected/common_male_pilot.mdl"
-#define Infected_Common34		"models/infected/common_test.mdl"
+static const String:sHumanPaths[HUMAN_MODEL_PATH_SIZE][] =
+{
+	"models/survivors/survivor_gambler.mdl",
+	"models/survivors/survivor_producer.mdl",
+	"models/survivors/survivor_coach.mdl",
+	"models/survivors/survivor_mechanic.mdl",
+	"models/survivors/survivor_namvet.mdl",
+	"models/survivors/survivor_teenangst.mdl",
+	"models/survivors/survivor_teenangst_light.mdl",
+	"models/survivors/survivor_biker.mdl",
+	"models/survivors/survivor_biker_light.mdl",
+	"models/survivors/survivor_manager.mdl",
+	"models/npcs/rescue_pilot_01.mdl"
+};
+
+enum LMCHumanModelType
+{
+	LMCHumanModelType_Nick = 0,
+	LMCHumanModelType_Rochelle,
+	LMCHumanModelType_Coach,
+	LMCHumanModelType_Ellis,
+	LMCHumanModelType_Bill,
+	LMCHumanModelType_Zoey,
+	LMCHumanModelType_ZoeyLight,
+	LMCHumanModelType_Francis,
+	LMCHumanModelType_FrancisLight,
+	LMCHumanModelType_Louis,
+	LMCHumanModelType_Pilot
+};
+
+
+static const String:sSpecialPaths[SPECIAL_MODEL_PATH_SIZE][] =
+{
+	"models/infected/witch.mdl",
+	"models/infected/witch_bride.mdl",
+	"models/infected/hulk.mdl",
+	"models/infected/hulk_dlc3.mdl",
+	"models/infected/boomer.mdl",
+	"models/infected/boomette.mdl",
+	"models/infected/hunter.mdl",
+	"models/infected/smoker.mdl"
+};
+
+enum LMCSpecialModelType
+{
+	LMCSpecialModelType_Witch = 0,
+	LMCSpecialModelType_WitchBride,
+	LMCSpecialModelType_Tank,
+	LMCSpecialModelType_TankDLC3,
+	LMCSpecialModelType_Boomer,
+	LMCSpecialModelType_Boomette,
+	LMCSpecialModelType_Hunter,
+	LMCSpecialModelType_Smoker
+};
+
+
+static const String:sUnCommonPaths[UNCOMMON_MODEL_PATH_SIZE][] =
+{
+	"models/infected/common_male_riot.mdl",
+	"models/infected/common_male_mud.mdl",
+	"models/infected/common_male_ceda.mdl",
+	"models/infected/common_male_clown.mdl",
+	"models/infected/common_male_fallen_survivor.mdl",
+	"models/infected/common_male_jimmy.mdl"
+};
+
+enum LMCUnCommonModelType
+{
+	LMCUnCommonModelType_RiotCop = 0,
+	LMCUnCommonModelType_MudMan,
+	LMCUnCommonModelType_Ceda,
+	LMCUnCommonModelType_Clown,
+	LMCUnCommonModelType_Jimmy,
+	LMCUnCommonModelType_Fallen
+};
+
+
+static const String:sCommonPaths[COMMON_MODEL_PATH_SIZE][] =
+{
+	"models/infected/common_male_tshirt_cargos.mdl",
+	"models/infected/common_male_tankTop_jeans.mdl",
+	"models/infected/common_male_dressShirt_jeans.mdl",
+	"models/infected/common_female_tankTop_jeans.mdl",
+	"models/infected/common_female_tshirt_skirt.mdl",
+	"models/infected/common_male_roadcrew.mdl",
+	"models/infected/common_male_tankTop_overalls.mdl",
+	"models/infected/common_male_tankTop_jeans_rain.mdl",
+	"models/infected/common_female_tankTop_jeans_rain.mdl",
+	"models/infected/common_male_roadcrew_rain.mdl",
+	"models/infected/common_male_tshirt_cargos_swamp.mdl",
+	"models/infected/common_male_tankTop_overalls_swamp.mdl",
+	"models/infected/common_female_tshirt_skirt_swamp.mdl",
+	"models/infected/common_male_formal.mdl",
+	"models/infected/common_female_formal.mdl",
+	"models/infected/common_military_male01.mdl",
+	"models/infected/common_police_male01.mdl",
+	"models/infected/common_male_baggagehandler_01.mdl",
+	"models/infected/common_tsaagent_male01.mdl",
+	"models/infected/common_shadertest.mdl",
+	"models/infected/common_female_nurse01.mdl",
+	"models/infected/common_surgeon_male01.mdl",
+	"models/infected/common_worker_male01.mdl",
+	"models/infected/common_morph_test.mdl",
+	"models/infected/common_male_biker.mdl",
+	"models/infected/common_female01.mdl",
+	"models/infected/common_male01.mdl",
+	"models/infected/common_male_suit.mdl",
+	"models/infected/common_patient_male01_l4d2.mdl",
+	"models/infected/common_male_polo_jeans.mdl",
+	"models/infected/common_female_rural01.mdl",
+	"models/infected/common_male_rural01.mdl",
+	"models/infected/common_male_pilot.mdl",
+	"models/infected/common_test.mdl"
+};
+
 
 
 static iHiddenOwner[2048+1] = {0, ...};
@@ -187,7 +242,7 @@ public Plugin:myinfo =
 	author = "Lux",
 	description = "Left 4 Dead Model Changer for Survivors and Infected",
 	version = PLUGIN_VERSION,
-	url = "https://forums.alliedmods.net/showthread.php?p=2449184#post2449184"
+	url = "https://forums.alliedmods.net/showthread.php?p=2449184"
 };
 
 #define ENABLE_AUTOEXEC true
@@ -237,79 +292,31 @@ public OnPluginStart()
 	HookEvent("revive_end", eSetColour);
 	
 	#if ENABLE_AUTOEXEC
-	AutoExecConfig(true, "L4D2ModelChanger1.9");
+	AutoExecConfig(true, "L4D2ModelChanger");
 	#endif
 }
 
 public OnMapStart()
 {
+	new i;
+	for(i = 0; i < HUMAN_MODEL_PATH_SIZE; i++)
+		PrecacheModel(sHumanPaths[i], true);
 	
-	PrecacheModel(Witch_Normal, true);
-	PrecacheModel(Witch_Bride, true);
-	PrecacheModel(Infected_RiotCop, true);
-	PrecacheModel(Infected_Mudder, true);
-	PrecacheModel(NPC_Pilot, true);
-	PrecacheModel(Infected_Ceda, true);
-	PrecacheModel(Infected_Clown, true);
-	PrecacheModel(Infected_Jimmy, true);
-	PrecacheModel(Infected_Fallen, true);
-	PrecacheModel(Infected_TankNorm, true);
-	PrecacheModel(Infected_TankSac, true);
-	PrecacheModel(Infected_Boomer, true);
-	PrecacheModel(Infected_Boomette, true);
-	PrecacheModel(Infected_Hunter, true);
-	PrecacheModel(Infected_Smoker, true);
-	PrecacheModel(Infected_Common1, true);
-	PrecacheModel(Infected_Common2, true);
-	PrecacheModel(Infected_Common3, true);
-	PrecacheModel(Infected_Common4, true);
-	PrecacheModel(Infected_Common5, true);
-	PrecacheModel(Infected_Common6, true);
-	PrecacheModel(Infected_Common7, true);
-	PrecacheModel(Infected_Common8, true);
-	PrecacheModel(Infected_Common9, true);
-	PrecacheModel(Infected_Common10, true);
-	PrecacheModel(Infected_Common11, true);
-	PrecacheModel(Infected_Common12, true);
-	PrecacheModel(Infected_Common13, true);
-	PrecacheModel(Infected_Common14, true);
-	PrecacheModel(Infected_Common15, true);
-	PrecacheModel(Infected_Common16, true);
-	PrecacheModel(Infected_Common17, true);
-	PrecacheModel(Infected_Common18, true);
-	PrecacheModel(Infected_Common19, true);
-	PrecacheModel(Infected_Common20, true);
-	PrecacheModel(Infected_Common21, true);
-	PrecacheModel(Infected_Common22, true);
-	PrecacheModel(Infected_Common23, true);
-	PrecacheModel(Infected_Common24, true);
-	PrecacheModel(Infected_Common25, true);
-	PrecacheModel(Infected_Common26, true);
-	PrecacheModel(Infected_Common27, true);
-	PrecacheModel(Infected_Common28, true);
-	PrecacheModel(Infected_Common29, true);
-	PrecacheModel(Infected_Common30, true);
-	PrecacheModel(Infected_Common31, true);
-	PrecacheModel(Infected_Common32, true);
-	PrecacheModel(Infected_Common33, true);
-	PrecacheModel(Infected_Common34, true);
-	PrecacheModel(NPC_Pilot, true);
-	PrecacheModel(MODEL_NICK, true);
-	PrecacheModel(MODEL_ROCHELLE, true);
-	PrecacheModel(MODEL_COACH, true);
-	PrecacheModel(MODEL_ELLIS, true);
-	PrecacheModel(MODEL_BILL, true);
-	PrecacheModel(MODEL_ZOEY, true);
-	PrecacheModel(MODEL_ZOEYLIGHT, true);
-	PrecacheModel(MODEL_FRANCIS, true);
-	PrecacheModel(MODEL_FRANCISLIGHT, true);
-	PrecacheModel(MODEL_LOUIS, true);
+	for(i = 0; i < SPECIAL_MODEL_PATH_SIZE; i++)
+		PrecacheModel(sSpecialPaths[i], true);
+	
+	for(i = 0; i < UNCOMMON_MODEL_PATH_SIZE; i++)
+		PrecacheModel(sUnCommonPaths[i], true);
+	
+	for(i = 0; i < COMMON_MODEL_PATH_SIZE; i++)
+		PrecacheModel(sCommonPaths[i], true);
+
 	PrecacheSound("ui/menu_countdown.wav", true);
 	CvarsChanged();
 	
 	
 	/*THIRDPERSON FIX*/
-	for(new i = 1; i <= MaxClients; i++)
+	for(i = 1; i <= MaxClients; i++)
 	{
 		bAutoApplyMsg[i] = true;//1.4
 		for(new b = 0; b < sizeof(bAutoBlockedMsg[]); b++)//1.4
@@ -341,7 +348,7 @@ CvarsChanged()
 }
 
 //heil timocop he done this before me
-static BeWitched(iClient, const String:sModel[], const bool:bBaseReattach)
+BeWitched(iClient, const String:sModel[], const bool:bBaseReattach)
 {
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
 		return;
@@ -841,7 +848,7 @@ public Action:ShowMenu(iClient, iArgs)
 		ReplyToCommand(iClient, "[LMC] Menu is in-game only.");
 		return Plugin_Continue;
 	}
-	if(GetUserFlagBits(iClient) == 0 && g_bAdminOnly)
+	if(g_bAdminOnly && !CheckCommandAccess(iClient, "", COMMAND_ACCESS, true))
 	{
 		ReplyToCommand(iClient, "\x04[LMC] \x03Model Changer is only available to admins.");
 		return Plugin_Continue;
@@ -911,7 +918,7 @@ public CharMenu(Handle:hMenu, MenuAction:action, param1, param2)
 	}
 }
 
-static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
+ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 {
 	static String:sModel[PLATFORM_MAX_PATH];
 	
@@ -967,7 +974,6 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 					{//1.4
 						if(IsFakeClient(iClient))
 							return;
-						
 						
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][0])
 							return;
@@ -1104,14 +1110,13 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			}
 		}
 	}
-	//model selection
+	
+	//model selection	
 	switch(iCaseNum)//1.4
 	{
-		case 1: {
-			SetEntityRenderMode(iClient, RENDER_NORMAL);
-			SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 0);
-			SetEntProp(iClient, Prop_Send, "m_nMaxGPULevel", 0);
-			
+		case 1: 
+		{
+			ResetDefaultModel(iClient);
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1120,17 +1125,13 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			
 			PrintToChat(iClient, "\x04[LMC] \x03Models will be default");
 			bAutoApplyMsg[iClient] = false;
-			
-			new iEntity = iHiddenIndex[iClient];
-			if(IsValidEntRef(iEntity))
-			{
-				AcceptEntityInput(iEntity, "kill");
-				iHiddenIndex[iClient] = -1;
-			}
 			return;
 		}
-		case 2: {
-			BeWitched(iClient, Witch_Normal, false);
+		case 2: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Witch)))
+				BeWitched(iClient, sSpecialPaths[LMCSpecialModelType_Witch], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1140,8 +1141,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Witch");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 3: {
-			BeWitched(iClient, Witch_Bride, false);
+		case 3: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_WitchBride)))
+				BeWitched(iClient, sSpecialPaths[LMCSpecialModelType_WitchBride], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1151,8 +1155,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Witch Bride");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 4: {
-			BeWitched(iClient, Infected_Boomer, false);
+		case 4: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Boomer)))
+				BeWitched(iClient, sSpecialPaths[LMCSpecialModelType_Boomer], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1162,8 +1169,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Boomer");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 5: {
-			BeWitched(iClient, Infected_Boomette, false);
+		case 5: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Boomette)))
+				BeWitched(iClient, sSpecialPaths[LMCSpecialModelType_Boomette], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1173,8 +1183,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Boomette");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 6: {
-			BeWitched(iClient, Infected_Hunter, false);
+		case 6: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Hunter)))
+				BeWitched(iClient, sSpecialPaths[LMCSpecialModelType_Hunter], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1183,8 +1196,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Hunter");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 7: {
-			BeWitched(iClient, Infected_Smoker, false);
+		case 7: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Smoker)))
+				BeWitched(iClient, sSpecialPaths[LMCSpecialModelType_Smoker], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1194,8 +1210,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Smoker");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 8: {
-			BeWitched(iClient, Infected_RiotCop, false);
+		case 8: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_RiotCop)))
+				BeWitched(iClient, sUnCommonPaths[LMCUnCommonModelType_RiotCop], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1205,8 +1224,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04RiotCop");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 9: {
-			BeWitched(iClient, Infected_Mudder, false);
+		case 9: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_MudMan)))
+				BeWitched(iClient, sUnCommonPaths[LMCUnCommonModelType_MudMan], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1216,8 +1238,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04MudMen");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 10: {
-			BeWitched(iClient, NPC_Pilot, false);
+		case 10: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Pilot)))
+				BeWitched(iClient, sHumanPaths[LMCHumanModelType_Pilot], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1227,8 +1252,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Chopper Pilot");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 11: {
-			BeWitched(iClient, Infected_Ceda, false);
+		case 11: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Ceda)))
+				BeWitched(iClient, sUnCommonPaths[LMCUnCommonModelType_Ceda], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1238,8 +1266,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04CEDA Suit");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 12: {
-			BeWitched(iClient, Infected_Clown, false);
+		case 12: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Clown)))
+				BeWitched(iClient, sUnCommonPaths[LMCUnCommonModelType_Clown], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1249,8 +1280,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Clown");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 13: {
-			BeWitched(iClient, Infected_Jimmy, false);
+		case 13: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Jimmy)))
+				BeWitched(iClient, sUnCommonPaths[LMCUnCommonModelType_Jimmy], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1260,8 +1294,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Jimmy Gibs");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 14: {
-			BeWitched(iClient, Infected_Fallen, false);
+		case 14: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Fallen)))
+				BeWitched(iClient, sUnCommonPaths[LMCUnCommonModelType_Fallen], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1273,49 +1310,13 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 		}
 		case 15:
 		{
-			static iChoice = 1;//+1 each time amy player picks a common infected
-			//maybe ill use the m_iSkin entprop for more variation but im not sure how that will effect stuff with thirdparty models with no variation comment if you do.
+			static iChoice = 0;//+1 each time amy player picks a common infected
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Common, iChoice))
+				BeWitched(iClient, sCommonPaths[iChoice], false);
 			
-			switch(iChoice)
-			{
-				case 1: BeWitched(iClient, Infected_Common1, false);
-				case 2: BeWitched(iClient, Infected_Common2, false);
-				case 3: BeWitched(iClient, Infected_Common3, false);
-				case 4: BeWitched(iClient, Infected_Common4, false);
-				case 5: BeWitched(iClient, Infected_Common5, false);
-				case 6: BeWitched(iClient, Infected_Common6, false);
-				case 7: BeWitched(iClient, Infected_Common7, false);
-				case 8: BeWitched(iClient, Infected_Common8, false);
-				case 9: BeWitched(iClient, Infected_Common9, false);
-				case 10: BeWitched(iClient, Infected_Common10, false);
-				case 11: BeWitched(iClient, Infected_Common11, false);
-				case 12: BeWitched(iClient, Infected_Common12, false);
-				case 13: BeWitched(iClient, Infected_Common13, false);
-				case 14: BeWitched(iClient, Infected_Common14, false);
-				case 15: BeWitched(iClient, Infected_Common15, false);
-				case 16: BeWitched(iClient, Infected_Common16, false);
-				case 17: BeWitched(iClient, Infected_Common17, false);
-				case 18: BeWitched(iClient, Infected_Common18, false);
-				case 19: BeWitched(iClient, Infected_Common19, false);
-				case 20: BeWitched(iClient, Infected_Common20, false);
-				case 21: BeWitched(iClient, Infected_Common21, false);
-				case 22: BeWitched(iClient, Infected_Common22, false);
-				case 23: BeWitched(iClient, Infected_Common23, false);
-				case 24: BeWitched(iClient, Infected_Common24, false);
-				case 25: BeWitched(iClient, Infected_Common25, false);
-				case 26: BeWitched(iClient, Infected_Common26, false);
-				case 27: BeWitched(iClient, Infected_Common27, false);
-				case 28: BeWitched(iClient, Infected_Common28, false);
-				case 29: BeWitched(iClient, Infected_Common29, false);
-				case 30: BeWitched(iClient, Infected_Common30, false);
-				case 31: BeWitched(iClient, Infected_Common31, false);
-				case 32: BeWitched(iClient, Infected_Common32, false);
-				case 33: BeWitched(iClient, Infected_Common33, false);
-				case 34: BeWitched(iClient, Infected_Common34, false);
-			}
 			iChoice++;
-			if(iChoice > 34)
-				iChoice = 1;
+			if(iChoice >= COMMON_MODEL_PATH_SIZE)
+				iChoice = 0;
 				
 			
 			if(IsFakeClient(iClient))
@@ -1327,8 +1328,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Common Infected");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 16: {
-			BeWitched(iClient, MODEL_NICK, false);
+		case 16: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Nick)))
+				BeWitched(iClient, sHumanPaths[LMCHumanModelType_Nick], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1338,8 +1342,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Nick");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 17: {
-			BeWitched(iClient, MODEL_ROCHELLE, false);
+		case 17: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Rochelle)))
+				BeWitched(iClient, sHumanPaths[LMCHumanModelType_Rochelle], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1349,8 +1356,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Rochelle");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 18: {
-			BeWitched(iClient, MODEL_COACH, false);
+		case 18: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Coach)))
+				BeWitched(iClient, sHumanPaths[LMCHumanModelType_Coach], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1360,8 +1370,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Coach");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 19: {
-			BeWitched(iClient, MODEL_ELLIS, false);
+		case 19: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Ellis)))
+				BeWitched(iClient, sHumanPaths[LMCHumanModelType_Ellis], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1371,8 +1384,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Ellis");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 20: {
-			BeWitched(iClient, MODEL_BILL, false);
+		case 20: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Bill)))
+				BeWitched(iClient, sHumanPaths[LMCHumanModelType_Bill], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1382,11 +1398,18 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Bill");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 21: {
+		case 21: 
+		{
 			if(GetRandomInt(1, 100) > 50)
-				BeWitched(iClient, MODEL_ZOEY, false);
+			{
+				if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Zoey)))
+					BeWitched(iClient, sHumanPaths[LMCHumanModelType_Zoey], false);
+			}
 			else
-				BeWitched(iClient, MODEL_ZOEYLIGHT, false);
+			{
+				if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_ZoeyLight)))
+					BeWitched(iClient, sHumanPaths[LMCHumanModelType_ZoeyLight], false);
+			}
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1396,11 +1419,18 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Zoey");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 22: {
+		case 22: 
+		{
 			if(GetRandomInt(1, 100) > 50)
-				BeWitched(iClient, MODEL_FRANCIS, false);
+			{
+				if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Francis)))
+					BeWitched(iClient, sHumanPaths[LMCHumanModelType_Francis], false);
+			}
 			else
-				BeWitched(iClient, MODEL_FRANCISLIGHT, false);
+			{
+				if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_FrancisLight)))
+					BeWitched(iClient, sHumanPaths[LMCHumanModelType_FrancisLight], false);
+			}
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1410,8 +1440,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Francis");
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 23: {
-			BeWitched(iClient, MODEL_LOUIS, false);
+		case 23: 
+		{
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Louis)))
+				BeWitched(iClient, sHumanPaths[LMCHumanModelType_Louis], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1426,7 +1459,9 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 			if(!g_bTankModel)
 				return;
 			
-			BeWitched(iClient, Infected_TankNorm, false);
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Tank)))
+				BeWitched(iClient, sSpecialPaths[LMCSpecialModelType_Tank], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1439,18 +1474,11 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 		case 25:
 		{
 			if(!g_bTankModel)
-			{
-				if(IsFakeClient(iClient))
-					return;
-				
-				if(!bUsingMenu && !bAutoApplyMsg[iClient])
-					return;
-				
-				PrintToChat(iClient, "\x04[LMC] \x03Tank Models are Disabled");
-				bAutoApplyMsg[iClient] = false;
 				return;
-			}
-			BeWitched(iClient, Infected_TankSac, false);
+			
+			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_TankDLC3)))
+				BeWitched(iClient, sSpecialPaths[LMCSpecialModelType_TankDLC3], false);
+			
 			if(IsFakeClient(iClient))
 				return;
 			
@@ -1466,14 +1494,6 @@ static ModelIndex(iClient, iCaseNum, bool:bUsingMenu=false)
 
 public OnClientPostAdminCheck(iClient)
 {
-	if(IsFakeClient(iClient))
-	{
-		if(GetClientTeam(iClient) == 2)
-			SDKHook(iClient, SDKHook_OnTakeDamagePost, eOnTakeDamagePost);
-		
-		return;
-	}
-	
 	SDKHook(iClient, SDKHook_OnTakeDamagePost, eOnTakeDamagePost);
 	
 	if(g_iAnnounceMode != 0 && !g_bAdminOnly)
@@ -1516,8 +1536,7 @@ public Action:iClientInfo(Handle:hTimer, any:iUserID)
 			DispatchSpawn(iEntity);
 			AcceptEntityInput(iEntity, "ShowHint", iClient);
 			
-			Format(sValues, sizeof(sValues), "OnUser1 !self:Kill::6:1");
-			SetVariantString(sValues);
+			SetVariantString("OnUser1 !self:Kill::6:1");
 			AcceptEntityInput(iEntity, "AddOutput");
 			AcceptEntityInput(iEntity, "FireUser1");
 		}
@@ -1525,98 +1544,78 @@ public Action:iClientInfo(Handle:hTimer, any:iUserID)
 	return Plugin_Stop;
 }
 
-//malformed model fix for the real model changing and messing up stuff like invis explot with the menu
+
 public OnGameFrame()
 {
-	static iFrameskip = 0;
-	static iFrameskipColour = 0;
-	iFrameskip = (iFrameskip + 1) % MAX_FRAMECHECK;
-	
-	if(iFrameskip != 0 || !IsServerProcessing())
+	if(!IsServerProcessing())
 		return;
 	
-	iFrameskipColour = (iFrameskipColour + 1) % 480;
+	static iClient = 1;
+	if(iClient > MaxClients || iClient < 1)
+		iClient = 1;
 	
-	if(iFrameskipColour != 0)
+	
+	if(IsClientInGame(iClient) && IsPlayerAlive(iClient))
 	{
-		for(new i = 1;i <= MaxClients;i++)
+		if(IsValidEntRef(iHiddenIndex[iClient]))
 		{
-			if(!IsClientInGame(i) || !IsPlayerAlive(i))
-				continue;
-			
+			SetEntityRenderMode(iClient, RENDER_NONE);
 			static iEnt;
-			if(!IsValidEntRef(iHiddenIndex[i]) && !IsValidEntRef(iHiddenEntityRef[i]))
-				SetEntityRenderMode(i, RENDER_NORMAL);
+			iEnt = EntRefToEntIndex(iHiddenIndex[iClient]);
 			
-			if(IsValidEntRef(iHiddenIndex[i]))
+			if((GetEntProp(iClient, Prop_Send, "m_nGlowRange") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRange") == 0)
+					&& (GetEntProp(iClient, Prop_Send, "m_iGlowType") > 0 && GetEntProp(iEnt, Prop_Send, "m_iGlowType") == 0)
+					&& (GetEntProp(iClient, Prop_Send, "m_glowColorOverride") > 0 && GetEntProp(iEnt, Prop_Send, "m_glowColorOverride") == 0)
+					&& (GetEntProp(iClient, Prop_Send, "m_nGlowRangeMin") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin") == 0))
 			{
-				SetEntityRenderMode(i, RENDER_NONE);
-				iEnt = EntRefToEntIndex(iHiddenIndex[i]);
-				
-				if(GetEntProp(iEnt, Prop_Send, "m_nGlowRange") > 0 && GetEntProp(i, Prop_Send, "m_nGlowRange") == 0)
-					continue;
-				if(GetEntProp(iEnt, Prop_Send, "m_iGlowType") > 0 && GetEntProp(i, Prop_Send, "m_iGlowType") == 0)
-					continue;
-				if(GetEntProp(iEnt, Prop_Send, "m_glowColorOverride") > 0 && GetEntProp(i, Prop_Send, "m_glowColorOverride") == 0)
-					continue;
-				if(GetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin") > 0 && GetEntProp(i, Prop_Send, "m_nGlowRangeMin") == 0)
-					continue;
-				
-				SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(i, Prop_Send, "m_nGlowRange"));
-				SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(i, Prop_Send, "m_iGlowType"));
-				SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(i, Prop_Send, "m_glowColorOverride"));
-				SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(i, Prop_Send, "m_nGlowRangeMin"));
+				SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(iClient, Prop_Send, "m_nGlowRange"));
+				SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(iClient, Prop_Send, "m_iGlowType"));
+				SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(iClient, Prop_Send, "m_glowColorOverride"));
+				SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(iClient, Prop_Send, "m_nGlowRangeMin"));
 			}
-			
-			static iModelIndex[MAXPLAYERS+1] = {0, ...};
-			if(iModelIndex[i] == GetEntProp(i, Prop_Data, "m_nModelIndex", 2))
-				continue;
-			
-			iModelIndex[i] = GetEntProp(i, Prop_Data, "m_nModelIndex", 2);
-			
-			if(!IsValidEntRef(iHiddenIndex[i]))
-				continue;
-			
-			static String:sModel[PLATFORM_MAX_PATH];
-			GetEntPropString(iHiddenIndex[i], Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-			BeWitched(i, sModel, true);
 		}
-	}
-	
-	static iFrameSkipOther;
-	iFrameSkipOther = (iFrameSkipOther + 1) % 1480;
-	
-	if(iFrameSkipOther != 0)
-	{
-		static i;
-		for(i = MaxClients+1;i <= 2048;i++)
+		else if(!IsValidEntRef(iHiddenEntityRef[iClient]))
+			SetEntityRenderMode(iClient, RENDER_NORMAL);
+		
+		static iModelIndex[MAXPLAYERS+1] = {-1, ...};
+		if(iModelIndex[iClient] != GetEntProp(iClient, Prop_Data, "m_nModelIndex", 2))
 		{
-			if(!IsValidEntRef(iHiddenEntityRef[i]))
-				continue;
-			
-			if(!IsValidEntRef(iHiddenEntity[i]))
-				continue;
-			
-			static iEnt;
-			iEnt = EntRefToEntIndex(iHiddenEntity[i]);
-			SetEntityRenderFx(i, RENDERFX_HOLOGRAM);
-			SetEntityRenderColor(i, 0, 0, 0, 0);
-			
-			if(GetEntProp(iEnt, Prop_Send, "m_nGlowRange") > 0 && GetEntProp(i, Prop_Send, "m_nGlowRange") == 0)
-				continue;
-			if(GetEntProp(iEnt, Prop_Send, "m_iGlowType") > 0 && GetEntProp(i, Prop_Send, "m_iGlowType") == 0)
-				continue;
-			if(GetEntProp(iEnt, Prop_Send, "m_glowColorOverride") > 0 && GetEntProp(i, Prop_Send, "m_glowColorOverride") == 0)
-				continue;
-			if(GetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin") > 0 && GetEntProp(i, Prop_Send, "m_nGlowRangeMin") == 0)
-				continue;
-			
-			SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(i, Prop_Send, "m_nGlowRange"));
-			SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(i, Prop_Send, "m_iGlowType"));
-			SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(i, Prop_Send, "m_glowColorOverride"));
-			SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(i, Prop_Send, "m_nGlowRangeMin"));
+			iModelIndex[iClient] = GetEntProp(iClient, Prop_Data, "m_nModelIndex", 2);
+			if(IsValidEntRef(iHiddenIndex[iClient]))
+			{
+				static String:sModel[PLATFORM_MAX_PATH];
+				GetEntPropString(iHiddenIndex[iClient], Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+				BeWitched(iClient, sModel, true);
+			}
 		}
 	}
+	iClient++;
+	
+	
+	static iEntity;
+	if(iEntity <= MaxClients || iEntity > 2048)
+		iEntity = MaxClients+1;
+	
+	if(IsValidEntRef(iHiddenEntity[iEntity] && IsValidEntRef(iHiddenEntityRef[iEntity])))
+	{
+		static iEnt;
+		iEnt = EntRefToEntIndex(iHiddenEntity[iEntity]);
+		SetEntityRenderFx(iEntity, RENDERFX_HOLOGRAM);
+		SetEntityRenderColor(iEntity, 0, 0, 0, 0);
+		
+		
+		if((GetEntProp(iEntity, Prop_Send, "m_nGlowRange") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRange") == 0)
+				&& (GetEntProp(iEntity, Prop_Send, "m_iGlowType") > 0 && GetEntProp(iEnt, Prop_Send, "m_iGlowType") == 0)
+				&& (GetEntProp(iEntity, Prop_Send, "m_glowColorOverride") > 0 && GetEntProp(iEnt, Prop_Send, "m_glowColorOverride") == 0)
+				&& (GetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin") == 0))
+		{
+			SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(iEntity, Prop_Send, "m_nGlowRange"));
+			SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(iEntity, Prop_Send, "m_iGlowType"));
+			SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(iEntity, Prop_Send, "m_glowColorOverride"));
+			SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin"));
+		}
+	}
+	iEntity++;
 }
 
 static bool:IsValidEntRef(iEntRef)
@@ -1939,7 +1938,7 @@ public OnEntityDestroyed(iEntity)
 
 public OnEntityCreated(iEntity, const String:sClassname[])
 {
-	if(g_iHideDeathModel == -1 || bHideDeathModel ||!IsServerProcessing())
+	if(g_iHideDeathModel == -1 || bHideDeathModel || !IsServerProcessing())
 		return;
 	
 	if(sClassname[0] != 's' || !StrEqual(sClassname, "survivor_death_model", false))
@@ -1958,7 +1957,7 @@ public SpawnPost(iEntity)
 	AcceptEntityInput(iEntity, "Kill");
 }
 
-static BeWitchOther(iEntity, const String:sModel[])
+BeWitchOther(iEntity, const String:sModel[])
 {
 	if(iEntity < 1 || iEntity > 2048)
 		return;
@@ -1992,13 +1991,6 @@ static BeWitchOther(iEntity, const String:sModel[])
 	SetEntityRenderColor(iEntity, 0, 0, 0, 0);
 	SetEntProp(iEntity, Prop_Send, "m_nMinGPULevel", 1);
 	SetEntProp(iEntity, Prop_Send, "m_nMaxGPULevel", 1);
-	
-	/*
-	SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(i, Prop_Send, "m_nGlowRange"));
-	SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(i, Prop_Send, "m_iGlowType"));
-	SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(i, Prop_Send, "m_glowColorOverride"));
-	SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(i, Prop_Send, "m_nGlowRangeMin"));
-	*/
 }
 
 public bool:_TraceFilter(iEntity, contentsMask)
@@ -2052,8 +2044,68 @@ public OnClientCookiesCached(iClient)
 
 public eOnTakeDamagePost(iVictim, iAttacker, iInflictor, Float:fDamage, iDamagetype)
 {
-	if(!IsClientInGame(iVictim) || GetClientTeam(iVictim) != 2 || !IsPlayerAlive(iVictim))
+	if(!IsClientInGame(iVictim) || GetClientTeam(iVictim) != 2)
 		return;
 	
 	bIsIncapped[iVictim] = bool:GetEntProp(iVictim, Prop_Send, "m_isIncapacitated", 1);
 }
+
+bool:CheckForSameModel(iClient, LMCModelSectionType:iModelSectionType, iModelIndex)
+{
+	static String:sCurrentModel[64];
+	GetClientModel(iClient, sCurrentModel, sizeof(sCurrentModel));
+	
+	switch(iModelSectionType)
+	{
+		case LMCModelSectionType_Human:
+		{
+			if(!StrEqual(sCurrentModel, sHumanPaths[iModelIndex], false))
+				return false;
+			
+			ResetDefaultModel(iClient);
+			return true;
+		}
+		case LMCModelSectionType_Special:
+		{
+			if(!StrEqual(sCurrentModel, sSpecialPaths[iModelIndex], false))
+				return false;
+			
+			ResetDefaultModel(iClient);
+			return true;
+		}
+		case LMCModelSectionType_UnCommon:
+		{
+			if(!StrEqual(sCurrentModel, sUnCommonPaths[iModelIndex], false))
+				return false;
+			
+			ResetDefaultModel(iClient);
+			return true;
+		}
+		case LMCModelSectionType_Common:
+		{
+			if(!StrEqual(sCurrentModel, sCommonPaths[iModelIndex], false))
+				return false;
+			
+			ResetDefaultModel(iClient);
+			return true;
+		}
+	}
+	LogError("[LMC] You did something wrong Editing source code (iModelSectionType = %i)", iModelSectionType);
+	ResetDefaultModel(iClient);
+	return true;
+	
+}
+
+ResetDefaultModel(iClient)
+{
+	SetEntityRenderMode(iClient, RENDER_NORMAL);
+	SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 0);
+	SetEntProp(iClient, Prop_Send, "m_nMaxGPULevel", 0);
+	
+	if(IsValidEntRef(EntRefToEntIndex(iHiddenIndex[iClient])))
+	{
+		AcceptEntityInput(EntRefToEntIndex(iHiddenIndex[iClient]), "kill");
+		iHiddenIndex[iClient] = -1;
+	}
+}
+
