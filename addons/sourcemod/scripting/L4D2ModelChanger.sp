@@ -752,6 +752,9 @@ public ePlayerSpawn(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 	
 	if(!IsFakeClient(iClient))
 	{
+		if(g_bAdminOnly && !CheckCommandAccess(iClient, "", COMMAND_ACCESS, true))
+			return;
+		
 		if(iSavedModel[iClient] < 2)
 			return;
 		
@@ -2037,6 +2040,9 @@ public OnClientCookiesCached(iClient)
 	
 	if(IsValidEntRef(iHiddenIndex[iClient]))
 		return;
+	
+	if(g_bAdminOnly && !CheckCommandAccess(iClient, "", COMMAND_ACCESS, true))
+			return;
 	
 	ModelIndex(iClient, iSavedModel[iClient], false);
 }
