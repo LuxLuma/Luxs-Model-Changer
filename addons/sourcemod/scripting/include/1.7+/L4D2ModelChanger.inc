@@ -1,38 +1,38 @@
 #if defined _L4D2ModelChanger_included
-    #endinput
+	#endinput
 #endif
 #define _L4D2ModelChanger_included
- 
+
 enum LMCModelType
 {
-    LMCModelType_NoModel = 1,
-    LMCModelType_WitchNormal,
-    LMCModelType_WitchBride,
-    LMCModelType_InfectedBoomer,
-    LMCModelType_InfectedBoomette,
-    LMCModelType_InfectedHunter,
-    LMCModelType_InfectedSmoker,
-    LMCModelType_InfectedRiotcop,
-    LMCModelType_InfectedMudman,
-    LMCModelType_NPCPilot,
-    LMCModelType_InfectedCeda,
-    LMCModelType_InfectedClown,
-    LMCModelType_InfectedJimmyGibs,
-    LMCModelType_InfectedFallenSurvivor,
-    LMCModelType_InfectedRandomCommon,
-    LMCModelType_SurvivorNick,
-    LMCModelType_SurvivorRochelle,
-    LMCModelType_SurvivorCoach,
-    LMCModelType_SurvivorEllis,
-    LMCModelType_SurvivorBill,
-    LMCModelType_SurvivorZoey,
-    LMCModelType_SurvivorFrancis,
-    LMCModelType_SurvivorLouis,
-    LMCModelType_InfectedTank,
-    LMCModelType_InfectedTankDLC3,
+	LMCModelType_NoModel = 1,
+	LMCModelType_WitchNormal,
+	LMCModelType_WitchBride,
+	LMCModelType_InfectedBoomer,
+	LMCModelType_InfectedBoomette,
+	LMCModelType_InfectedHunter,
+	LMCModelType_InfectedSmoker,
+	LMCModelType_InfectedRiotcop,
+	LMCModelType_InfectedMudman,
+	LMCModelType_NPCPilot,
+	LMCModelType_InfectedCeda,
+	LMCModelType_InfectedClown,
+	LMCModelType_InfectedJimmyGibs,
+	LMCModelType_InfectedFallenSurvivor,
+	LMCModelType_InfectedRandomCommon,
+	LMCModelType_SurvivorNick,
+	LMCModelType_SurvivorRochelle,
+	LMCModelType_SurvivorCoach,
+	LMCModelType_SurvivorEllis,
+	LMCModelType_SurvivorBill,
+	LMCModelType_SurvivorZoey,
+	LMCModelType_SurvivorFrancis,
+	LMCModelType_SurvivorLouis,
+	LMCModelType_InfectedTank,
+	LMCModelType_InfectedTankDLC3,
 }
- 
- 
+
+
 /**
 *   Show and Hide Client overlay models.
 *   Note@If client changes model with menu that could effect the hidden toggle.
@@ -42,7 +42,7 @@ enum LMCModelType
 *   @return true        If action was successful false othewise.
 */
 native bool LMC_HideClientOverlayModel(int iEntity, bool bHide);
- 
+
 /**
 *   @note Entity Overlays have different array from Client overlays
 *
@@ -50,23 +50,23 @@ native bool LMC_HideClientOverlayModel(int iEntity, bool bHide);
 *   @return             Entity Index, -1 on invalid.
 */
 native int LMC_GetEntityOverlayModel(int iEntity);
- 
+
 /**
 *   @note Don't use this on Clients because it would not hide the model in Firstperson and is less securty for Clients if used.
 *   @note if used on entities that don't have m_nGlowRange entprop could throw errors(i'm not sure).
 *
 *   @param  iEntity     Entity Index.
 *   @param  sModel      Model Path of the model you wish to apply.
-*   @return             Overlay Model index, -1 on unable create.                  
+*   @return             Overlay Model index, -1 on unable create.
 */
 native int LMC_SetEntityOverlayModel(int iEntity, char sModel[PLATFORM_MAX_PATH]);
- 
+
 /**
 *   @param  iClient     Client Index.
 *   @return             Entity Index, -1 on invalid.
 */
 native int LMC_GetClientOverlayModel(int iClient);
- 
+
 /**
 *   @note LMC_OnClientModelAppliedPre/LMC_OnClientModelSelected will be Skipped.
 *
@@ -77,8 +77,8 @@ native int LMC_GetClientOverlayModel(int iClient);
 *   @return             Overlay Model index, -1 on unable create.
 */
 native int LMC_SetClientOverlayModel(int iClient, char sModel[PLATFORM_MAX_PATH]);
- 
- 
+
+
 /**
 *   @note this is called instead of LMC_OnClientModelApplied if the overlay model already exists.
 *
@@ -88,7 +88,7 @@ native int LMC_SetClientOverlayModel(int iClient, char sModel[PLATFORM_MAX_PATH]
 *   @no return;
 */
 forward void LMC_OnClientModelChanged(int iClient, int iEntity, const char sModel[PLATFORM_MAX_PATH]);
- 
+
 /**
 *   After Overlay model Applied
 @   @Note This can be called twice On When a client is put in server.
@@ -102,7 +102,7 @@ forward void LMC_OnClientModelChanged(int iClient, int iEntity, const char sMode
 *   @no return;
 */
 forward void LMC_OnClientModelApplied(int iClient, int iEntity, const char sModel[PLATFORM_MAX_PATH], bool bBaseReattach);
- 
+
 /**
 *   Before LMC_OnClientModelApplied but after LMC_OnModelSelected
 *   @note Cookie will have already besaved and won't effect and model won't be saved for next respawn.
@@ -116,7 +116,7 @@ forward void LMC_OnClientModelApplied(int iClient, int iEntity, const char sMode
 *   @return Plugin_Handled/Plugin_Stop to block, Plugin_Changed to change model Index
 */
 forward Action LMC_OnClientModelAppliedPre(int iClient, LMCModelType &iModel);
- 
+
 /**
 *   before Cookie saving and cvar checks
 *   @note block this will not save the model the client has selected and cookie wont be updated.
@@ -130,7 +130,7 @@ forward Action LMC_OnClientModelAppliedPre(int iClient, LMCModelType &iModel);
 *   @return Plugin_Handled/Plugin_Stop to block, Plugin_Changed to change model to sModel
 */
 forward Action LMC_OnClientModelSelected(int iClient, char sModel[PLATFORM_MAX_PATH]);
- 
+
 /**
 *   @note This is Only called for Client models not for entity models
 *
