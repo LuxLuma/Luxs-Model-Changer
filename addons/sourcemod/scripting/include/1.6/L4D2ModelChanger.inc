@@ -141,7 +141,7 @@ forward Action:LMC_OnClientModelSelected(iClient, String:sModel[PLATFORM_MAX_PAT
 forward LMC_OnClientModelDestroyed(iClient, iEntity);
 
 /**
-*	This is called when lmc_hide_defib_model < 0 cvar
+*	This is called when lmc_hide_defib_model > -1 cvar
 *
 *	@param 	iClient			Client Index who died.
 *	@param 	iEntity			Entity Index of Deathmodel for client who died
