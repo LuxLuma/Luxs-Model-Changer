@@ -24,7 +24,7 @@ Added a check to stop basemodel being same as overlay model selection (seems to 
 #include <sdkhooks>
 #include <clientprefs>
 
-#define PLUGIN_VERSION "2.0"
+#define PLUGIN_VERSION "2.0.1"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
@@ -112,8 +112,8 @@ static const String:sUnCommonPaths[UNCOMMON_MODEL_PATH_SIZE][] =
 	"models/infected/common_male_mud.mdl",
 	"models/infected/common_male_ceda.mdl",
 	"models/infected/common_male_clown.mdl",
-	"models/infected/common_male_fallen_survivor.mdl",
-	"models/infected/common_male_jimmy.mdl"
+	"models/infected/common_male_jimmy.mdl",
+	"models/infected/common_male_fallen_survivor.mdl"
 };
 
 enum LMCUnCommonModelType
@@ -636,9 +636,6 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		
 		if(iTeam != 2)
 			return;
-		
-		iHiddenIndex[iVictim] = -1;
-		iHiddenOwner[iEntity] = -1;
 		
 		AcceptEntityInput(iEntity, "ClearParent");
 		SetEntProp(iEnt, Prop_Send, "m_nMinGPULevel", 1);
