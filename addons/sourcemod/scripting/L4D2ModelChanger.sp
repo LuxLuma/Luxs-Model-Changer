@@ -643,6 +643,9 @@ public ePlayerDeath(Handle:hEvent, const String:sEventName[], bool:bDontBroadcas
 		
 		if(g_iHideDeathModel == 1)
 		{
+			iHiddenIndex[iVictim] = -1;
+			iHiddenOwner[iEntity] = -1;
+			
 			AcceptEntityInput(iEntity, "Detach");
 			
 			SetVariantString("!activator");
