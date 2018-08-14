@@ -24,7 +24,7 @@ Added a check to stop basemodel being same as overlay model selection (seems to 
 #include <sdkhooks>
 #include <clientprefs>
 
-#define PLUGIN_VERSION "2.0.1"
+#define PLUGIN_VERSION "2.0.2"
 
 #define ZOMBIECLASS_SMOKER		1
 #define ZOMBIECLASS_BOOMER		2
@@ -190,6 +190,7 @@ static Handle:hCvar_AiChanceInfected = INVALID_HANDLE;
 static Handle:hCvar_TankModel = INVALID_HANDLE;
 static Handle:hCvar_HideDeathModel = INVALID_HANDLE;
 static Handle:hCvar_HideBotsModel = INVALID_HANDLE;
+static Handle:hCvar_AggressiveChecks = INVALID_HANDLE;
 static bool:g_bAllowTank = false;
 static bool:g_bAllowHunter = false;
 static bool:g_bAllowSmoker = false;
@@ -197,6 +198,7 @@ static bool:g_bAllowBoomer = false;
 static bool:g_bAllowSurvivors = false;
 static bool:g_bTankModel = false;
 static bool:g_bHideBotsModel;
+static bool:g_bAggressiveChecks;
 static g_iHideDeathModel;
 static g_iAiChanceSurvivor = 50;
 static g_iAiChanceInfected = 50;
@@ -266,6 +268,7 @@ public OnPluginStart()
 	hCvar_TankModel = CreateConVar("lmc_allow_tank_model_use", "0", "The tank model is big and don't look good on other models so i made it optional(1 = true)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	hCvar_HideDeathModel = CreateConVar("lmc_hide_defib_model", "2", "(-1 to do nothing at all)(0 = But create Deathmodels) (1 = custom model death model) (2 = Custom model ragdoll and hide death model)", FCVAR_NOTIFY, true, -1.0, true, 2.0);
 	hCvar_HideBotsModel = CreateConVar("lmc_spec_hide_bots", "1", "When spectating bots in firstperson hide custom model? (0 = disable will save some cpu power)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	hCvar_AggressiveChecks = CreateConVar("lmc_aggressive_model_checks", "1", "1 = (When client has no lmc model (enforce aggressive model showing base model render mode)) 0 = (compatibility mode (should help with plugins like incap crawling) Depends on the plugin if you see visual bugs from compatibility mode not lmc's fault)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	hCookie_LmcCookie = RegClientCookie("lmc_cookie", "", CookieAccess_Protected);
 	
@@ -282,6 +285,7 @@ public OnPluginStart()
 	HookConVarChange(hCvar_TankModel, eConvarChanged);
 	HookConVarChange(hCvar_HideDeathModel, eConvarChanged);
 	HookConVarChange(hCvar_HideBotsModel, eConvarChanged);
+	HookConVarChange(hCvar_AggressiveChecks, eConvarChanged);
 	CvarsChanged();
 	
 	
@@ -345,6 +349,7 @@ CvarsChanged()
 	g_bTankModel = GetConVarInt(hCvar_TankModel) > 0;
 	g_fAnnounceDelay = GetConVarFloat(hCvar_AnnounceDelay);
 	g_iAnnounceMode = GetConVarInt(hCvar_AnnounceMode);
+	g_bAggressiveChecks = GetConVarInt(hCvar_AggressiveChecks) > 0;
 }
 
 //heil timocop he done this before me
@@ -1577,7 +1582,7 @@ public OnGameFrame()
 				SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(iClient, Prop_Send, "m_nGlowRangeMin"));
 			}
 		}
-		else if(!IsValidEntRef(iHiddenEntityRef[iClient]))
+		else if(g_bAggressiveChecks && !IsValidEntRef(iHiddenEntityRef[iClient]))
 			SetEntityRenderMode(iClient, RENDER_NORMAL);
 		
 		static iModelIndex[MAXPLAYERS+1] = {-1, ...};
