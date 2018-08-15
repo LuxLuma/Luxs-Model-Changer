@@ -1,20 +1,15 @@
 /*
-
-1.9.7
-Added DeathModel forward
-
-1.9.8
-Updated DeathModel forward params
-
-1.9.9
-Updated IsSurvivorThirdPerson bool
-fixed issue with female boomers jumping showing overlay models
-
 2.0
 Changed glowcheck/malformed checking 1 entity and client each frame
 converted defines to enums
 added all model paths to arrays easier adding new models if i missed any
 Added a check to stop basemodel being same as overlay model selection (seems to stop clientside jiggly bones from working)
+
+2.0.1
+Fixed wrong indexs
+
+2.0.2
+Made cvar for enforcing base model rendering mode with no LMC model
 */
 
 
@@ -268,7 +263,7 @@ public OnPluginStart()
 	hCvar_TankModel = CreateConVar("lmc_allow_tank_model_use", "0", "The tank model is big and don't look good on other models so i made it optional(1 = true)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	hCvar_HideDeathModel = CreateConVar("lmc_hide_defib_model", "2", "(-1 to do nothing at all)(0 = But create Deathmodels) (1 = custom model death model) (2 = Custom model ragdoll and hide death model)", FCVAR_NOTIFY, true, -1.0, true, 2.0);
 	hCvar_HideBotsModel = CreateConVar("lmc_spec_hide_bots", "1", "When spectating bots in firstperson hide custom model? (0 = disable will save some cpu power)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	hCvar_AggressiveChecks = CreateConVar("lmc_aggressive_model_checks", "1", "1 = (When client has no lmc model (enforce aggressive model showing base model render mode)) 0 = (compatibility mode (should help with plugins like incap crawling) Depends on the plugin if you see visual bugs from compatibility mode not lmc's fault)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	hCvar_AggressiveChecks = CreateConVar("lmc_aggressive_model_checks", "0", "1 = (When client has no lmc model (enforce aggressive model showing base model render mode)) 0 = (compatibility mode (should help with plugins like incap crawling) Depends on the plugin)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
 	hCookie_LmcCookie = RegClientCookie("lmc_cookie", "", CookieAccess_Protected);
 	
