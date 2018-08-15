@@ -10,6 +10,7 @@ Fixed wrong indexs
 
 2.0.2
 Made cvar for enforcing base model rendering mode with no LMC model
+lmc_aggressive_model_checks
 */
 
 
