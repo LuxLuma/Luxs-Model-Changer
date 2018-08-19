@@ -165,9 +165,8 @@ public void OnAllPluginsLoaded()
 }
 
 
-public OnPluginStart()
+public void OnPluginStart()
 {
-	RegConsoleCmd("sm_lmc", ShowMenu, "Brings up a menu to select a client's model");
 	
 	CreateConVar("l4d2modelchanger_version", PLUGIN_VERSION, "Left 4 Dead Model Changer", FCVAR_SPONLY|FCVAR_DONTRECORD|FCVAR_NOTIFY);
 	
@@ -183,10 +182,7 @@ public OnPluginStart()
 	hCvar_AiChanceInfected = CreateConVar("lmc_ai_model_infected", "15", "(0 = disable custom models)chance on which the AI will get a custom model", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 	hCvar_TankModel = CreateConVar("lmc_allow_tank_model_use", "0", "The tank model is big and don't look good on other models so i made it optional(1 = true)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	
-	
-	HookConVarChange(hCvar_AllowTank, eConvarChanged);
-	HookConVarChange(hCvar_AllowHunter, eConvarChanged);
-	HookConVarChange(hCvar_AllowSmoker, eConvarChanged);
+	 
 	HookConVarChange(hCvar_AllowBoomer, eConvarChanged);
 	HookConVarChange(hCvar_AllowSurvivors, eConvarChanged);
 	HookConVarChange(hCvar_AiChanceSurvivor, eConvarChanged);
