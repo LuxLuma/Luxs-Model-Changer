@@ -103,20 +103,30 @@ forward LMC_OnClientModelChanged(iClient, iEntity, const String:sModel[PLATFORM_
 */
 forward LMC_OnClientModelApplied(iClient, iEntity, const String:sModel[PLATFORM_MAX_PATH], bool:bBaseReattach);
 
-/**
-*	Before LMC_OnClientModelApplied but after LMC_OnModelSelected
-*	@note Cookie will have already besaved and won't effect and model won't be saved for next respawn.
-*	You can only Set models  that are already defined in l4d2modelchanger use LMC_OnModelSelected
-*	to use other models.
-*
-*	@note this will obey cvars set in l4d2modelchanger use LMC_OnModelSelected to change to any model
-*
-*	@param 	iClient		Client Index.
-*	@param 	iModelType	ModelIndex	Refer to LMCModelType enum
-*	@return	Plugin_Handled/Plugin_Stop to block, Plugin_Changed	to change model Index
-*/
-forward Action:LMC_OnClientModelAppliedPre(iClient, &LMCModelType:iModel);
 
+
+/**
+*	@note This is Only called for Client models not for entity models
+*
+*	@param 	iClient		Client Index who had the model.
+*	@param 	iEntity		Entity Index of OverlayModel
+*	@no return
+*/
+forward LMC_OnClientModelDestroyed(iClient, iEntity);
+
+/**
+*	REQUIRES LMC_deathhandler module
+*	This is called when lmc_hide_defib_model > -1 cvar
+*
+*	@param 	iClient			Client Index who died.
+*	@param 	iEntity			Entity Index of Deathmodel for client who died
+*	@param	iOverlayModel 	Entity Index of Deathmodel overlaymodel -1 if don't exist
+*	@no return
+*/
+forward LMC_OnClientDeathModelCreated(iClient, iDeathModel, iOverlayModel);
+
+
+#pragma deprecated ADD VERSION
 /**
 *	before Cookie saving and cvar checks
 *	@note block this will not save the model the client has selected and cookie wont be updated.
@@ -131,23 +141,17 @@ forward Action:LMC_OnClientModelAppliedPre(iClient, &LMCModelType:iModel);
 */
 forward Action:LMC_OnClientModelSelected(iClient, String:sModel[PLATFORM_MAX_PATH]);
 
+#pragma deprecated ADD VERSION
 /**
-*	@note This is Only called for Client models not for entity models
+*	Before LMC_OnClientModelApplied but after LMC_OnModelSelected
+*	@note Cookie will have already besaved and won't effect and model won't be saved for next respawn.
+*	You can only Set models  that are already defined in l4d2modelchanger use LMC_OnModelSelected
+*	to use other models.
 *
-*	@param 	iClient		Client Index who had the model.
-*	@param 	iEntity		Entity Index of OverlayModel
-*	@no return
-*/
-forward LMC_OnClientModelDestroyed(iClient, iEntity);
-
-/**
-*	This is called when lmc_hide_defib_model > -1 cvar
+*	@note this will obey cvars set in l4d2modelchanger use LMC_OnModelSelected to change to any model
 *
-*	@param 	iClient			Client Index who died.
-*	@param 	iEntity			Entity Index of Deathmodel for client who died
-*	@param	iOverlayModel 	Entity Index of Deathmodel overlaymodel -1 if don't exist
-*	@no return
+*	@param 	iClient		Client Index.
+*	@param 	iModelType	ModelIndex	Refer to LMCModelType enum
+*	@return	Plugin_Handled/Plugin_Stop to block, Plugin_Changed	to change model Index
 */
-forward LMC_OnClientDeathModelCreated(iClient, iDeathModel, iOverlayModel);
-
-
+forward Action:LMC_OnClientModelAppliedPre(iClient, &LMCModelType:iModel);

@@ -4,7 +4,7 @@
 #include <sdkhooks>
 #pragma newdecls required
 
-#define PLUGIN_VERSION "cakebuildA"
+#define PLUGIN_VERSION "cakebuildD"
 
 static int iHiddenOwner[2048+1] = {0, ...};
 static int iHiddenEntity[2048+1] = {0, ...};
@@ -16,11 +16,8 @@ static Handle hCvar_AggressiveChecks = INVALID_HANDLE;
 static bool g_bAggressiveChecks = false;
 
 Handle g_hOnClientModelApplied = INVALID_HANDLE;
-Handle g_hOnClientModelAppliedPre = INVALID_HANDLE;
-Handle g_hOnClientModelBlocked = INVALID_HANDLE;
 Handle g_hOnClientModelChanged = INVALID_HANDLE;
 Handle g_hOnClientModelDestroyed = INVALID_HANDLE;
-Handle g_hOnClientDeathModelCreated = INVALID_HANDLE;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
@@ -31,13 +28,11 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("LMC_GetEntityOverlayModel", GetEntityOverlayModel);
 	CreateNative("LMC_HideClientOverlayModel", HideOverlayModel);
 	CreateNative("LMC_SetTransmit", SetTransmit);
+	CreateNative("LMC_ResetRenderMode", ResetRenderMode);
 	
 	g_hOnClientModelApplied = CreateGlobalForward("LMC_OnClientModelApplied", ET_Event, Param_Cell, Param_Cell, Param_String, Param_Cell);
-	g_hOnClientModelAppliedPre = CreateGlobalForward("LMC_OnClientModelAppliedPre", ET_Event, Param_Cell, Param_CellByRef);
-	g_hOnClientModelBlocked  = CreateGlobalForward("LMC_OnClientModelSelected", ET_Event, Param_Cell, Param_String);
 	g_hOnClientModelChanged  = CreateGlobalForward("LMC_OnClientModelChanged", ET_Event, Param_Cell, Param_Cell, Param_String);
 	g_hOnClientModelDestroyed  = CreateGlobalForward("LMC_OnClientModelDestroyed", ET_Event, Param_Cell, Param_Cell);
-	g_hOnClientDeathModelCreated  = CreateGlobalForward("LMC_OnClientDeathModelCreated", ET_Event, Param_Cell, Param_Cell, Param_Cell);
 	
 	return APLRes_Success;
 }
@@ -50,8 +45,12 @@ public void OnPluginStart()
 	hCvar_AggressiveChecks = CreateConVar("lmc_aggressive_model_checks", "0", "1 = (When client has no lmc model (enforce aggressive model showing base model render mode)) 0 = (compatibility mode (should help with plugins like incap crawling) Depends on the plugin)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	HookConVarChange(hCvar_AggressiveChecks, eConvarChanged);
 	CvarsChanged();
-	
 	AutoExecConfig(true, "lmc_core");
+	
+	HookEvent("player_team", eTeamChange);
+	HookEvent("player_incapacitated", eSetColour);
+	HookEvent("revive_end", eSetColour);
+	HookEvent("player_spawn", ePlayerSpawn, EventHookMode_Pre);
 }
 
 public void eConvarChanged(Handle hCvar, const char[] sOldVal, const char[] sNewVal)
@@ -63,21 +62,43 @@ void CvarsChanged()
 {
 	g_bAggressiveChecks = GetConVarInt(hCvar_AggressiveChecks) > 0;
 }
-bool BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
+
+public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
+	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
+	if(iClient < 1 || iClient > MaxClients)
+		return;
+	
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
 		return;
 	
-	int iEntity = iHiddenIndex[iClient];
-	if(IsValidEntRef(iEntity) && !bBaseReattach)
+	if(IsValidEntRef(iHiddenIndex[iClient]))
+	{
+		AcceptEntityInput(iHiddenIndex[iClient], "kill");
+		iHiddenIndex[iClient] = -1;
+	}
+	
+	SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 0);
+	SetEntProp(iClient, Prop_Send, "m_nMaxGPULevel", 0);
+}
+
+int BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
+{
+	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
+		return -1;
+	
+	CheckForSameModel(iClient, sModel);
+	
+	int iEntity = EntRefToEntIndex(iHiddenIndex[iClient]);
+	if(IsValidEntRef(iHiddenIndex[iClient]) && !bBaseReattach)
 	{
 		SetEntityModel(iEntity, sModel);
 		Call_StartForward(g_hOnClientModelChanged);
 		Call_PushCell(iClient);
-		Call_PushCell(EntRefToEntIndex(iEntity));
+		Call_PushCell(iEntity);
 		Call_PushString(sModel);
 		Call_Finish();
-		return;
+		return iEntity;
 	}
 	else if(bBaseReattach)
 		AcceptEntityInput(iEntity, "Kill");
@@ -85,7 +106,7 @@ bool BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
 	
 	iEntity = CreateEntityByName("prop_dynamic_ornament");
 	if(iEntity < 0)
-		return;
+		return -1;
 	
 	DispatchKeyValue(iEntity, "model", sModel);
 	
@@ -115,6 +136,61 @@ bool BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
 	Call_Finish();
 	
 	SDKHook(iEntity, SDKHook_SetTransmit, HideModel);
+	return iEntity;
+}
+
+int BeWitchOther(int iEntity, const char[] sModel)// dont pass refs
+{
+	if(iEntity < 1 || iEntity > 2048)
+		return -1;
+	
+	CheckForSameModel(iEntity, sModel);
+	
+	if(IsValidEntRef(iHiddenEntity[iEntity]))
+	{
+		SetEntityModel(iHiddenEntity[iEntity], sModel);
+		return EntRefToEntIndex(iHiddenEntity[iEntity]);
+	}
+	
+	int iEnt = CreateEntityByName("prop_dynamic_ornament");
+	if(iEnt < 0)
+		return -1;
+	
+	DispatchKeyValue(iEnt, "model", sModel);
+	
+	DispatchSpawn(iEnt);
+	ActivateEntity(iEnt);
+	
+	SetVariantString("!activator");
+	AcceptEntityInput(iEnt, "SetParent", iEntity);
+	
+	SetVariantString("!activator");
+	AcceptEntityInput(iEnt, "SetAttached", iEntity);
+	AcceptEntityInput(iEnt, "TurnOn");
+	
+	iHiddenEntity[iEntity] = EntIndexToEntRef(iEnt);
+	iHiddenEntityRef[iEntity] = EntIndexToEntRef(iEntity);
+	
+	SetEntityRenderFx(iEntity, RENDERFX_HOLOGRAM);
+	SetEntityRenderColor(iEntity, 0, 0, 0, 0);
+	
+	SetEntProp(iEntity, Prop_Send, "m_nMinGPULevel", 1);
+	SetEntProp(iEntity, Prop_Send, "m_nMaxGPULevel", 1);
+	return iEnt;
+}
+
+void CheckForSameModel(int iEntity, const char[] sPendingModel)// justincase 
+{
+	char sModel[PLATFORM_MAX_PATH];
+	char sNetClass[64];
+	if(!GetEntityNetClass(iEntity, sNetClass, sizeof(sNetClass)))
+		return;
+	
+	GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+	if(!StrEqual(sModel, sPendingModel, false))
+		return;
+	
+	PrintToServer("[LMC][%i]%s(NetClass) overlay_model is the same as base model! \"%s\"", iEntity, sNetClass, sModel);
 }
 
 public Action HideModel(int iEntity, int iClient)
@@ -300,8 +376,7 @@ public int SetOverlayModel(Handle plugin, int numParams)
 	if(sModel[0] == '\0')
 		ThrowNativeError(SP_ERROR_PARAM, "Error Empty String");
 	
-	BeWitched(iClient, sModel, false);
-	return EntRefToEntIndex(iHiddenIndex[iClient]);
+	return BeWitched(iClient, sModel, false);
 }
 
 public int SetEntityOverlayModel(Handle plugin, int numParams)
@@ -319,8 +394,7 @@ public int SetEntityOverlayModel(Handle plugin, int numParams)
 	if(sModel[0] == '\0')
 		ThrowNativeError(SP_ERROR_PARAM, "Error Empty String");
 	
-	BeWitchOther(iEntity, sModel);
-	return EntRefToEntIndex(iHiddenEntityRef[iEntity]);
+	return BeWitchOther(iEntity, sModel);
 }
 
 public int GetEntityOverlayModel(Handle plugin, int numParams)
@@ -341,6 +415,21 @@ public int GetEntityOverlayModel(Handle plugin, int numParams)
 	return EntRefToEntIndex(iHiddenEntity[iEntity]);
 }
 
+public int ResetRenderMode(Handle plugin, int numParams)
+{
+	if(numParams < 1)
+		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
+	
+	int iEntity = GetNativeCell(1);
+	if(iEntity < 1 || iEntity > 2048+1)
+		ThrowNativeError(SP_ERROR_PARAM, "Entity index out of bounds %i", iEntity);
+	
+	if(!IsValidEntity(iEntity))
+		ThrowNativeError(SP_ERROR_ABORTED, "Entity Invalid %i", iEntity);
+	
+	ResetRender(iEntity);
+}
+
 
 public void OnEntityDestroyed(int iEntity)
 {
@@ -352,10 +441,8 @@ public void OnEntityDestroyed(int iEntity)
 	if(sClassname[0] != 'p' || !StrEqual(sClassname, "prop_dynamic_ornament", false))
 		return;
 	
-	static int iClient;
-	iClient = GetClientOfUserId(iHiddenOwner[iEntity]);
-	
-	if(iClient < 1)
+	int iClient = GetClientOfUserId(iHiddenOwner[iEntity]);
+	if(iClient > 0)
 		return;
 	
 	iHiddenOwner[iEntity] = -1;
@@ -368,55 +455,19 @@ public void OnEntityDestroyed(int iEntity)
 	Call_Finish();
 }
 
-bool BeWitchOther(int iEntity, const char[] sModel)
+void ResetRender(int iEntity)
 {
-	if(iEntity < 1 || iEntity > 2048)
-		return false;
-	
-	if(IsValidEntRef(iHiddenEntity[iEntity]))
+	if(iEntity < MaxClients+1)
 	{
-		SetEntityModel(iHiddenEntity[iEntity], sModel);
-		return true;
+		SetEntityRenderMode(iEntity, RENDER_NORMAL);
+		SetEntProp(iEntity, Prop_Send, "m_nMinGPULevel", 0);
+		SetEntProp(iEntity, Prop_Send, "m_nMaxGPULevel", 0);
 	}
-	
-	int iEnt = CreateEntityByName("prop_dynamic_ornament");
-	if(iEnt < 0)
-		return false;
-	
-	DispatchKeyValue(iEnt, "model", sModel);
-	
-	DispatchSpawn(iEnt);
-	ActivateEntity(iEnt);
-	
-	SetVariantString("!activator");
-	AcceptEntityInput(iEnt, "SetParent", iEntity);
-	
-	SetVariantString("!activator");
-	AcceptEntityInput(iEnt, "SetAttached", iEntity);
-	AcceptEntityInput(iEnt, "TurnOn");
-	
-	iHiddenEntity[iEntity] = EntIndexToEntRef(iEnt);
-	iHiddenEntityRef[iEntity] = EntIndexToEntRef(iEntity);
-	
-	SetEntityRenderFx(iEntity, RENDERFX_HOLOGRAM);
-	SetEntityRenderColor(iEntity, 0, 0, 0, 0);
-	
-	SetEntProp(iEntity, Prop_Send, "m_nMinGPULevel", 1);
-	SetEntProp(iEntity, Prop_Send, "m_nMaxGPULevel", 1);
-	return true;
-}
-
-void ResetDefaultModel(int iClient)
-{
-	SetEntityRenderMode(iClient, RENDER_NORMAL);
-	SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 0);
-	SetEntProp(iClient, Prop_Send, "m_nMaxGPULevel", 0);
-	
-	if(!IsValidEntRef(iHiddenIndex[iClient]))
-		return;
-	
-	AcceptEntityInput(EntRefToEntIndex(iHiddenIndex[iClient]), "kill");
-	iHiddenIndex[iClient] = -1;
+	else
+	{
+		SetEntityRenderFx(iEntity, RENDERFX_NONE);
+		SetEntityRenderColor(iEntity, 255, 255, 255, 255);
+	}
 }
 
 public void OnClientDisconnect(int iClient)
@@ -656,5 +707,5 @@ static bool IsInfectedThirdPerson(int iClient)
 //deprecated stuff
 public int HideOverlayModel(Handle plugin, int numParams)
 {
-	ThrowNativeError(SP_ERROR_NOT_FOUND, "Deprecated function not longer included in LMC since ADD_VERSION.");//add version
+	ThrowNativeError(SP_ERROR_NONE, "Deprecated function not longer included in LMC since ADD_VERSION.");//add version
 }
