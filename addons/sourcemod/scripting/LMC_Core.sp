@@ -12,7 +12,8 @@ static int iHiddenEntityRef[2048+1];
 static int iHiddenIndex[MAXPLAYERS+1] = {0, ...};
 static bool bThirdPerson[MAXPLAYERS+1] = {false, ...};
 
-
+static Handle hCvar_AggressiveChecks = INVALID_HANDLE;
+static bool g_bAggressiveChecks = false;
 
 Handle g_hOnClientModelApplied = INVALID_HANDLE;
 Handle g_hOnClientModelAppliedPre = INVALID_HANDLE;
@@ -29,6 +30,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	CreateNative("LMC_SetEntityOverlayModel", SetEntityOverlayModel);
 	CreateNative("LMC_GetEntityOverlayModel", GetEntityOverlayModel);
 	CreateNative("LMC_HideClientOverlayModel", HideOverlayModel);
+	CreateNative("LMC_SetTransmit", SetTransmit);
 	
 	g_hOnClientModelApplied = CreateGlobalForward("LMC_OnClientModelApplied", ET_Event, Param_Cell, Param_Cell, Param_String, Param_Cell);
 	g_hOnClientModelAppliedPre = CreateGlobalForward("LMC_OnClientModelAppliedPre", ET_Event, Param_Cell, Param_CellByRef);
@@ -41,13 +43,26 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 }
 
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	CreateConVar("lmc_core_version", PLUGIN_VERSION, "LMC_Core_version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
+	
+	hCvar_AggressiveChecks = CreateConVar("lmc_aggressive_model_checks", "0", "1 = (When client has no lmc model (enforce aggressive model showing base model render mode)) 0 = (compatibility mode (should help with plugins like incap crawling) Depends on the plugin)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	HookConVarChange(hCvar_AggressiveChecks, eConvarChanged);
+	CvarsChanged();
+	
+	AutoExecConfig(true, "lmc_core");
 }
 
+public void eConvarChanged(Handle hCvar, const char[] sOldVal, const char[] sNewVal)
+{
+	CvarsChanged();
+}
 
-
+void CvarsChanged()
+{
+	g_bAggressiveChecks = GetConVarInt(hCvar_AggressiveChecks) > 0;
+}
 bool BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
 {
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
@@ -230,6 +245,29 @@ public void OnGameFrame()
 }
 
 
+
+public int SetTransmit(Handle plugin, int numParams)
+{
+	if(numParams < 2)
+		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
+	
+	int iClient = GetNativeCell(1);
+	if(iClient < 1 || iClient > MaxClients)
+		ThrowNativeError(SP_ERROR_PARAM, "Client index out of bounds %i", iClient);
+	
+	if(!IsValidEntRef(iHiddenIndex[iClient]))
+		return false;
+	
+	bool bType = view_as<bool>(GetNativeCell(2));
+	
+	if(bType)
+	{
+		SDKHook(iHiddenIndex[iClient], SDKHook_SetTransmit, HideModel);
+		return true;
+	}
+	SDKUnhook(iHiddenIndex[iClient], SDKHook_SetTransmit, HideModel);
+	return true;
+}
 
 public int GetOverlayModel(Handle plugin, int numParams)
 {
