@@ -6,6 +6,18 @@
 
 #define PLUGIN_VERSION "cakebuildD"
 
+enum ZOMBIECLASS
+{
+	ZOMBIECLASS_SMOKER = 1,
+	ZOMBIECLASS_BOOMER,
+	ZOMBIECLASS_HUNTER,
+	ZOMBIECLASS_SPITTER,
+	ZOMBIECLASS_JOCKEY,
+	ZOMBIECLASS_CHARGER,
+	ZOMBIECLASS_UNKNOWN,
+	ZOMBIECLASS_TANK,
+}
+
 static int iHiddenOwner[2048+1] = {0, ...};
 static int iHiddenEntity[2048+1] = {0, ...};
 static int iHiddenEntityRef[2048+1];
@@ -633,6 +645,7 @@ static bool IsSurvivorThirdPerson(int iClient)
 	}
 	return false;
 }
+
 static bool IsInfectedThirdPerson(int iClient)
 {
 	if(bThirdPerson[iClient])
@@ -646,7 +659,7 @@ static bool IsInfectedThirdPerson(int iClient)
 	
 	switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))
 	{
-		case 1://smoker
+		case ZOMBIECLASS_SMOKER:
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
@@ -654,7 +667,7 @@ static bool IsInfectedThirdPerson(int iClient)
 				return true;
 			}
 		}
-		case 3://hunter
+		case ZOMBIECLASS_HUNTER:
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
@@ -662,7 +675,7 @@ static bool IsInfectedThirdPerson(int iClient)
 				return true;
 			}
 		}
-		case 4://spitter
+		case ZOMBIECLASS_SPITTER:
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
@@ -670,7 +683,7 @@ static bool IsInfectedThirdPerson(int iClient)
 				return true;
 			}
 		}
-		case 5://jockey
+		case ZOMBIECLASS_JOCKEY:
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
@@ -678,7 +691,7 @@ static bool IsInfectedThirdPerson(int iClient)
 				return true;
 			}
 		}
-		case 6://charger
+		case ZOMBIECLASS_CHARGER:
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
@@ -686,7 +699,7 @@ static bool IsInfectedThirdPerson(int iClient)
 				return true;
 			}
 		}
-		case 8://tank
+		case ZOMBIECLASS_TANK:
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
