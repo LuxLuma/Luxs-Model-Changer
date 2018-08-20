@@ -9,6 +9,7 @@ native int LMC_GetClientOverlayModel(int iClient);
 native int LMC_GetEntityOverlayModel(int iEntity);
 native bool LMC_SetTransmit(int iClient, bool HookAction);
 
+#define PLUGIN_NAME "LMC_Deathhandler"
 #define PLUGIN_VERSION "cakewhaE"
 
 static bool bIsIncapped[MAXPLAYERS+1] = {false, ...};
@@ -26,10 +27,19 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+public Plugin myinfo =
+{
+	name = "LMC_Deathhandler",
+	author = "Lux",
+	description = "Manages deaths regarding lmc, overlay deathmodels and ragdolls, and fixes clonesurvivors deathmodels teleporting around.",
+	version = PLUGIN_VERSION,
+	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
+};
+
 public void OnAllPluginsLoaded()
 {
 	if(!LibraryExists("L4D2ModelChanger"))
-		SetFailState("[LMC]LMC_Core notloaded, load LMC_Core and reload plugin.");
+		SetFailState("[LMC]LMC_Core notloaded, load LMC_Core and reload %s.", PLUGIN_NAME);
 }
 
 public void OnPluginStart()
@@ -43,6 +53,10 @@ public void OnPluginStart()
 	
 	HookEvent("player_death", ePlayerDeath, EventHookMode_Pre);
 	HookEvent("witch_killed", eWitchKilled, EventHookMode_Pre);
+	
+	for(int i = 1; i <= MaxClients; i++)
+		if(IsClientInGame(i))
+			OnClientPutInServer(i);
 }
 
 public void eConvarChanged(Handle hCvar, const char[] sOldVal, const char[] sNewVal)
@@ -320,7 +334,12 @@ public bool _TraceFilter(int iEntity, int contentsMask)
 	return true;
 }
 
-public void eOnTakeDamagePost(int iVictim, int iAttacker, int iInflictor, float fDamage, int iDamagetype)
+public void OnClientPutInServer(int iClient)
+{
+	SDKHook(iClient, SDKHook_OnTakeDamageAlivePost, eOnTakeDamageAlivePost);
+}
+
+public void eOnTakeDamageAlivePost(int iVictim, int iAttacker, int iInflictor, float fDamage, int iDamagetype)
 {
 	if(!IsClientInGame(iVictim) || GetClientTeam(iVictim) != 2)
 		return;

@@ -5,6 +5,7 @@
 //#include <L4D2ModelChanger>
 #pragma newdecls required
 
+#define PLUGIN_NAME "LMC_RandomSpawns"
 #define PLUGIN_VERSION "cakeChocoA"
 
 #define HUMAN_MODEL_PATH_SIZE 11
@@ -174,12 +175,21 @@ static int g_iChanceInfected = 20;
 static bool g_bTankModel = false;
 
 static Handle hCvar_RNGHumans = INVALID_HANDLE;
-static bool g_bRNGHumans = false; 
+static bool g_bRNGHumans = false;
+
+public Plugin myinfo =
+{
+	name = "LMC_RandomSpawns",
+	author = "Lux",
+	description = "Makes lmc models random for humans&ai",
+	version = PLUGIN_VERSION,
+	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
+};
 
 public void OnAllPluginsLoaded()
 {
 	if(!LibraryExists("L4D2ModelChanger"))
-		SetFailState("[LMC]LMC_Core notloaded, load LMC_Core and reload plugin.");
+		SetFailState("[LMC]LMC_Core notloaded, load LMC_Core and reload %s.", PLUGIN_NAME);
 	
 	HookCvars();
 }

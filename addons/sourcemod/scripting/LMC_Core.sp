@@ -49,6 +49,15 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	return APLRes_Success;
 }
 
+public Plugin myinfo =
+{
+	name = "LMC_Core",
+	author = "Lux",
+	description = "Core of LMC, manages overlay models",
+	version = PLUGIN_VERSION,
+	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
+};
+
 
 public void OnPluginStart()
 {

@@ -4,6 +4,15 @@
 
 #define PLUGIN_VERSION "cakeBigA"
 
+public Plugin myinfo =
+{
+	name = "LMC_SharedCvars",
+	author = "Lux",
+	description = "Modules that sharecvars are put in here",
+	version = PLUGIN_VERSION,
+	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
+};
+
 public void OnPluginStart()
 {
 	CreateConVar("lmc_sharedcvars_version", PLUGIN_VERSION, "LMC_SharedCvars_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
