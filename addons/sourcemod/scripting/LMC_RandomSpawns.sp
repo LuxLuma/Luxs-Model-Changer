@@ -371,7 +371,10 @@ public void NextFrame(int iUserID)
 		default:
 			return;
 	}
-
+	
+	if(sModel[0] == '\0')
+		return;
+	
 	if(!SameModel(iClient, sModel))
 		LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sModel));
 }
