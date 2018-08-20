@@ -45,7 +45,7 @@ public void OnPluginStart()
 	hCvar_AggressiveChecks = CreateConVar("lmc_aggressive_model_checks", "0", "1 = (When client has no lmc model (enforce aggressive model showing base model render mode)) 0 = (compatibility mode (should help with plugins like incap crawling) Depends on the plugin)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	HookConVarChange(hCvar_AggressiveChecks, eConvarChanged);
 	CvarsChanged();
-	AutoExecConfig(true, "lmc_core");
+	AutoExecConfig(true, "LMC_Core");
 	
 	HookEvent("player_team", eTeamChange);
 	HookEvent("player_incapacitated", eSetColour);

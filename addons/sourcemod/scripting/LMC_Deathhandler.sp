@@ -39,7 +39,7 @@ public void OnPluginStart()
 	hCvar_HideDeathModel = CreateConVar("lmc_hide_defib_model", "2", "(-1 to do nothing at all)(0 = create Deathmodels) (1 = custom model death model) (2 = Custom model ragdoll and hide death model)", FCVAR_NOTIFY, true, -1.0, true, 2.0);
 	HookConVarChange(hCvar_HideDeathModel, eConvarChanged);
 	CvarsChanged();
-	AutoExecConfig(true, "lmc_deathhandler");
+	AutoExecConfig(true, "LMC_Deathhandler");
 	
 	HookEvent("player_death", ePlayerDeath, EventHookMode_Pre);
 	HookEvent("witch_killed", eWitchKilled, EventHookMode_Pre);
