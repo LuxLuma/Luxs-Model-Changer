@@ -39,7 +39,7 @@ public Plugin myinfo =
 {
 	name = PLUGIN_NAME,
 	author = "Lux",
-	description = "Makes lmc models random for humans&ai",
+	description = "Manages transmitting models to clients",
 	version = PLUGIN_VERSION,
 	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
 };
@@ -55,10 +55,12 @@ public Action HideModel(int iEntity, int iClient)
 			if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == GetClientOfUserId(iHiddenOwner[iEntity]))
 				return Plugin_Handled;
 	
+	
 	static int iOwner;
 	iOwner = GetClientOfUserId(iHiddenOwner[iEntity]);
 	if(iOwner < 1 || !IsClientInGame(iOwner))
 		return Plugin_Continue;
+	
 	
 	switch(GetClientTeam(iOwner)) 
 	{
@@ -307,7 +309,7 @@ public int SetTransmit(Handle plugin, int numParams)
 	
 	if(!IsValidEntity(iEntity))
 		ThrowNativeError(SP_ERROR_ABORTED, "Entity is Invalid %i", iEntity);
-		
+	
 	iHiddenOwner[iEntity] = GetClientUserId(iClient);
 	
 	bool bType = view_as<bool>(GetNativeCell(3));

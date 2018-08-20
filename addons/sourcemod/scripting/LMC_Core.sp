@@ -320,7 +320,7 @@ public int GetOverlayModel(Handle plugin, int numParams)
 
 public int SetOverlayModel(Handle plugin, int numParams)
 {
-	if(numParams < 3)
+	if(numParams < 2)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
 	
 	int iClient = GetNativeCell(1);
