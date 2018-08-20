@@ -102,10 +102,10 @@ public Action HideModel(int iEntity, int iClient)
 
 static bool IsSurvivorThirdPerson(int iClient)
 {
-/* This shit is busted rightnow but it works on otherplugins :P
+//This shit is busted rightnow but it works on otherplugins :P
 	if(bThirdPerson[iClient])
 		return true;
-*/
+	
 	if(GetEntPropEnt(iClient, Prop_Send, "m_hViewEntity") > 0)
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
@@ -225,10 +225,10 @@ static bool IsSurvivorThirdPerson(int iClient)
 
 static bool IsInfectedThirdPerson(int iClient)
 {
-/* This shit is busted rightnow but it works on otherplugins :P
+	//This shit is busted rightnow but it works on otherplugins :P
 	if(bThirdPerson[iClient])
 		return true;
-*/
+	
 	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
