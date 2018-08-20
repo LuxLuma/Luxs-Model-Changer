@@ -4,6 +4,7 @@
 #include <sdkhooks>
 #pragma newdecls required
 
+
 #define PLUGIN_VERSION "2.5"
 
 enum ZOMBIECLASS

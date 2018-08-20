@@ -5,6 +5,7 @@
 #include <L4D2ModelChanger>
 #pragma newdecls required
 
+
 #define PLUGIN_NAME "LMC_L4D2_SetTransmit"
 #define PLUGIN_VERSION "1.0"
 
@@ -101,8 +102,10 @@ public Action HideModel(int iEntity, int iClient)
 
 static bool IsSurvivorThirdPerson(int iClient)
 {
+/* This shit is busted rightnow but it works on otherplugins :P
 	if(bThirdPerson[iClient])
 		return true;
+*/
 	if(GetEntPropEnt(iClient, Prop_Send, "m_hViewEntity") > 0)
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
@@ -222,8 +225,10 @@ static bool IsSurvivorThirdPerson(int iClient)
 
 static bool IsInfectedThirdPerson(int iClient)
 {
+/* This shit is busted rightnow but it works on otherplugins :P
 	if(bThirdPerson[iClient])
 		return true;
+*/
 	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)

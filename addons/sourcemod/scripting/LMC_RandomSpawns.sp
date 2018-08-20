@@ -5,6 +5,7 @@
 #include <L4D2ModelChanger>
 #pragma newdecls required
 
+
 #define PLUGIN_NAME "LMC_RandomSpawns"
 #define PLUGIN_VERSION "1.0"
 
