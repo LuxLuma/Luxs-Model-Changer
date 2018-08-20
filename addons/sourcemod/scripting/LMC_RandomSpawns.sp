@@ -29,7 +29,6 @@ enum ZOMBIECLASS
 	ZOMBIECLASS_TANK,
 }
 
-
 enum LMCModelSectionType
 {
 	LMCModelSectionType_Human = 0,
@@ -361,7 +360,7 @@ bool ChooseRNGModel(char sModel[PLATFORM_MAX_PATH])
 			if(!g_bTankModel && (iRNG == view_as<int>(LMCSpecialModelType_Tank) || view_as<int>(LMCSpecialModelType_TankDLC3)))
 				return false;
 			
-			strcopy(sModel, sizeof(sModel), sSpecialPaths[GetRandomInt(0, SPECIAL_MODEL_PATH_SIZE)]);
+			strcopy(sModel, sizeof(sModel), sSpecialPaths[iRNG]);
 		}
 		case LMCModelSectionType_UnCommon:
 			strcopy(sModel, sizeof(sModel), sUnCommonPaths[GetRandomInt(0, UNCOMMON_MODEL_PATH_SIZE)]);
