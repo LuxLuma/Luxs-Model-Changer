@@ -274,7 +274,9 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 	if(iClient < 1 || iClient > MaxClients)
 		return;
 	
-	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient) || (!IsFakeClient(iClient) && !g_bRNGHumans))
+	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
+		return;
+	if(!IsFakeClient(iClient) && !g_bRNGHumans)
 		return;
 	
 	SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 0);
@@ -367,8 +369,9 @@ bool ChooseRNGModel(char sModel[PLATFORM_MAX_PATH])
 		case LMCModelSectionType_Special:
 		{
 			int iRNG = GetRandomInt(0, SPECIAL_MODEL_PATH_SIZE);
-			if(!g_bTankModel && (iRNG == view_as<int>(LMCSpecialModelType_Tank) || view_as<int>(LMCSpecialModelType_TankDLC3)))
-				return false;
+			if(!g_bTankModel)
+				if(iRNG == view_as<int>(LMCSpecialModelType_Tank) || iRNG == view_as<int>(LMCSpecialModelType_TankDLC3))
+					return false;
 			
 			strcopy(sModel, sizeof(sModel), sSpecialPaths[iRNG]);
 		}
