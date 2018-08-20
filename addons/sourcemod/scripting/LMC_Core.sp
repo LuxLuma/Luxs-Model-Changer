@@ -4,7 +4,7 @@
 #include <sdkhooks>
 #pragma newdecls required
 
-#define PLUGIN_VERSION "cakebuildD"
+#define PLUGIN_VERSION "2.5"
 
 enum ZOMBIECLASS
 {
@@ -18,12 +18,11 @@ enum ZOMBIECLASS
 	ZOMBIECLASS_TANK,
 }
 
-static int iHiddenOwner[2048+1] = {0, ...};
+
 static int iHiddenEntity[2048+1] = {0, ...};
 static int iHiddenEntityRef[2048+1];
 static int iHiddenIndex[MAXPLAYERS+1] = {0, ...};
-static bool bThirdPerson[MAXPLAYERS+1] = {false, ...};
-
+static int iHiddenOwner[2048+1] = {0, ...};
 static Handle hCvar_AggressiveChecks = INVALID_HANDLE;
 static bool g_bAggressiveChecks = false;
 
@@ -31,15 +30,27 @@ Handle g_hOnClientModelApplied = INVALID_HANDLE;
 Handle g_hOnClientModelChanged = INVALID_HANDLE;
 Handle g_hOnClientModelDestroyed = INVALID_HANDLE;
 
+static bool bL4D2 = false;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	RegPluginLibrary("L4D2ModelChanger");
+	EngineVersion iEngineVersion = GetEngineVersion();
+	if(iEngineVersion == Engine_Left4Dead2)
+		bL4D2 = true;
+	else if(iEngineVersion == Engine_Left4Dead)
+		bL4D2 = false;
+	else
+	{
+		strcopy(error, err_max, "Plugin only supports Left 4 Dead 1/2");
+		return APLRes_SilentFailure;
+	}
+	
+	RegPluginLibrary("L4D2ModelChanger");// for compatibility with older plugins
+	RegPluginLibrary("LMC_Core");
 	CreateNative("LMC_GetClientOverlayModel", GetOverlayModel);
 	CreateNative("LMC_SetClientOverlayModel", SetOverlayModel);
 	CreateNative("LMC_SetEntityOverlayModel", SetEntityOverlayModel);
 	CreateNative("LMC_GetEntityOverlayModel", GetEntityOverlayModel);
 	CreateNative("LMC_HideClientOverlayModel", HideOverlayModel);
-	CreateNative("LMC_SetTransmit", SetTransmit);
 	CreateNative("LMC_ResetRenderMode", ResetRenderMode);
 	
 	g_hOnClientModelApplied = CreateGlobalForward("LMC_OnClientModelApplied", ET_Event, Param_Cell, Param_Cell, Param_String, Param_Cell);
@@ -156,7 +167,6 @@ int BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
 	Call_PushCell(bBaseReattach);
 	Call_Finish();
 	
-	SDKHook(iEntity, SDKHook_SetTransmit, HideModel);
 	return iEntity;
 }
 
@@ -214,60 +224,6 @@ void CheckForSameModel(int iEntity, const char[] sPendingModel)// justincase
 	PrintToServer("[LMC][%i]%s(NetClass) overlay_model is the same as base model! \"%s\"", iEntity, sNetClass, sModel);// used netclass because classname can be changed!
 }
 
-public Action HideModel(int iEntity, int iClient)
-{
-	if(IsFakeClient(iClient))
-		return Plugin_Continue;
-	
-	if(!IsPlayerAlive(iClient))
-		if(GetEntProp(iClient, Prop_Send, "m_iObserverMode") == 4)
-			if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == GetClientOfUserId(iHiddenOwner[iEntity]))
-				return Plugin_Handled;
-	
-	static int iOwner;
-	iOwner = GetClientOfUserId(iHiddenOwner[iEntity]);
-	
-	if(iOwner < 1 || !IsClientInGame(iOwner))
-		return Plugin_Continue;
-	
-	switch(GetClientTeam(iOwner)) 
-	{
-		case 2: 
-		{
-			if(iOwner != iClient)
-				return Plugin_Continue;
-			
-			if(!IsSurvivorThirdPerson(iClient))
-				return Plugin_Handled;
-		}
-		case 3: 
-		{
-			static bool bIsGhost;
-			bIsGhost = GetEntProp(iOwner, Prop_Send, "m_isGhost", 1) > 0;
-			
-			if(iOwner != iClient) 
-			{
-				//Hide model for everyone else when is ghost mode exapt me
-				if(bIsGhost)
-					return Plugin_Handled;
-			}
-			else 
-			{
-				// Hide my model when not in thirdperson
-				if(bIsGhost)
-					SetEntityRenderMode(iOwner, RENDER_NONE);
-				
-				if(!IsInfectedThirdPerson(iOwner))
-					return Plugin_Handled;
-			}
-		}
-	}
-	
-	return Plugin_Continue;
-}
-
-
-
 public void OnGameFrame()
 {
 	if(!IsServerProcessing())
@@ -286,15 +242,18 @@ public void OnGameFrame()
 			static int iEnt;
 			iEnt = EntRefToEntIndex(iHiddenIndex[iClient]);
 			
-			if((GetEntProp(iClient, Prop_Send, "m_nGlowRange") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRange") == 0)
-					&& (GetEntProp(iClient, Prop_Send, "m_iGlowType") > 0 && GetEntProp(iEnt, Prop_Send, "m_iGlowType") == 0)
-					&& (GetEntProp(iClient, Prop_Send, "m_glowColorOverride") > 0 && GetEntProp(iEnt, Prop_Send, "m_glowColorOverride") == 0)
-					&& (GetEntProp(iClient, Prop_Send, "m_nGlowRangeMin") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin") == 0))
+			if(bL4D2)
 			{
-				SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(iClient, Prop_Send, "m_nGlowRange"));
-				SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(iClient, Prop_Send, "m_iGlowType"));
-				SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(iClient, Prop_Send, "m_glowColorOverride"));
-				SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(iClient, Prop_Send, "m_nGlowRangeMin"));
+				if((GetEntProp(iClient, Prop_Send, "m_nGlowRange") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRange") == 0)
+						&& (GetEntProp(iClient, Prop_Send, "m_iGlowType") > 0 && GetEntProp(iEnt, Prop_Send, "m_iGlowType") == 0)
+						&& (GetEntProp(iClient, Prop_Send, "m_glowColorOverride") > 0 && GetEntProp(iEnt, Prop_Send, "m_glowColorOverride") == 0)
+						&& (GetEntProp(iClient, Prop_Send, "m_nGlowRangeMin") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin") == 0))
+				{
+					SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(iClient, Prop_Send, "m_nGlowRange"));
+					SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(iClient, Prop_Send, "m_iGlowType"));
+					SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(iClient, Prop_Send, "m_glowColorOverride"));
+					SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(iClient, Prop_Send, "m_nGlowRangeMin"));
+				}
 			}
 		}
 		else if(g_bAggressiveChecks && !IsValidEntRef(iHiddenEntityRef[iClient]))
@@ -326,45 +285,23 @@ public void OnGameFrame()
 		SetEntityRenderFx(iEntity, RENDERFX_HOLOGRAM);
 		SetEntityRenderColor(iEntity, 0, 0, 0, 0);
 		
-		
-		if((GetEntProp(iEntity, Prop_Send, "m_nGlowRange") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRange") == 0)
-				&& (GetEntProp(iEntity, Prop_Send, "m_iGlowType") > 0 && GetEntProp(iEnt, Prop_Send, "m_iGlowType") == 0)
-				&& (GetEntProp(iEntity, Prop_Send, "m_glowColorOverride") > 0 && GetEntProp(iEnt, Prop_Send, "m_glowColorOverride") == 0)
-				&& (GetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin") == 0))
+		if(bL4D2)
 		{
-			SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(iEntity, Prop_Send, "m_nGlowRange"));
-			SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(iEntity, Prop_Send, "m_iGlowType"));
-			SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(iEntity, Prop_Send, "m_glowColorOverride"));
-			SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin"));
+			if((GetEntProp(iEntity, Prop_Send, "m_nGlowRange") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRange") == 0)
+					&& (GetEntProp(iEntity, Prop_Send, "m_iGlowType") > 0 && GetEntProp(iEnt, Prop_Send, "m_iGlowType") == 0)
+					&& (GetEntProp(iEntity, Prop_Send, "m_glowColorOverride") > 0 && GetEntProp(iEnt, Prop_Send, "m_glowColorOverride") == 0)
+					&& (GetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin") > 0 && GetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin") == 0))
+			{
+				SetEntProp(iEnt, Prop_Send, "m_nGlowRange", GetEntProp(iEntity, Prop_Send, "m_nGlowRange"));
+				SetEntProp(iEnt, Prop_Send, "m_iGlowType", GetEntProp(iEntity, Prop_Send, "m_iGlowType"));
+				SetEntProp(iEnt, Prop_Send, "m_glowColorOverride", GetEntProp(iEntity, Prop_Send, "m_glowColorOverride"));
+				SetEntProp(iEnt, Prop_Send, "m_nGlowRangeMin", GetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin"));
+			}
 		}
 	}
 	iEntity++;
 }
 
-
-
-public int SetTransmit(Handle plugin, int numParams)
-{
-	if(numParams < 2)
-		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
-	
-	int iClient = GetNativeCell(1);
-	if(iClient < 1 || iClient > MaxClients)
-		ThrowNativeError(SP_ERROR_PARAM, "Client index out of bounds %i", iClient);
-	
-	if(!IsValidEntRef(iHiddenIndex[iClient]))
-		return false;
-	
-	bool bType = view_as<bool>(GetNativeCell(2));
-	
-	if(bType)
-	{
-		SDKHook(iHiddenIndex[iClient], SDKHook_SetTransmit, HideModel);
-		return true;
-	}
-	SDKUnhook(iHiddenIndex[iClient], SDKHook_SetTransmit, HideModel);
-	return true;
-}
 
 public int GetOverlayModel(Handle plugin, int numParams)
 {
@@ -383,7 +320,7 @@ public int GetOverlayModel(Handle plugin, int numParams)
 
 public int SetOverlayModel(Handle plugin, int numParams)
 {
-	if(numParams < 2)
+	if(numParams < 3)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
 	
 	int iClient = GetNativeCell(1);
@@ -396,6 +333,7 @@ public int SetOverlayModel(Handle plugin, int numParams)
 	
 	if(sModel[0] == '\0')
 		ThrowNativeError(SP_ERROR_PARAM, "Error Empty String");
+	
 	
 	return BeWitched(iClient, sModel, false);
 }
@@ -463,7 +401,7 @@ public void OnEntityDestroyed(int iEntity)
 		return;
 	
 	int iClient = GetClientOfUserId(iHiddenOwner[iEntity]);
-	if(iClient > 0)
+	if(iClient < 1)
 		return;
 	
 	iHiddenOwner[iEntity] = -1;
@@ -472,7 +410,7 @@ public void OnEntityDestroyed(int iEntity)
 	
 	Call_StartForward(g_hOnClientModelDestroyed);
 	Call_PushCell(iClient);
-	Call_PushCell(EntRefToEntIndex(iHiddenIndex[iClient]));//now returns entity index 
+	Call_PushCell(EntRefToEntIndex(iHiddenIndex[iClient]));
 	Call_Finish();
 }
 
@@ -525,205 +463,10 @@ public void eTeamChange(Handle hEvent, const char[] sEventName, bool bDontBroadc
 	iHiddenIndex[iClient] = -1;
 }
 
-public void TP_OnThirdPersonChanged(int iClient, bool bIsThirdPerson)
-{
-	bThirdPerson[iClient] = bIsThirdPerson;
-}
-
 static bool IsValidEntRef(int iEntRef)
 {
 	return (iEntRef != 0 && EntRefToEntIndex(iEntRef) != INVALID_ENT_REFERENCE);
 }
-static bool IsSurvivorThirdPerson(int iClient)
-{
-	if(bThirdPerson[iClient])
-		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_hViewEntity") > 0)
-		return true;
-	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
-		return true;
-	if(GetEntProp(iClient, Prop_Send, "m_iObserverMode") == 1)
-		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_pummelAttacker") > 0)
-		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_carryAttacker") > 0)
-		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_pounceAttacker") > 0)
-		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_jockeyAttacker") > 0)
-		return true;
-	if(GetEntProp(iClient, Prop_Send, "m_isHangingFromLedge") > 0)
-		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_reviveTarget") > 0)
-		return true;
-	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
-		return true;
-	switch(GetEntProp(iClient, Prop_Send, "m_iCurrentUseAction"))
-	{
-		case 1:
-		{
-			static int iTarget;
-			iTarget = GetEntPropEnt(iClient, Prop_Send, "m_useActionTarget");
-			
-			if(iTarget == GetEntPropEnt(iClient, Prop_Send, "m_useActionOwner"))
-				return true;
-			else if(iTarget != iClient)
-				return true;
-		}
-		case 4, 5, 6, 7, 8, 9, 10:
-		return true;
-	}
-	
-	static char sModel[31];
-	GetEntPropString(iClient, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-	
-	switch(sModel[29])
-	{
-		case 'b'://nick
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 626, 625, 624, 623, 622, 621, 661, 662, 664, 665, 666, 667, 668, 670, 671, 672, 673, 674, 620, 680, 616:
-				return true;
-			}
-		}
-		case 'd'://rochelle
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 674, 678, 679, 630, 631, 632, 633, 634, 668, 677, 681, 680, 676, 675, 673, 672, 671, 670, 687, 629, 625, 616:
-				return true;
-			}
-		}
-		case 'c'://coach
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 656, 622, 623, 624, 625, 626, 663, 662, 661, 660, 659, 658, 657, 654, 653, 652, 651, 621, 620, 669, 615:
-				return true;
-			}
-		}
-		case 'h'://ellis
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 625, 675, 626, 627, 628, 629, 630, 631, 678, 677, 676, 575, 674, 673, 672, 671, 670, 669, 668, 667, 666, 665, 684, 621:
-				return true;
-			}
-		}
-		case 'v'://bill
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 528, 759, 763, 764, 529, 530, 531, 532, 533, 534, 753, 676, 675, 761, 758, 757, 756, 755, 754, 527, 772, 762, 522:
-				return true;
-			}
-		}
-		case 'n'://zoey
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 537, 819, 823, 824, 538, 539, 540, 541, 542, 543, 813, 828, 825, 822, 821, 820, 818, 817, 816, 815, 814, 536, 809, 572:
-				return true;
-			}
-		}
-		case 'e'://francis
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 532, 533, 534, 535, 536, 537, 769, 768, 767, 766, 765, 764, 763, 762, 761, 760, 759, 758, 757, 756, 531, 530, 775, 525:
-				return true;
-			}
-		}
-		case 'a'://louis
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 529, 530, 531, 532, 533, 534, 766, 765, 764, 763, 762, 761, 760, 759, 758, 757, 756, 755, 754, 753, 527, 772, 528, 522:
-				return true;
-			}
-		}
-		case 'w'://adawong
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 674, 678, 679, 630, 631, 632, 633, 634, 668, 677, 681, 680, 676, 675, 673, 672, 671, 670, 687, 629, 625, 616:
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-static bool IsInfectedThirdPerson(int iClient)
-{
-	if(bThirdPerson[iClient])
-		return true;
-	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
-		return true;
-	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
-		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_hViewEntity") > 0)
-		return true;
-	
-	switch(GetEntProp(iClient, Prop_Send, "m_zombieClass"))
-	{
-		case ZOMBIECLASS_SMOKER:
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 30, 31, 32, 36, 37, 38, 39:
-				return true;
-			}
-		}
-		case ZOMBIECLASS_HUNTER:
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 38, 39, 40, 41, 42, 43, 45, 46, 47, 48, 49:
-				return true;
-			}
-		}
-		case ZOMBIECLASS_SPITTER:
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 17, 18, 19, 20:
-				return true;
-			}
-		}
-		case ZOMBIECLASS_JOCKEY:
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 8 , 15, 16, 17, 18:
-				return true;
-			}
-		}
-		case ZOMBIECLASS_CHARGER:
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 5, 27, 28, 29, 31, 32, 33, 34, 35, 39, 40, 41, 42:
-				return true;
-			}
-		}
-		case ZOMBIECLASS_TANK:
-		{
-			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
-			{
-				case 28, 29, 30, 31, 49, 50, 51, 73, 74, 75, 76 ,77:
-				return true;
-			}
-		}
-	}
-	
-	return false;
-}
-
-
-
-
 
 
 //deprecated stuff

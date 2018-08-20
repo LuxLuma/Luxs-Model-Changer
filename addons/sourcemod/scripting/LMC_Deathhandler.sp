@@ -2,15 +2,12 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-//#include <L4D2ModelChanger>
+#include <L4D2ModelChanger>
 #pragma newdecls required
 
-native int LMC_GetClientOverlayModel(int iClient);
-native int LMC_GetEntityOverlayModel(int iEntity);
-native bool LMC_SetTransmit(int iClient, bool HookAction);
-
 #define PLUGIN_NAME "LMC_Deathhandler"
-#define PLUGIN_VERSION "cakewhaE"
+#define PLUGIN_VERSION "1.0"
+
 
 static bool bIsIncapped[MAXPLAYERS+1] = {false, ...};
 static bool bHideDeathModel = false;
@@ -23,6 +20,13 @@ Handle g_hOnClientDeathModelCreated = INVALID_HANDLE;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
+	if(GetEngineVersion() != Engine_Left4Dead2 )
+	{
+		strcopy(error, err_max, "Plugin only supports Left 4 Dead 2");
+		return APLRes_SilentFailure;
+	}
+	
+	RegPluginLibrary("LMC_Deathhandler");
 	g_hOnClientDeathModelCreated  = CreateGlobalForward("LMC_OnClientDeathModelCreated", ET_Event, Param_Cell, Param_Cell, Param_Cell);
 	return APLRes_Success;
 }
@@ -31,15 +35,17 @@ public Plugin myinfo =
 {
 	name = "LMC_Deathhandler",
 	author = "Lux",
-	description = "Manages deaths regarding lmc, overlay deathmodels and ragdolls, and fixes clonesurvivors deathmodels teleporting around.",
+	description = "Manages deaths regarding lmc, overlay deathmodels and ragdolls, and fixes clonesurvivors deathmodels teleporting around, module required to handle (witch & common deaths)",
 	version = PLUGIN_VERSION,
 	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
 };
 
 public void OnAllPluginsLoaded()
 {
-	if(!LibraryExists("L4D2ModelChanger"))
+	if(!LibraryExists("LMC_Core"))
 		SetFailState("[LMC]LMC_Core notloaded, load LMC_Core and reload %s.", PLUGIN_NAME);
+	if(!LibraryExists("LMC_L4D2_SetTransmit"))
+		SetFailState("[LMC]LMC_L4D2_SetTransmit notloaded, load LMC_L4D2_SetTransmit and reload %s.", PLUGIN_NAME);
 }
 
 public void OnPluginStart()
@@ -241,7 +247,7 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 		SetEntProp(iEntity, Prop_Send, "m_glowColorOverride", 0);
 		SetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin", 0);
 		
-		LMC_SetTransmit(iVictim, false);
+		LMC_L4D2_SetTransmit(iVictim, iEntity, false);
 		
 		if(iTeam != 2)
 			return;
