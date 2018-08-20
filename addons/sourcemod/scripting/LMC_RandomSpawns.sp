@@ -68,7 +68,7 @@ enum LMCHumanModelType
 	LMCHumanModelType_Pilot
 };
 
-static char sSpecialPaths[SPECIAL_MODEL_PATH_SIZE][] =
+static const char sSpecialPaths[SPECIAL_MODEL_PATH_SIZE][] =
 {
 	"models/infected/witch.mdl",
 	"models/infected/witch_bride.mdl",
@@ -276,7 +276,7 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 	
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
 		return;
-	if(!IsFakeClient(iClient) && !g_bRNGHumans)
+	if(!g_bRNGHumans && !IsFakeClient(iClient))
 		return;
 	
 	SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 0);
