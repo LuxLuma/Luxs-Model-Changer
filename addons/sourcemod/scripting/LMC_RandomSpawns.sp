@@ -345,7 +345,8 @@ public void NextFrame(int iUserID)
 			if(!ChooseRNGModel(sModel))
 				return;
 	}
-	LMC_SetClientOverlayModel(iClient, sModel);
+	if(!SameModel(iClient, sModel))
+		LMC_SetClientOverlayModel(iClient, sModel);
 }
 
 bool ChooseRNGModel(char sModel[PLATFORM_MAX_PATH])
@@ -368,4 +369,11 @@ bool ChooseRNGModel(char sModel[PLATFORM_MAX_PATH])
 			strcopy(sModel, sizeof(sModel), sCommonPaths[GetRandomInt(0, COMMON_MODEL_PATH_SIZE)]);
 	}
 	return true;
+}
+
+bool SameModel(int iClient, const char[] sPendingModel)
+{
+	char sModel[PLATFORM_MAX_PATH];
+	GetEntPropString(iClient, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+	return StrEqual(sModel, sPendingModel, false);
 }

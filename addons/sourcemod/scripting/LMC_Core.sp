@@ -707,5 +707,5 @@ static bool IsInfectedThirdPerson(int iClient)
 //deprecated stuff
 public int HideOverlayModel(Handle plugin, int numParams)
 {
-	ThrowNativeError(SP_ERROR_NONE, "Deprecated function not longer included in LMC since ADD_VERSION.");//add version
+	ThrowNativeError(SP_ERROR_NOT_RUNNABLE, "Deprecated function not longer included in LMC since \"ADD_VERSION\" use older build if you want to use this function.");//add version
 }
