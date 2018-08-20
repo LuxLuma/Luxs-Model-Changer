@@ -202,7 +202,7 @@ void CheckForSameModel(int iEntity, const char[] sPendingModel)// justincase
 	if(!StrEqual(sModel, sPendingModel, false))
 		return;
 	
-	PrintToServer("[LMC][%i]%s(NetClass) overlay_model is the same as base model! \"%s\"", iEntity, sNetClass, sModel);
+	PrintToServer("[LMC][%i]%s(NetClass) overlay_model is the same as base model! \"%s\"", iEntity, sNetClass, sModel);// used netclass because classname can be changed!
 }
 
 public Action HideModel(int iEntity, int iClient)
