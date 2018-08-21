@@ -360,8 +360,19 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 	if(iSavedModel[iClient] < 2)
 		return;
 		
+	RequestFrame(NextFrame, GetClientUserId(iClient));
+}
+
+public void NextFrame(int iUserID)
+{
+	int iClient = GetClientOfUserId(iUserID);
+	if(iClient < 1 || !IsClientInGame(iClient))
+		return;
+	
 	ModelIndex(iClient, iSavedModel[iClient], false);
 }
+
+
 
 /*borrowed some code from csm*/
 public Action ShowMenu(int iClient, int iArgs)
