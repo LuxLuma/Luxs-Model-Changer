@@ -15,7 +15,7 @@
 #pragma newdecls required
 
 
-#define PLUGIN_NAME "LMC_Menu_Choosing"
+#define PLUGIN_NAME "LMC_L4D2_Menu_Choosing"
 #define PLUGIN_VERSION "1.0"
 
 //change me to whatever flag you want
