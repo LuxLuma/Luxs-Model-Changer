@@ -1,9 +1,17 @@
 #pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
-#include <sdkhooks>
+
+#define REQUIRE_EXTENSIONS
 #include <clientprefs>
-#include <L4D2ModelChanger>
+#define REQUIRE_EXTENSIONS
+
+#define REQUIRE_PLUGIN
+#include <LMCCore>
+#include <LMCL4D2CDeathHandler>
+#include <LMCL4D2SetTransmit>
+#undef REQUIRE_PLUGIN
+
 #pragma newdecls required
 
 
@@ -205,18 +213,6 @@ public Plugin myinfo =
 	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
 };
 
-public void OnAllPluginsLoaded()
-{
-	if(!LibraryExists("LMC_Core"))
-		SetFailState("[LMC]LMC_Core notloaded, load LMC_Core and reload %s.", PLUGIN_NAME);
-	if(!LibraryExists("LMC_Deathhandler"))
-		SetFailState("[LMC]LMC_Deathhandler notloaded, load LMC_Deathhandler and reload %s.", PLUGIN_NAME);
-	if(!LibraryExists("LMC_L4D2_SetTransmit"))
-		SetFailState("[LMC]LMC_L4D2_SetTransmit notloaded, load LMC_L4D2_SetTransmit and reload %s.", PLUGIN_NAME);
-	
-	HookCvars();
-}
-
 public void OnPluginStart()
 {
 	CreateConVar("lmc_sharedcvars_version", PLUGIN_VERSION, "LMC_SharedCvars_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
@@ -301,8 +297,7 @@ public void OnMapStart()
 
 public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
-	int iUserID = GetEventInt(hEvent, "userid");
-	int iClient = GetClientOfUserId(iUserID);
+	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if(iClient < 1 || iClient > MaxClients)
 		return;
 	
@@ -365,15 +360,6 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 	if(iSavedModel[iClient] < 2)
 		return;
 		
-	RequestFrame(NextFrame, iUserID);
-}
-
-public void NextFrame(int iUserID)
-{
-	int iClient = GetClientOfUserId(iUserID);
-	if(iClient < 1 || !IsClientInGame(iClient) || !IsPlayerAlive(iClient))
-		return;
-	
 	ModelIndex(iClient, iSavedModel[iClient], false);
 }
 
@@ -972,9 +958,6 @@ bool CheckForSameModel(int iClient, LMCModelSectionType iModelSectionType, int i
 
 void ResetDefaultModel(int iClient)
 {
-	
-	
-	
 	int iOverlayModel = LMC_GetClientOverlayModel(iClient);
 	if(iOverlayModel > -1)
 		AcceptEntityInput(iOverlayModel, "kill");
@@ -1014,4 +997,10 @@ public void OnClientCookiesCached(int iClient)
 			return;
 	
 	ModelIndex(iClient, iSavedModel[iClient], false);
+}
+
+public void LMC_OnClientModelApplied(int iClient, int iEntity, const char sModel[PLATFORM_MAX_PATH], bool bBaseReattach)
+{
+	if(bBaseReattach)//if true because orignal overlay model has been killed
+		LMC_L4D2_SetTransmit(iClient, iEntity);
 }

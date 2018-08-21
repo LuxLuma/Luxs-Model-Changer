@@ -5,7 +5,7 @@
 #pragma newdecls required
 
 
-#define PLUGIN_VERSION "2.5"
+#define PLUGIN_VERSION "3.0"
 
 enum ZOMBIECLASS
 {
@@ -46,7 +46,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 	}
 	
 	RegPluginLibrary("L4D2ModelChanger");// for compatibility with older plugins
-	RegPluginLibrary("LMC_Core");
+	RegPluginLibrary("LMCCore");
 	CreateNative("LMC_GetClientOverlayModel", GetOverlayModel);
 	CreateNative("LMC_SetClientOverlayModel", SetOverlayModel);
 	CreateNative("LMC_SetEntityOverlayModel", SetEntityOverlayModel);
@@ -63,7 +63,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public Plugin myinfo =
 {
-	name = "LMC_Core",
+	name = "LMCCore",
 	author = "Lux",
 	description = "Core of LMC, manages overlay models",
 	version = PLUGIN_VERSION,
@@ -73,12 +73,12 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	CreateConVar("lmc_core_version", PLUGIN_VERSION, "LMC_Core_version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
+	CreateConVar("lmccore_version", PLUGIN_VERSION, "LMCCore_version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
 	
 	hCvar_AggressiveChecks = CreateConVar("lmc_aggressive_model_checks", "0", "1 = (When client has no lmc model (enforce aggressive model showing base model render mode)) 0 = (compatibility mode (should help with plugins like incap crawling) Depends on the plugin)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	HookConVarChange(hCvar_AggressiveChecks, eConvarChanged);
 	CvarsChanged();
-	AutoExecConfig(true, "LMC_Core");
+	AutoExecConfig(true, "LMCCore");
 	
 	HookEvent("player_team", eTeamChange);
 	HookEvent("player_incapacitated", eSetColour);

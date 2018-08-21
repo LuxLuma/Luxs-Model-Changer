@@ -4,9 +4,20 @@
 
 #define PLUGIN_VERSION "1.0"
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	EngineVersion iEngineVersion = GetEngineVersion();
+	if(iEngineVersion != Engine_Left4Dead2 && iEngineVersion != Engine_Left4Dead)
+	{
+		strcopy(error, err_max, "Plugin only supports Left 4 Dead 1/2");
+		return APLRes_SilentFailure;
+	}	
+	return APLRes_Success;
+}
+
 public Plugin myinfo =
 {
-	name = "LMC_SharedCvars",
+	name = "LMCSharedCvars",
 	author = "Lux",
 	description = "Modules that sharecvars are put in here",
 	version = PLUGIN_VERSION,

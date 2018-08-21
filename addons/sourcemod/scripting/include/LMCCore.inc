@@ -1,22 +1,28 @@
 /*
-*	LMC_Core Library is called "LMC_Core" (Deprecated lib name is "L4D2ModelChanger")
+*	LMCCore Library is called "LMCCore" (Deprecated lib name is "L4D2ModelChanger")
 *	for anyone looking to do a dynamic use of LMC
 *	
-*	LMC_OnClientDeathModelCreated module is required to get forwarded, Library is called "LMC_Deathhandler"
-*	
-*	LMC_L4D2_SetTransmit() module "LMC_L4D2_SetTransmit" required to use native, Library is called "LMC_L4D2_SetTransmit"
+*	https://github.com/LuxLuma/-L4D2-Left-4-Dead-2-Model-Changer/
 *	
 *	if you plan on using deprecated functions you will need to use an olderbuild from before 2.0.3
 *	https://github.com/LuxLuma/-L4D2-Left-4-Dead-2-Model-Changer/releases
+*	
+*	
+*	Library Names:				Plugin Names:					Info:
+*	"LMCCore"					(LMCCore.smx)					Core of LMC
+*	"LMCCDeathHandler"			(LMCCDeathHandler.smx)			Handles client deathmodels and ragdolls
+*	"LMCEDeathHandler"			(LMCEDeathHandler.smx)			Handles entity ragdolls
+*	"LMCL4D2SetTransmit"		(LMCL4D2SetTransmit.smx)		Handles L4D2 SetTransmitting
 */
 
-#if defined _L4D2ModelChanger_included
+
+#if defined _LMCCore_included
 #endinput
 #endif
-#define _L4D2ModelChanger_included
+#define _LMCCore_included
 
-#define L4D2ModelChanger_include_version "2.5"
 
+#define LMCCore_version "2.5"
 
 
 
@@ -52,16 +58,6 @@ native int LMC_GetClientOverlayModel(int iClient);
 *   @return								Overlay Model index, -1 on unable create.
 */
 native int LMC_SetClientOverlayModel(int iClient, const char[] sModel);
-
-/**
-*	Unhook/hook LMC's SetTransmit in LMC_L4D2_SetTransmit module
-*	
-*	@param iClient		Client index owner of the iEntity 
-*	@param iEntity		Entity to hook/unhook
-*	@param Unhook/hook	True to HookEntity, false to Unhook entity
-*	@return 			return true if was hooked/unhooked, false entity has no overlay model
-*/
-native bool LMC_L4D2_SetTransmit(int iClient, int iEntity, bool HookAction=true);
 
 /**
 *	Reset's entity's rendermode and Entity(colour) back to default(able to see)
@@ -102,16 +98,6 @@ forward void LMC_OnClientModelApplied(int iClient, int iEntity, const char sMode
 */
 forward void LMC_OnClientModelDestroyed(int iClient, int iEntity);
 
-/**
-*	This is called when lmc_hide_defib_model > -1 cvar
-*	@Note only called if LMC_Deathhandler module is installed
-*
-*	@param 	iClient		Client Index who died.
-*	@param 	iEntity		Entity Index of Deathmodel for client who died
-*	@param	iOverlayModel 	Entity Index of Deathmodel overlaymodel -1 if don't exist
-*	@no return
-*/
-forward void LMC_OnClientDeathModelCreated(int iClient, int iDeathModel, int iOverlayModel);
 
 
 
@@ -194,3 +180,26 @@ enum LMCModelType
 *   @return Plugin_Handled/Plugin_Stop to block, Plugin_Changed to change model Index
 */
 forward Action LMC_OnClientModelAppliedPre(int iClient, LMCModelType &iModel);
+
+public SharedPlugin __pl_LMCCore = 
+{
+	name = "LMCCore",
+	file = "LMCCore.smx",
+#if defined REQUIRE_PLUGIN
+	required = 1,
+#else
+	required = 0,
+#endif
+};
+
+#if !defined REQUIRE_PLUGIN
+public void __pl_LMCCore_SetNTVOptional()
+{
+	MarkNativeAsOptional("LMC_GetEntityOverlayModel");
+	MarkNativeAsOptional("LMC_SetEntityOverlayModel");
+	MarkNativeAsOptional("LMC_GetClientOverlayModel");
+	MarkNativeAsOptional("LMC_SetClientOverlayModel");
+	MarkNativeAsOptional("LMC_ResetRenderMode");
+	MarkNativeAsOptional("LMC_HideClientOverlayModel");
+}
+#endif

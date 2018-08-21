@@ -1,8 +1,13 @@
 #pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
-#include <sdkhooks>
-#include <L4D2ModelChanger>
+
+#define REQUIRE_PLUGIN
+#include <LMCCore>
+#include <LMCL4D2CDeathHandler>
+#include <LMCL4D2SetTransmit>
+#undef REQUIRE_PLUGIN
+
 #pragma newdecls required
 
 
@@ -188,30 +193,18 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public Plugin myinfo =
 {
-	name = "LMC_RandomSpawns",
+	name = PLUGIN_NAME,
 	author = "Lux",
 	description = "Makes lmc models random for humans&ai",
 	version = PLUGIN_VERSION,
 	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
 };
 
-public void OnAllPluginsLoaded()
-{
-	if(!LibraryExists("LMC_Core"))
-		SetFailState("[LMC]LMC_Core notloaded, load LMC_Core and reload %s.", PLUGIN_NAME);
-	if(!LibraryExists("LMC_Deathhandler"))
-		SetFailState("[LMC]LMC_Deathhandler notloaded, load LMC_Deathhandler and reload %s.", PLUGIN_NAME);
-	if(!LibraryExists("LMC_L4D2_SetTransmit"))
-		SetFailState("[LMC]LMC_L4D2_SetTransmit notloaded, load LMC_L4D2_SetTransmit and reload %s.", PLUGIN_NAME);
-	
-	HookCvars();
-}
-
 public void OnPluginStart()
 {
 	CreateConVar("lmc_randomaispawns_version", PLUGIN_VERSION, "LMC_RandomAiSpawns_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
-	hCvar_RNGHumans = CreateConVar("lmc_rng_humans", "0", "Allow humans to be considered by rng, menu selection will overwrite this in LMC_Menu_Choosing", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	hCvar_Survivors = CreateConVar("lmc_rng_model_survivor", "10", "(0 = disable custom models)chance on which will get a custom model", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	hCvar_RNGHumans = CreateConVar("lmc_rng_humans", "10", "Allow humans to be considered by rng, menu selection will overwrite this in LMC_Menu_Choosing", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	hCvar_Survivors = CreateConVar("lmc_rng_model_survivor", "0", "(0 = disable custom models)chance on which will get a custom model", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 	hCvar_Infected = CreateConVar("lmc_rng_model_infected", "20", "(0 = disable custom models)chance on which will get a custom model", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 	HookConVarChange(hCvar_RNGHumans, eConvarChanged);
 	HookConVarChange(hCvar_Survivors, eConvarChanged);
@@ -344,6 +337,7 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 			return;
 		}
 	}
+	
 	RequestFrame(NextFrame, iUserID);
 }
 
@@ -407,4 +401,10 @@ bool SameModel(int iClient, const char[] sPendingModel)
 	char sModel[PLATFORM_MAX_PATH];
 	GetEntPropString(iClient, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 	return StrEqual(sModel, sPendingModel, false);
+}
+
+public void LMC_OnClientModelApplied(int iClient, int iEntity, const char sModel[PLATFORM_MAX_PATH], bool bBaseReattach)
+{
+	if(bBaseReattach)//if true because orignal overlay model has been killed
+		LMC_L4D2_SetTransmit(iClient, iEntity);
 }

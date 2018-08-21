@@ -2,11 +2,10 @@
 #include <sourcemod>
 #include <sdktools>
 #include <sdkhooks>
-#include <L4D2ModelChanger>
 #pragma newdecls required
 
 
-#define PLUGIN_NAME "LMC_L4D2_SetTransmit"
+#define PLUGIN_NAME "LMCL4D2SetTransmit"
 #define PLUGIN_VERSION "1.0"
 
 enum ZOMBIECLASS
@@ -31,7 +30,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 		strcopy(error, err_max, "Plugin only supports Left 4 Dead 2");
 		return APLRes_SilentFailure;
 	}
-	RegPluginLibrary("LMC_L4D2_SetTransmit");
+	RegPluginLibrary("LMCL4D2SetTransmit");
 	CreateNative("LMC_L4D2_SetTransmit", SetTransmit);
 	return APLRes_Success;
 }
@@ -40,10 +39,15 @@ public Plugin myinfo =
 {
 	name = PLUGIN_NAME,
 	author = "Lux",
-	description = "Manages transmitting models to clients",
+	description = "Manages transmitting models to clients in L4D2",
 	version = PLUGIN_VERSION,
 	url = "https://forums.alliedmods.net/showthread.php?p=2607394"
 };
+
+public void OnPluginStart()
+{
+	CreateConVar("lmcl4d2settransmit_version", PLUGIN_VERSION, "LMCL4D2SetTransmit_version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
+}
 
 
 public Action HideModel(int iEntity, int iClient)
@@ -51,17 +55,16 @@ public Action HideModel(int iEntity, int iClient)
 	if(IsFakeClient(iClient))
 		return Plugin_Continue;
 	
+	static int iOwner;
+	iOwner = GetClientOfUserId(iHiddenOwner[iEntity]);
 	if(!IsPlayerAlive(iClient))
 		if(GetEntProp(iClient, Prop_Send, "m_iObserverMode") == 4)
-			if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == GetClientOfUserId(iHiddenOwner[iEntity]))
+			if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == iOwner)
 				return Plugin_Handled;
 	
 	
-	static int iOwner;
-	iOwner = GetClientOfUserId(iHiddenOwner[iEntity]);
 	if(iOwner < 1 || !IsClientInGame(iOwner))
 		return Plugin_Continue;
-	
 	
 	switch(GetClientTeam(iOwner)) 
 	{
@@ -102,10 +105,8 @@ public Action HideModel(int iEntity, int iClient)
 
 static bool IsSurvivorThirdPerson(int iClient)
 {
-//This shit is busted rightnow but it works on otherplugins :P
 	if(bThirdPerson[iClient])
 		return true;
-	
 	if(GetEntPropEnt(iClient, Prop_Send, "m_hViewEntity") > 0)
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
@@ -126,6 +127,7 @@ static bool IsSurvivorThirdPerson(int iClient)
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
 		return true;
+	
 	switch(GetEntProp(iClient, Prop_Send, "m_iCurrentUseAction"))
 	{
 		case 1:
@@ -315,14 +317,11 @@ public int SetTransmit(Handle plugin, int numParams)
 	if(!IsValidEntity(iEntity))
 		ThrowNativeError(SP_ERROR_ABORTED, "Entity is Invalid %i", iEntity);
 	
-	iHiddenOwner[iEntity] = GetClientUserId(iClient);
-	
-	bool bType = view_as<bool>(GetNativeCell(3));
-	if(bType)
+	if(GetNativeCell(3))
 	{
+		iHiddenOwner[iEntity] = GetClientUserId(iClient);
 		SDKHook(iEntity, SDKHook_SetTransmit, HideModel);
-		return true;
+		return;
 	}
 	SDKUnhook(iEntity, SDKHook_SetTransmit, HideModel);
-	return true;
 }
