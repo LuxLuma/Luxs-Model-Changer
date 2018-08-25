@@ -496,5 +496,5 @@ static bool IsValidEntRef(int iEntRef)
 //deprecated stuff
 public int HideOverlayModel(Handle plugin, int numParams)
 {
-	ThrowNativeError(SP_ERROR_NOT_RUNNABLE, "Deprecated function not longer included in LMC since \"ADD_VERSION\" use older build if you want to use this function.");//add version
+	ThrowNativeError(SP_ERROR_NOT_RUNNABLE, "Deprecated function not longer included in LMC since \"2.0.3\" use older build if you want to use this function.");
 }

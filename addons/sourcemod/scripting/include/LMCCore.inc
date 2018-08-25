@@ -105,7 +105,7 @@ forward void LMC_OnClientModelDestroyed(int iClient, int iEntity);
 
 
 
-#pragma deprecated no longer used since 2.0.3
+
 /**
 *   Deprecated function will thorw error from LMC_Core if called.
 *
@@ -116,9 +116,10 @@ forward void LMC_OnClientModelDestroyed(int iClient, int iEntity);
 *   @param  bHide       true = hide \ false = unhide (toggle effect)
 *   @return true        If action was successful false othewise.
 */
+#pragma deprecated no longer used since 2.0.3
 native bool LMC_HideClientOverlayModel(int iEntity, bool bHide);
 
-#pragma deprecated no longer used since 2.0.3
+
 /**
 *   Deprecated forward will not be called in version 2.0.3+
 *
@@ -133,6 +134,7 @@ native bool LMC_HideClientOverlayModel(int iEntity, bool bHide);
 *   @param  sModel      return Plugin_Changed Model Path to change model
 *   @return Plugin_Handled/Plugin_Stop to block, Plugin_Changed to change model to sModel
 */
+#pragma deprecated no longer used since 2.0.3
 forward Action LMC_OnClientModelSelected(int iClient, char sModel[PLATFORM_MAX_PATH]);
 
 enum LMCModelType
@@ -164,7 +166,6 @@ enum LMCModelType
 	LMCModelType_InfectedTankDLC3,
 }
 
-#pragma deprecated no longer used since 2.0.3
 /**
 *   Deprecated forward will not be called in version 2.0.3+
 *
@@ -179,6 +180,7 @@ enum LMCModelType
 *   @param  iModelType  ModelIndex  Refer to LMCModelType enum
 *   @return Plugin_Handled/Plugin_Stop to block, Plugin_Changed to change model Index
 */
+#pragma deprecated no longer used since 2.0.3
 forward Action LMC_OnClientModelAppliedPre(int iClient, LMCModelType &iModel);
 
 public SharedPlugin __pl_LMCCore = 
