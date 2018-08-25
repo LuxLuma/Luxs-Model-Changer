@@ -4,7 +4,7 @@
 
 #define REQUIRE_EXTENSIONS
 #include <clientprefs>
-#define REQUIRE_EXTENSIONS
+#undef REQUIRE_EXTENSIONS
 
 #define REQUIRE_PLUGIN
 #include <LMCCore>
@@ -215,15 +215,15 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	CreateConVar("lmc_sharedcvars_version", PLUGIN_VERSION, "LMC_SharedCvars_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
+	CreateConVar("lmc_l4d2_menu_choosing", PLUGIN_VERSION, "LMC_L4D2_Menu_Choosing_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
 	
-	hCvar_AdminOnlyModel = CreateConVar("lmc_adminonly", "0", "Allow admins to only change models? (1 = true) NOTE: this will disable announcement to player who join.", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	hCvar_AdminOnlyModel = CreateConVar("lmc_adminonly", "0", "Allow admins to only change models? (1 = true) NOTE: this will disable announcement to player who join. ((#define COMMAND_ACCESS ADMFLAG_CHAT) change to w/o flag you want)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	hCvar_AnnounceDelay = CreateConVar("lmc_announcedelay", "15.0", "Delay On which a message is displayed for !lmc command", FCVAR_NOTIFY, true, 1.0, true, 360.0);
 	hCvar_AnnounceMode = CreateConVar("lmc_announcemode", "1", "Display Mode for !lmc command (0 = off, 1 = Print to chat, 2 = Center text, 3 = Director Hint)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	HookConVarChange(hCvar_AdminOnlyModel, eConvarChanged);
 	HookConVarChange(hCvar_AnnounceDelay, eConvarChanged);
 	HookConVarChange(hCvar_AnnounceMode, eConvarChanged);
-	AutoExecConfig(true, "LMC_Menu_Choosing");
+	AutoExecConfig(true, "LMC_L4D2_Menu_Choosing");
 	CvarsChanged();
 	
 	hCookie_LmcCookie = RegClientCookie("lmc_cookie", "", CookieAccess_Protected);
@@ -562,6 +562,8 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				return;
 			}
 		}
+		default:
+			return;
 	}
 	
 	//model selection	

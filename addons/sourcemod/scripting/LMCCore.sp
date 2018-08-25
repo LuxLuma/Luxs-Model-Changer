@@ -313,6 +313,9 @@ public int GetOverlayModel(Handle plugin, int numParams)
 	if(iClient < 1 || iClient > MaxClients)
 		ThrowNativeError(SP_ERROR_PARAM, "Client index out of bounds %i", iClient);
 	
+	if(!IsClientInGame(iClient))
+		ThrowNativeError(SP_ERROR_ABORTED, "Client is not ingame %i", iClient);
+	
 	if(!IsValidEntRef(iHiddenIndex[iClient]))
 		return -1;
 	
@@ -328,8 +331,10 @@ public int SetOverlayModel(Handle plugin, int numParams)
 	if(iClient < 1 || iClient > MaxClients)
 		ThrowNativeError(SP_ERROR_PARAM, "Client index out of bounds %i", iClient);
 	
-	static char sModel[PLATFORM_MAX_PATH];
+	if(!IsClientInGame(iClient))
+		ThrowNativeError(SP_ERROR_ABORTED, "Client is not ingame %i", iClient);
 	
+	char sModel[PLATFORM_MAX_PATH];
 	GetNativeString(2, sModel, sizeof(sModel));
 	
 	if(sModel[0] == '\0')
@@ -347,8 +352,15 @@ public int SetEntityOverlayModel(Handle plugin, int numParams)
 	int iEntity = GetNativeCell(1);
 	if(iEntity < 1 || iEntity > 2048)
 		ThrowNativeError(SP_ERROR_PARAM, "Entity index out of bounds %i", iEntity);
+		
+	if(!IsValidEntity(iEntity))
+		ThrowNativeError(SP_ERROR_ABORTED, "Entity Invalid %i", iEntity);
 	
-	static char sModel[PLATFORM_MAX_PATH];
+	if(iEntity <= MaxClients)
+		if(!IsClientInGame(iEntity))
+			ThrowNativeError(SP_ERROR_ABORTED, "Client is not ingame %i", iEntity);
+	
+	char sModel[PLATFORM_MAX_PATH];
 	GetNativeString(2, sModel, sizeof(sModel));
 	
 	if(sModel[0] == '\0')
@@ -365,6 +377,13 @@ public int GetEntityOverlayModel(Handle plugin, int numParams)
 	int iEntity = GetNativeCell(1);
 	if(iEntity < MaxClients+1 || iEntity > 2048+1)
 		ThrowNativeError(SP_ERROR_PARAM, "Entity index out of bounds %i", iEntity);
+	
+	if(!IsValidEntity(iEntity))
+		ThrowNativeError(SP_ERROR_ABORTED, "Entity Invalid %i", iEntity);
+	
+	if(iEntity <= MaxClients)
+		if(!IsClientInGame(iEntity))
+			ThrowNativeError(SP_ERROR_ABORTED, "Client is not ingame %i", iEntity);
 	
 	if(!IsValidEntRef(iHiddenEntityRef[iEntity]))
 		return -1;
@@ -386,6 +405,10 @@ public int ResetRenderMode(Handle plugin, int numParams)
 	
 	if(!IsValidEntity(iEntity))
 		ThrowNativeError(SP_ERROR_ABORTED, "Entity Invalid %i", iEntity);
+	
+	if(iEntity <= MaxClients)
+		if(!IsClientInGame(iEntity))
+			ThrowNativeError(SP_ERROR_ABORTED, "Client is not ingame %i", iEntity);
 	
 	ResetRender(iEntity);
 }

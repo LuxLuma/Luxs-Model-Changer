@@ -202,14 +202,14 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	CreateConVar("lmc_randomaispawns_version", PLUGIN_VERSION, "LMC_RandomAiSpawns_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
-	hCvar_RNGHumans = CreateConVar("lmc_rng_humans", "10", "Allow humans to be considered by rng, menu selection will overwrite this in LMC_Menu_Choosing", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	hCvar_Survivors = CreateConVar("lmc_rng_model_survivor", "0", "(0 = disable custom models)chance on which will get a custom model", FCVAR_NOTIFY, true, 0.0, true, 100.0);
+	CreateConVar("lmc_l4d2_randomspawns_version", PLUGIN_VERSION, "LMC_RandomAiSpawns_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
+	hCvar_RNGHumans = CreateConVar("lmc_rng_humans", "0", "Allow humans to be considered by rng, menu selection will overwrite this in LMC_Menu_Choosing", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	hCvar_Survivors = CreateConVar("lmc_rng_model_survivor", "10", "(0 = disable custom models)chance on which will get a custom model", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 	hCvar_Infected = CreateConVar("lmc_rng_model_infected", "20", "(0 = disable custom models)chance on which will get a custom model", FCVAR_NOTIFY, true, 0.0, true, 100.0);
 	HookConVarChange(hCvar_RNGHumans, eConvarChanged);
 	HookConVarChange(hCvar_Survivors, eConvarChanged);
 	HookConVarChange(hCvar_Infected, eConvarChanged);
-	AutoExecConfig(true, "LMC_RandomSpawns");
+	AutoExecConfig(true, "LMC_L4D2_RandomSpawns");
 	CvarsChanged();
 	
 	HookEvent("player_spawn", ePlayerSpawn);
