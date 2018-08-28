@@ -16,7 +16,7 @@
 
 
 #define PLUGIN_NAME "LMC_L4D2_Menu_Choosing"
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.0.1"
 
 //change me to whatever flag you want
 #define COMMAND_ACCESS ADMFLAG_CHAT
@@ -217,7 +217,7 @@ public void OnPluginStart()
 {
 	CreateConVar("lmc_l4d2_menu_choosing", PLUGIN_VERSION, "LMC_L4D2_Menu_Choosing_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
 	
-	hCvar_AdminOnlyModel = CreateConVar("lmc_adminonly", "0", "Allow admins to only change models? (1 = true) NOTE: this will disable announcement to player who join. ((#define COMMAND_ACCESS ADMFLAG_CHAT) change to w/o flag you want)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
+	hCvar_AdminOnlyModel = CreateConVar("lmc_adminonly", "0", "Allow admins to only change models? (1 = true) NOTE: this will disable announcement to player who join. ((#define COMMAND_ACCESS ADMFLAG_CHAT) change to w/o flag you want or (Use override file))", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	hCvar_AnnounceDelay = CreateConVar("lmc_announcedelay", "15.0", "Delay On which a message is displayed for !lmc command", FCVAR_NOTIFY, true, 1.0, true, 360.0);
 	hCvar_AnnounceMode = CreateConVar("lmc_announcemode", "1", "Display Mode for !lmc command (0 = off, 1 = Print to chat, 2 = Center text, 3 = Director Hint)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	HookConVarChange(hCvar_AdminOnlyModel, eConvarChanged);
@@ -306,7 +306,7 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 		
 	LMC_ResetRenderMode(iClient);
 	
-	if(g_bAdminOnly && !CheckCommandAccess(iClient, "", COMMAND_ACCESS, true))
+	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS))
 			return;
 	
 	switch(GetClientTeam(iClient))
@@ -382,7 +382,7 @@ public Action ShowMenu(int iClient, int iArgs)
 		ReplyToCommand(iClient, "[LMC] Menu is in-game only.");
 		return Plugin_Continue;
 	}
-	if(g_bAdminOnly && !CheckCommandAccess(iClient, "", COMMAND_ACCESS, true))
+	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS))
 	{
 		ReplyToCommand(iClient, "\x04[LMC] \x03Model Changer is only available to admins.");
 		return Plugin_Continue;
@@ -393,7 +393,7 @@ public Action ShowMenu(int iClient, int iArgs)
 		bAutoBlockedMsg[iClient][8] = false;
 	}
 	Handle hMenu = CreateMenu(CharMenu);
-	SetMenuTitle(hMenu, "Choose a Model");//1.4
+	SetMenuTitle(hMenu, "Lux's Model Changer");//1.4
 	
 	AddMenuItem(hMenu, "1", "Normal Models");
 	AddMenuItem(hMenu, "2", "Random Common");
