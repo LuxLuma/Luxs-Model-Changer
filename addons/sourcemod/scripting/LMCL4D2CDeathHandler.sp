@@ -76,6 +76,7 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 		float fPos[3];
 		GetClientAbsOrigin(iVictim, fPos);
 		iEnt = EntRefToEntIndex(iDeathModelRef);
+		iDeathModelRef = INVALID_ENT_REFERENCE;
 		TeleportEntity(iEnt, fPos, NULL_VECTOR, NULL_VECTOR);// fix valve issue with teleporting clones
 		
 		Call_StartForward(g_hOnClientDeathModelCreated);
