@@ -22,7 +22,7 @@
 #define _LMCCore_included
 
 
-#define LMCCore_version "2.5"
+#define LMCCore_version "2.5.1"
 
 
 
@@ -36,7 +36,6 @@ native int LMC_GetEntityOverlayModel(int iEntity);
 
 /**
 *   @note Don't use this on Clients because it would not hide the model in Firstperson and is less securty for Clients if used.
-*   @note if used on entities that don't have m_nGlowRange entprop could throw errors(i'm not sure).
 *
 *   @param  iEntity     Entity Index.
 *   @param  sModel      Model Path of the model you wish to apply.

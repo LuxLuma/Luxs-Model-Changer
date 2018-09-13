@@ -11,10 +11,9 @@
 #endif
 #define _LMCL4D2CDeathHandler_included
 
-#define LMCL4D2CDeathHandler_include_version "1.0"
+#define LMCL4D2CDeathHandler_include_version "1.0.1"
 
 /**
-*	This is called when lmc_hide_defib_model > -1 cvar
 *	@Note only called if LMCL4D2CDeathHandler module is installed
 *
 *	@param 	iClient		Client Index who died.
