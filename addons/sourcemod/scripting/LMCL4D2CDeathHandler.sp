@@ -78,38 +78,30 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 		iDeathModelRef = INVALID_ENT_REFERENCE;
 		TeleportEntity(iEnt, fPos, NULL_VECTOR, NULL_VECTOR);// fix valve issue with teleporting clones
 		
-		Call_StartForward(g_hOnClientDeathModelCreated);
-		Call_PushCell(iVictim);
-		Call_PushCell(iEnt);
-		
 		if(iEntity > MaxClients && IsValidEntity(iEntity))
 		{
 			char sModel[PLATFORM_MAX_PATH];
 			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
 			AcceptEntityInput(iEntity, "Kill");
+			iEntity = -1;
 			
-			if(sModel[0] == '\0')
+			if(sModel[0] != '\0')
 			{
-				Call_PushCell(-1);
-				Call_Finish();
-				return;
+				iEntity = LMC_SetEntityOverlayModel(iEnt, sModel);
+				SetEntityRenderMode(iEnt, RENDER_NONE);
+				SetEntProp(iEnt, Prop_Send, "m_nMinGPULevel", 1);
+				SetEntProp(iEnt, Prop_Send, "m_nMaxGPULevel", 1);
 			}
-				
-			iEntity = LMC_SetEntityOverlayModel(iEnt, sModel);
-			SetEntityRenderMode(iEnt, RENDER_NONE);
-			SetEntProp(iEnt, Prop_Send, "m_nMinGPULevel", 1);
-			SetEntProp(iEnt, Prop_Send, "m_nMaxGPULevel", 1);
-			
-			Call_PushCell(iEntity);
-			Call_Finish();
-			return;
 		}
-		Call_PushCell(-1);
+		Call_StartForward(g_hOnClientDeathModelCreated);
+		Call_PushCell(iVictim);
+		Call_PushCell(iEnt);
+		Call_PushCell(iEntity);
 		Call_Finish();
 		return;
 	}
 	
-	if(!IsValidEntity(iEntity))
+	if(!IsValidEntity(iEntity) || iTeam != 2)
 		return;
 	
 	SetEntProp(iEntity, Prop_Send, "m_nGlowRange", 0);
