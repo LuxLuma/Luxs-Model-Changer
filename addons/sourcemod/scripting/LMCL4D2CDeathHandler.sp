@@ -53,13 +53,11 @@ public void OnPluginStart()
 public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iVictim = GetClientOfUserId(GetEventInt(hEvent, "userid"));
-	int iEntity;
-	
 	if(iVictim < 1 || iVictim > MaxClients || !IsClientInGame(iVictim))
 		return;
 	
 	int iTeam = GetClientTeam(iVictim);
-	iEntity = LMC_GetClientOverlayModel(iVictim);
+	int iEntity = LMC_GetClientOverlayModel(iVictim);
 	
 	if(iTeam == 3 && IsValidEntity(iEntity))
 	{
