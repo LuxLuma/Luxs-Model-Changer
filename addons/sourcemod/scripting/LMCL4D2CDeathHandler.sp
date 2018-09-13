@@ -12,7 +12,7 @@
 
 
 #define PLUGIN_NAME "LMCL4D2CDeathHandler"
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.1.1"
 
 
 
@@ -70,12 +70,11 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 		return;
 	}
 	
-	int iEnt = -1;
 	if(iTeam == 2 && IsValidEntRef(iDeathModelRef))
 	{
 		float fPos[3];
 		GetClientAbsOrigin(iVictim, fPos);
-		iEnt = EntRefToEntIndex(iDeathModelRef);
+		int iEnt = EntRefToEntIndex(iDeathModelRef);
 		iDeathModelRef = INVALID_ENT_REFERENCE;
 		TeleportEntity(iEnt, fPos, NULL_VECTOR, NULL_VECTOR);// fix valve issue with teleporting clones
 		
@@ -83,32 +82,35 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 		Call_PushCell(iVictim);
 		Call_PushCell(iEnt);
 		
-		if(IsValidEntity(iEntity))
+		if(iEntity > MaxClients && IsValidEntity(iEntity))
+		{
+			char sModel[PLATFORM_MAX_PATH];
+			GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
+			AcceptEntityInput(iEntity, "Kill");
+			
+			if(sModel[0] == '\0')
+			{
+				Call_PushCell(-1);
+				Call_Finish();
+				return;
+			}
+				
+			iEntity = LMC_SetEntityOverlayModel(iEnt, sModel);
+			SetEntityRenderMode(iEnt, RENDER_NONE);
+			SetEntProp(iEnt, Prop_Send, "m_nMinGPULevel", 1);
+			SetEntProp(iEnt, Prop_Send, "m_nMaxGPULevel", 1);
+			
 			Call_PushCell(iEntity);
-		else
-			Call_PushCell(-1);
+			Call_Finish();
+			return;
+		}
+		Call_PushCell(-1);
 		Call_Finish();
+		return;
 	}
 	
 	if(!IsValidEntity(iEntity))
 		return;
-	
-	if(iEnt > MaxClients && IsValidEntity(iEnt))
-	{
-		char sModel[PLATFORM_MAX_PATH];
-		GetEntPropString(iEntity, Prop_Data, "m_ModelName", sModel, sizeof(sModel));
-		AcceptEntityInput(iEntity, "Kill");
-		
-		if(sModel[0] == '\0')
-			return;
-		
-		iEntity = LMC_SetEntityOverlayModel(iEnt, sModel);
-		SetEntityRenderMode(iEnt, RENDER_NONE);
-		SetEntProp(iEnt, Prop_Send, "m_nMinGPULevel", 1);
-		SetEntProp(iEnt, Prop_Send, "m_nMaxGPULevel", 1);
-		
-		return;
-	}
 	
 	SetEntProp(iEntity, Prop_Send, "m_nGlowRange", 0);
 	SetEntProp(iEntity, Prop_Send, "m_iGlowType", 0);
