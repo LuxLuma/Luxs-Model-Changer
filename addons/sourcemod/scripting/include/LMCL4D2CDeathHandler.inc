@@ -3,7 +3,7 @@
 *	LMC_OnClientDeathModelCreated module is required to get forwarded, Library is called "LMCL4D2CDeathHandler"
 *	
 *	
-*	https://github.com/LuxLuma/-L4D2-Left-4-Dead-2-Model-Changer/
+*	https://github.com/LuxLuma/Luxs-Model-Changer
 */
 
 #if defined _LMCL4D2CDeathHandler_included

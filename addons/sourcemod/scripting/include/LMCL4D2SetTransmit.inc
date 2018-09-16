@@ -2,7 +2,7 @@
 *	
 *	LMC_L4D2_SetTransmit() module "LMCL4D2SetTransmit" required to use native, Library is called "LMCL4D2SetTransmit"
 *	
-*	https://github.com/LuxLuma/-L4D2-Left-4-Dead-2-Model-Changer/
+*	https://github.com/LuxLuma/Luxs-Model-Changer
 */
 
 #if defined _LMCL4D2SetTransmit_included
