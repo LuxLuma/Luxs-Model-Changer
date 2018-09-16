@@ -15,7 +15,9 @@
 
 /**
 *	@Note only called if LMCL4D2CDeathHandler module is installed
-*
+*	
+*	Deathmodels are "survivor_death_model" that can be used with defibrillator.
+*	
 *	@param 	iClient		Client Index who died.
 *	@param 	iEntity		Entity Index of Deathmodel for client who died
 *	@param	iOverlayModel 	Entity Index of Deathmodel overlaymodel -1 if don't exist
