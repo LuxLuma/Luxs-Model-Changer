@@ -3,9 +3,9 @@
 #include <sdktools>
 
 #define REQUIRE_PLUGIN
-#include <LMCCore>
 #include <LMCL4D2CDeathHandler>
 #include <LMCL4D2SetTransmit>
+#include <LMCCore>
 #undef REQUIRE_PLUGIN
 
 #pragma newdecls required

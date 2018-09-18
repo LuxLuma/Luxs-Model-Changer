@@ -4,19 +4,19 @@
 #include <sdkhooks>
 
 #define REQUIRE_PLUGIN
-#include <LMCCore>
 #include <LMCL4D2SetTransmit>
+#include <LMCCore>
 #undef REQUIRE_PLUGIN
 
 #pragma newdecls required
 
 
 #define PLUGIN_NAME "LMCL4D2CDeathHandler"
-#define PLUGIN_VERSION "1.1.1"
-
+#define PLUGIN_VERSION "1.1.4"
 
 
 static int iDeathModelRef = INVALID_ENT_REFERENCE;
+static int iCSRagdollRef = INVALID_ENT_REFERENCE;
 static bool bIgnore = false;
 
 Handle g_hOnClientDeathModelCreated = INVALID_HANDLE;
@@ -50,6 +50,16 @@ public void OnPluginStart()
 	HookEvent("player_death", ePlayerDeath);
 }
 
+public void Cs_Ragdollhandler(int iRagdoll, int iClient)
+{
+	SDKUnhook(iRagdoll, SDKHook_SetTransmit, Cs_Ragdollhandler);
+	int iOwner = GetEntPropEnt(iRagdoll, Prop_Send, "m_hPlayer");
+	if(iOwner < 1 || iOwner > MaxClients)
+		return;
+	
+	SetEntProp(iOwner, Prop_Send, "m_nModelIndex", GetEntProp(iRagdoll, Prop_Send, "m_nModelIndex", 2), 2);// should i make a forward for this?
+}
+
 public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iVictim = GetClientOfUserId(GetEventInt(hEvent, "userid"));
@@ -57,20 +67,30 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 		return;
 	
 	int iTeam = GetClientTeam(iVictim);
-	int iEntity = LMC_GetClientOverlayModel(iVictim);
+	if(iTeam != 2 && iTeam != 3)
+		return;
 	
-	if(iTeam == 3 && IsValidEntity(iEntity))
+	int iEntity = LMC_GetClientOverlayModel(iVictim);
+	if(IsValidEntity(iEntity) && IsValidEntRef(iCSRagdollRef) && iVictim == GetEntPropEnt(iCSRagdollRef, Prop_Send, "m_hPlayer"))
 	{
-		LMC_L4D2_SetTransmit(iVictim, iEntity, false);
-		AcceptEntityInput(iEntity, "ClearParent");
-		SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
-		SetVariantString("OnUser1 !self:Kill::0.1:1");
-		AcceptEntityInput(iEntity, "AddOutput");
-		AcceptEntityInput(iEntity, "FireUser1");
+		int iRagdoll = EntRefToEntIndex(iCSRagdollRef);
+		iCSRagdollRef = INVALID_ENT_REFERENCE;
+		iDeathModelRef = INVALID_ENT_REFERENCE;
+		
+		SetEntProp(iRagdoll, Prop_Send, "m_nModelIndex", GetEntProp(iEntity, Prop_Send, "m_nModelIndex", 2), 2);
+		SetEntProp(iRagdoll, Prop_Send, "m_ragdollType", 1);
+		SDKHook(iRagdoll, SDKHook_SetTransmit, Cs_Ragdollhandler);
+		
+		LMC_ResetRenderMode(iVictim);
+		AcceptEntityInput(iEntity, "Kill");
+		
+		iCSRagdollRef = INVALID_ENT_REFERENCE;
+		iDeathModelRef = INVALID_ENT_REFERENCE;
 		return;
 	}
 	
-	if(iTeam == 2 && IsValidEntRef(iDeathModelRef))
+	//sm_ted_spawnhook cs_ragdoll
+	if(IsValidEntRef(iDeathModelRef))
 	{
 		float fPos[3];
 		GetClientAbsOrigin(iVictim, fPos);
@@ -101,34 +121,25 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 		return;
 	}
 	
-	if(!IsValidEntity(iEntity) || iTeam != 2)
-		return;
-	
-	SetEntProp(iEntity, Prop_Send, "m_nGlowRange", 0);
-	SetEntProp(iEntity, Prop_Send, "m_iGlowType", 0);
-	SetEntProp(iEntity, Prop_Send, "m_glowColorOverride", 0);
-	SetEntProp(iEntity, Prop_Send, "m_nGlowRangeMin", 0);
-	
-	LMC_L4D2_SetTransmit(iVictim, iEntity, false);
-	
-	AcceptEntityInput(iEntity, "ClearParent");
-	SetEntProp(iEntity, Prop_Send, "m_bClientSideRagdoll", 1, 1);
-	SetVariantString("OnUser1 !self:Kill::0.1:1");
-	AcceptEntityInput(iEntity, "AddOutput");
-	AcceptEntityInput(iEntity, "FireUser1");
+	if(IsValidEntity(iEntity))
+		AcceptEntityInput(iEntity, "Kill");
 }
 
 public void OnEntityCreated(int iEntity, const char[] sClassname)
 {
-	if(sClassname[0] != 's' || !StrEqual(sClassname, "survivor_death_model", false))
+	if(sClassname[0] != 's' && sClassname[0] != 'c')
 		return;
 	
-	SDKHook(iEntity, SDKHook_SpawnPost, SpawnPost);
+	if(StrEqual(sClassname, "cs_ragdoll", false))
+		iCSRagdollRef = EntIndexToEntRef(iEntity);
+	
+	if(StrEqual(sClassname, "survivor_death_model", false))
+		SDKHook(iEntity, SDKHook_SpawnPost, SpawnPostDeathModel);
 }
 
-public void SpawnPost(int iEntity)
+public void SpawnPostDeathModel(int iEntity)
 {
-	SDKUnhook(iEntity, SDKHook_SpawnPost, SpawnPost);
+	SDKUnhook(iEntity, SDKHook_SpawnPost, SpawnPostDeathModel);
 	if(!IsValidEntity(iEntity))
 		return;
 	

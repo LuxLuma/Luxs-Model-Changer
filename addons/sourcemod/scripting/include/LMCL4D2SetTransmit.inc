@@ -10,7 +10,7 @@
 #endif
 #define _LMCL4D2SetTransmit_included
 
-#define LMCL4D2SetTransmit_version "1.0"
+#define LMCL4D2SetTransmit_version "1.0.1"
 
 /**
 *	Unhook/hook LMC's SetTransmit in LMCL4D2SetTransmit module
