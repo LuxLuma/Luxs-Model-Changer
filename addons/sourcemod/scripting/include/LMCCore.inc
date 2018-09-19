@@ -2,10 +2,10 @@
 *	LMCCore Library is called "LMCCore" (Deprecated lib name is "L4D2ModelChanger")
 *	for anyone looking to do a dynamic use of LMC
 *	
-*	https://github.com/LuxLuma/-L4D2-Left-4-Dead-2-Model-Changer/
+*	https://github.com/LuxLuma/Luxs-Model-Changer
 *	
 *	if you plan on using deprecated functions you will need to use an olderbuild from before 2.0.3
-*	https://github.com/LuxLuma/-L4D2-Left-4-Dead-2-Model-Changer/releases
+*	https://github.com/LuxLuma/Luxs-Model-Changer/releases
 *	
 *	
 *	Library Names:				Plugin Names:					Info:
