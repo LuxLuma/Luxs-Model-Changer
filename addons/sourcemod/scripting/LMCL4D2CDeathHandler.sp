@@ -14,6 +14,7 @@
 #define PLUGIN_NAME "LMCL4D2CDeathHandler"
 #define PLUGIN_VERSION "1.1.4"
 
+static int iClientSpawnIndex[MAXPLAYERS+1];
 
 static int iDeathModelRef = INVALID_ENT_REFERENCE;
 static int iCSRagdollRef = INVALID_ENT_REFERENCE;
@@ -50,6 +51,13 @@ public void OnPluginStart()
 	HookEvent("player_death", ePlayerDeath);
 }
 
+public Action SpawnHook(int iClient)
+{
+	SDKUnhook(iClient, SDKHook_Spawn, SpawnHook);
+	SetEntProp(iClient, Prop_Send, "m_nModelIndex", iClientSpawnIndex[iClient], 2);
+}
+
+
 public void Cs_Ragdollhandler(int iRagdoll, int iClient)
 {
 	SDKUnhook(iRagdoll, SDKHook_SetTransmit, Cs_Ragdollhandler);
@@ -57,6 +65,8 @@ public void Cs_Ragdollhandler(int iRagdoll, int iClient)
 	if(iOwner < 1 || iOwner > MaxClients)
 		return;
 	
+	iClientSpawnIndex[iOwner] = GetEntProp(iOwner, Prop_Send, "m_nModelIndex", 2);
+	SDKHook(iOwner, SDKHook_Spawn, SpawnHook);
 	SetEntProp(iOwner, Prop_Send, "m_nModelIndex", GetEntProp(iRagdoll, Prop_Send, "m_nModelIndex", 2), 2);// should i make a forward for this?
 }
 
@@ -132,8 +142,7 @@ public void OnEntityCreated(int iEntity, const char[] sClassname)
 	
 	if(StrEqual(sClassname, "cs_ragdoll", false))
 		iCSRagdollRef = EntIndexToEntRef(iEntity);
-	
-	if(StrEqual(sClassname, "survivor_death_model", false))
+	else if(StrEqual(sClassname, "survivor_death_model", false))
 		SDKHook(iEntity, SDKHook_SpawnPost, SpawnPostDeathModel);
 }
 
