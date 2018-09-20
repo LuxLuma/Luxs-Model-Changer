@@ -14,7 +14,7 @@
 #define PLUGIN_NAME "LMCL4D2CDeathHandler"
 #define PLUGIN_VERSION "1.1.4"
 
-static int iClientSpawnIndex[MAXPLAYERS+1];
+static char sModelStrings[MAXPLAYERS+1][PLATFORM_MAX_PATH];
 
 static int iDeathModelRef = INVALID_ENT_REFERENCE;
 static int iCSRagdollRef = INVALID_ENT_REFERENCE;
@@ -54,7 +54,7 @@ public void OnPluginStart()
 public Action SpawnHook(int iClient)
 {
 	SDKUnhook(iClient, SDKHook_Spawn, SpawnHook);
-	SetEntProp(iClient, Prop_Send, "m_nModelIndex", iClientSpawnIndex[iClient], 2);
+	SetEntityModel(iClient, sModelStrings[iClient]);
 }
 
 
@@ -65,9 +65,9 @@ public void Cs_Ragdollhandler(int iRagdoll, int iClient)
 	if(iOwner < 1 || iOwner > MaxClients)
 		return;
 	
-	iClientSpawnIndex[iOwner] = GetEntProp(iOwner, Prop_Send, "m_nModelIndex", 2);
+	GetEntPropString(iOwner, Prop_Data, "m_ModelName", sModelStrings[iOwner], PLATFORM_MAX_PATH);
 	SDKHook(iOwner, SDKHook_Spawn, SpawnHook);
-	SetEntProp(iOwner, Prop_Send, "m_nModelIndex", GetEntProp(iRagdoll, Prop_Send, "m_nModelIndex", 2), 2);// should i make a forward for this?
+	SetEntProp(iOwner, Prop_Send, "m_nModelIndex", GetEntProp(iRagdoll, Prop_Send, "m_nModelIndex", 2), 2);
 }
 
 public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
