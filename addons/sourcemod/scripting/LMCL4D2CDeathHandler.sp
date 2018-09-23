@@ -99,8 +99,7 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 		return;
 	}
 	
-	//sm_ted_spawnhook cs_ragdoll
-	if(IsValidEntRef(iDeathModelRef))
+	if(iTeam == 2 && IsValidEntRef(iDeathModelRef))
 	{
 		float fPos[3];
 		GetClientAbsOrigin(iVictim, fPos);
