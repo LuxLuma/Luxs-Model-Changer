@@ -1,6 +1,7 @@
 #pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
+#include <sdkhooks>
 
 #define REQUIRE_PLUGIN
 #include <LMCCore>
@@ -10,18 +11,13 @@
 
 
 #define PLUGIN_NAME "LMCEDeathHandler"
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 
 
-static bool bL4D2 = false;
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	EngineVersion iEngineVersion = GetEngineVersion();
-	if(iEngineVersion == Engine_Left4Dead2)
-		bL4D2 = true;
-	else if(iEngineVersion == Engine_Left4Dead)
-		bL4D2 = false;
-	else
+	if(iEngineVersion != Engine_Left4Dead2 && iEngineVersion != Engine_Left4Dead)
 	{
 		strcopy(error, err_max, "Plugin only supports Left 4 Dead 1/2");
 		return APLRes_SilentFailure;
@@ -47,9 +43,7 @@ public void OnPluginStart()
 public void OnAllPluginsLoaded()// makesure my hook is last if it can
 {
 	HookEvent("player_death", ePlayerDeath);
-	HookEvent("witch_killed", eWitchKilled);
 }
-
 
 public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
@@ -57,46 +51,49 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 	if(iVictim < MaxClients+1 || iVictim > 2048 || !IsValidEntity(iVictim))
 		return;
 	
-	char sNetclass[7];
-	GetEntityNetClass(iVictim, sNetclass, 7);
-	if(StrEqual(sNetclass, "Witch", false))// called before witch death event
-		return;
-	
 	int iEntity = LMC_GetEntityOverlayModel(iVictim);
 	if(iEntity < 1)
 		return;
 	
 	NextBotRagdollHandler(iVictim, iEntity);
-
-}
-
-public void eWitchKilled(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
-{
-	int iWitch = GetEventInt(hEvent, "witchid");
-	if(iWitch < MaxClients+1 || iWitch > 2048 || !IsValidEntity(iWitch))
-		return;
 	
-	int iEntity = LMC_GetEntityOverlayModel(iWitch);
-	if(iEntity < 1)
-		return;
-	
-	NextBotRagdollHandler(iWitch, iEntity);
 }
 
 void NextBotRagdollHandler(int iEntity, int iPreRagdoll)
 {
-	if(bL4D2)
+	AcceptEntityInput(iPreRagdoll, "Kill");
+	
+	int iRagdoll = CreateEntityByName("cs_ragdoll");
+	if(iRagdoll < 1)
+		return;
+	
+	if(iRagdoll >= 2000)
 	{
-		SetEntProp(iPreRagdoll, Prop_Send, "m_nGlowRange", 0);
-		SetEntProp(iPreRagdoll, Prop_Send, "m_iGlowType", 0);
-		SetEntProp(iPreRagdoll, Prop_Send, "m_glowColorOverride", 0);
-		SetEntProp(iPreRagdoll, Prop_Send, "m_nGlowRangeMin", 0);
-		SetEntPropFloat(iEntity, Prop_Send, "m_flModelScale", 999.0);// failsafe incase BecomeRagdoll is invoked on the entity L4d1 does not have this tho
+		RemoveEdict(iRagdoll);
+		PrintToServer("[LMC]Removing edict[%i] for entity ragdolls to prevent crashing using parent's ragdoll", iRagdoll);
+		return;
 	}
 	
-	SetEntityRenderFx(iEntity, RENDERFX_HOLOGRAM);
-	SetEntityRenderColor(iEntity, 0, 0, 0, 0);
+	float fPos[3];
+	float fAng[3];
+	GetEntPropVector(iEntity, Prop_Data, "m_vecOrigin", fPos);
+	GetEntPropVector(iEntity, Prop_Data, "m_angRotation", fAng);
+	TeleportEntity(iRagdoll, fPos, fAng, NULL_VECTOR);
 	
-	AcceptEntityInput(iPreRagdoll, "BecomeRagdoll");
+	SetEntProp(iRagdoll, Prop_Send, "m_nModelIndex", GetEntProp(iPreRagdoll, Prop_Send, "m_nModelIndex", 2), 2);
+	SetEntProp(iRagdoll, Prop_Send, "m_iTeamNum", 3, 1);
+	SetEntProp(iRagdoll, Prop_Send, "m_hPlayer", -1, 3);
+	SetEntProp(iRagdoll, Prop_Send, "m_ragdollType", 1, 1);
+	SetEntProp(iRagdoll, Prop_Send, "m_bOnFire", GetEntProp(iEntity, Prop_Send, "m_bIsBurning", 1), 1);
+	
+	SetVariantString("OnUser1 !self:Kill::0.1:1");
+	AcceptEntityInput(iRagdoll, "AddOutput");
+	AcceptEntityInput(iRagdoll, "FireUser1");
+	
+	SDKHook(iEntity, SDKHook_SetTransmit, HideNextBot);
 }
 
+public Action HideNextBot(int iEntity, int iClient)
+{
+	return Plugin_Handled;
+}
