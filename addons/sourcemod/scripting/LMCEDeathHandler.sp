@@ -11,7 +11,7 @@
 
 
 #define PLUGIN_NAME "LMCEDeathHandler"
-#define PLUGIN_VERSION "1.1.1"
+#define PLUGIN_VERSION "1.1.4"
 
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
@@ -61,7 +61,34 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 
 void NextBotRagdollHandler(int iEntity, int iPreRagdoll)
 {
-	AcceptEntityInput(iPreRagdoll, "BecomeRagdoll");
+	if(GetEntProp(iEntity, Prop_Send, "m_bIsBurning", 1))
+	{
+		int iRagdoll = CreateEntityByName("cs_ragdoll");
+		if(iRagdoll > 0)
+		{
+			float fPos[3];
+			float fAng[3];
+			GetEntPropVector(iEntity, Prop_Data, "m_vecOrigin", fPos);
+			GetEntPropVector(iEntity, Prop_Data, "m_angRotation", fAng);
+			TeleportEntity(iRagdoll, fPos, fAng, NULL_VECTOR);
+			
+			SetEntProp(iRagdoll, Prop_Send, "m_nModelIndex", GetEntProp(iPreRagdoll, Prop_Send, "m_nModelIndex", 2), 2);
+			SetEntProp(iRagdoll, Prop_Send, "m_iTeamNum", 3, 1);
+			SetEntProp(iRagdoll, Prop_Send, "m_hPlayer", -1, 3);
+			SetEntProp(iRagdoll, Prop_Send, "m_ragdollType", 1, 1);
+			SetEntProp(iRagdoll, Prop_Send, "m_bOnFire", 1, 1);
+			
+			SetVariantString("OnUser1 !self:Kill::0.1:1");
+			AcceptEntityInput(iRagdoll, "AddOutput");
+			AcceptEntityInput(iRagdoll, "FireUser1");
+			AcceptEntityInput(iPreRagdoll, "Kill");
+		}
+		else
+			AcceptEntityInput(iPreRagdoll, "BecomeRagdoll");
+	}
+	else
+		AcceptEntityInput(iPreRagdoll, "BecomeRagdoll");
+	
 	SDKHook(iEntity, SDKHook_SetTransmit, HideNextBot);
 }
 
