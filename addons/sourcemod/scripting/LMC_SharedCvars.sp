@@ -34,7 +34,7 @@ public void OnPluginStart()
 	CreateConVar("lmc_allowboomer", "1", "Allow Boomer to have custom model? (1 = true)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("lmc_allowSurvivors", "1", "Allow Survivors to have custom model? (1 = true)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	CreateConVar("lmc_allow_tank_model_use", "0", "The tank model is big and don't look good on other models so i made it optional(1 = true)", FCVAR_NOTIFY, true, 0.0, true, 1.0);
-	CreateConVar("lmc_precache_prevent", "", "Disables model precaching on selected maps to prevent crashing, e.g. \"c1m3_mall,c11m1_greenhouse,\" for dead center map 3 and dead air map 1", FCVAR_NOTIFY);
+	CreateConVar("lmc_precache_prevent", "", "Disables model precaching on selected maps to help prevent crashing, e.g. \"c1m3_mall,\" for dead center map 3 separated by \",\"", FCVAR_NOTIFY);
 	
 	AutoExecConfig(true, "LMC_SharedCvars");
 }
