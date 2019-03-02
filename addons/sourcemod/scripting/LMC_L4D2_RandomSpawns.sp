@@ -271,8 +271,11 @@ public void OnMapStart()
 		if(StrContains(sCvarString, sMap, false) != -1)
 			bPrecacheModels = false;
 		
-		ReplaceString(sMap, sizeof(sMap), ",", "", false);
-		PrintToServer("[%s] \"%s\" Model Precaching Disabled.", PLUGIN_NAME, sMap);
+		if(!bPrecacheModels)
+		{
+			ReplaceString(sMap, sizeof(sMap), ",", "", false);
+			PrintToServer("[%s] \"%s\" Model Precaching Disabled.", PLUGIN_NAME, sMap);
+		}
 	}
 	
 	if(bPrecacheModels)
