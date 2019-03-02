@@ -20,8 +20,6 @@
 #define COMMON_MODEL_PATH_SIZE 33
 
 
-
-
 enum ZOMBIECLASS
 {
 	ZOMBIECLASS_SMOKER = 1,
@@ -155,7 +153,7 @@ static const char sCommonPaths[COMMON_MODEL_PATH_SIZE+1][] =
 };
 
 
-#define CvarIndexes 6
+#define CvarIndexes 7
 static const char sSharedCvarNames[CvarIndexes][] =
 {
 	"lmc_allowtank",
@@ -163,7 +161,8 @@ static const char sSharedCvarNames[CvarIndexes][] =
 	"lmc_allowsmoker",
 	"lmc_allowboomer",
 	"lmc_allowSurvivors",
-	"lmc_allow_tank_model_use"
+	"lmc_allow_tank_model_use",
+	"lmc_precache_prevent"
 };
 static Handle hCvar_ArrayIndex[CvarIndexes] = {INVALID_HANDLE, ...};
 
@@ -258,18 +257,39 @@ void HookCvars()
 
 public void OnMapStart()
 {
-	int i;
-	for(i = 0; i <= HUMAN_MODEL_PATH_SIZE; i++)
-		PrecacheModel(sHumanPaths[i], true);
+	bool bPrecacheModels = true;
+	if(FindConVar(sSharedCvarNames[6]) != INVALID_HANDLE)
+	{
+		char sCvarString[4096];
+		char sMap[66];
+		GetConVarString(FindConVar(sSharedCvarNames[6]), sCvarString, sizeof(sCvarString));
+		GetCurrentMap(sMap, sizeof(sMap));
+		
+		Format(sMap, sizeof(sMap), ",%s,", sMap);
+		Format(sCvarString, sizeof(sCvarString), ",%s,", sCvarString);
+		
+		if(StrContains(sCvarString, sMap, false) != -1)
+			bPrecacheModels = false;
+		
+		ReplaceString(sMap, sizeof(sMap), ",", "", false);
+		PrintToServer("[%s] \"%s\" Model Precaching Disabled.", PLUGIN_NAME, sMap);
+	}
 	
-	for(i = 0; i <= SPECIAL_MODEL_PATH_SIZE; i++)
-		PrecacheModel(sSpecialPaths[i], true);
-	
-	for(i = 0; i <= UNCOMMON_MODEL_PATH_SIZE; i++)
-		PrecacheModel(sUnCommonPaths[i], true);
-	
-	for(i = 0; i <= COMMON_MODEL_PATH_SIZE; i++)
-		PrecacheModel(sCommonPaths[i], true);
+	if(bPrecacheModels)
+	{
+		int i;
+		for(i = 0; i <= HUMAN_MODEL_PATH_SIZE; i++)
+			PrecacheModel(sHumanPaths[i], true);
+		
+		for(i = 0; i <= SPECIAL_MODEL_PATH_SIZE; i++)
+			PrecacheModel(sSpecialPaths[i], true);
+		
+		for(i = 0; i <= UNCOMMON_MODEL_PATH_SIZE; i++)
+			PrecacheModel(sUnCommonPaths[i], true);
+		
+		for(i = 0; i <= COMMON_MODEL_PATH_SIZE; i++)
+			PrecacheModel(sCommonPaths[i], true);
+	}
 	
 	HookCvars();
 	CvarsChanged();
@@ -370,7 +390,8 @@ public void NextFrame(int iUserID)
 		return;
 	
 	if(!SameModel(iClient, sModel))
-		LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sModel));
+		if(IsModelPrecached(sModel))
+			LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sModel));
 }
 
 bool ChooseRNGModel(char sModel[PLATFORM_MAX_PATH])

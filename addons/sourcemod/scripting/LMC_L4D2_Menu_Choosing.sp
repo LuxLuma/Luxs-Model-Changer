@@ -159,7 +159,7 @@ static const char sCommonPaths[COMMON_MODEL_PATH_SIZE][] =
 	"models/infected/common_test.mdl"
 };
 
-#define CvarIndexes 6
+#define CvarIndexes 7
 static const char sSharedCvarNames[CvarIndexes][] =
 {
 	"lmc_allowtank",
@@ -167,7 +167,8 @@ static const char sSharedCvarNames[CvarIndexes][] =
 	"lmc_allowsmoker",
 	"lmc_allowboomer",
 	"lmc_allowSurvivors",
-	"lmc_allow_tank_model_use"
+	"lmc_allow_tank_model_use",
+	"lmc_precache_prevent"
 };
 
 static const char sJoinSound[] = {"ui/menu_countdown.wav"};
@@ -273,20 +274,42 @@ void HookCvars()
 	}
 }
 
+
 public void OnMapStart()
 {
-	int i;
-	for(i = 0; i < HUMAN_MODEL_PATH_SIZE; i++)
-		PrecacheModel(sHumanPaths[i], true);
+	bool bPrecacheModels = true;
+	if(FindConVar(sSharedCvarNames[6]) != INVALID_HANDLE)
+	{
+		char sCvarString[4096];
+		char sMap[67];
+		GetConVarString(FindConVar(sSharedCvarNames[6]), sCvarString, sizeof(sCvarString));
+		GetCurrentMap(sMap, sizeof(sMap));
+		
+		Format(sMap, sizeof(sMap), ",%s,", sMap);
+		Format(sCvarString, sizeof(sCvarString), ",%s,", sCvarString);
+		
+		if(StrContains(sCvarString, sMap, false) != -1)
+			bPrecacheModels = false;
+		
+		ReplaceString(sMap, sizeof(sMap), ",", "", false);
+		PrintToServer("[%s] \"%s\" Model Precaching Disabled.", PLUGIN_NAME, sMap);
+	}
 	
-	for(i = 0; i < SPECIAL_MODEL_PATH_SIZE; i++)
-		PrecacheModel(sSpecialPaths[i], true);
-	
-	for(i = 0; i < UNCOMMON_MODEL_PATH_SIZE; i++)
-		PrecacheModel(sUnCommonPaths[i], true);
-	
-	for(i = 0; i < COMMON_MODEL_PATH_SIZE; i++)
-		PrecacheModel(sCommonPaths[i], true);
+	if(bPrecacheModels)
+	{
+		int i;
+		for(i = 0; i < HUMAN_MODEL_PATH_SIZE; i++)
+			PrecacheModel(sHumanPaths[i], true);
+		
+		for(i = 0; i < SPECIAL_MODEL_PATH_SIZE; i++)
+			PrecacheModel(sSpecialPaths[i], true);
+		
+		for(i = 0; i < UNCOMMON_MODEL_PATH_SIZE; i++)
+			PrecacheModel(sUnCommonPaths[i], true);
+		
+		for(i = 0; i < COMMON_MODEL_PATH_SIZE; i++)
+			PrecacheModel(sCommonPaths[i], true);
+	}
 	
 	PrecacheSound(sJoinSound, true);
 	
@@ -397,32 +420,55 @@ public Action ShowMenu(int iClient, int iArgs)
 	
 	AddMenuItem(hMenu, "1", "Normal Models");
 	AddMenuItem(hMenu, "2", "Random Common");
-	AddMenuItem(hMenu, "3", "Witch");
-	AddMenuItem(hMenu, "4", "Witch Bride");
-	AddMenuItem(hMenu, "5", "Boomer");
-	AddMenuItem(hMenu, "6", "Boomette");
-	AddMenuItem(hMenu, "7", "Hunter");
-	AddMenuItem(hMenu, "8", "Smoker");
-	AddMenuItem(hMenu, "9", "Riot Cop");
-	AddMenuItem(hMenu, "10", "MudMan");
-	AddMenuItem(hMenu, "11", "Chopper Pilot");
-	AddMenuItem(hMenu, "12", "CEDA");
-	AddMenuItem(hMenu, "13", "Clown");
-	AddMenuItem(hMenu, "14", "Jimmy Gibs");
-	AddMenuItem(hMenu, "15", "Fallen Survivor");
-	AddMenuItem(hMenu, "16", "Nick");
-	AddMenuItem(hMenu, "17", "Rochelle");
-	AddMenuItem(hMenu, "18", "Coach");
-	AddMenuItem(hMenu, "19", "Ellis");
-	AddMenuItem(hMenu, "20", "Bill");
-	AddMenuItem(hMenu, "21", "Zoey");
-	AddMenuItem(hMenu, "22", "Francis");
-	AddMenuItem(hMenu, "23", "Louis");
+	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Witch]))
+		AddMenuItem(hMenu, "3", "Witch");
+	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_WitchBride]))
+		AddMenuItem(hMenu, "4", "Witch Bride");
+	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Boomer]))
+		AddMenuItem(hMenu, "5", "Boomer");
+	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Boomette]))
+		AddMenuItem(hMenu, "6", "Boomette");
+	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Hunter]))
+		AddMenuItem(hMenu, "7", "Hunter");
+	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Smoker]))
+		AddMenuItem(hMenu, "8", "Smoker");
+	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_RiotCop]))
+		AddMenuItem(hMenu, "9", "Riot Cop");
+	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_MudMan]))
+		AddMenuItem(hMenu, "10", "MudMan");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Pilot]))
+		AddMenuItem(hMenu, "11", "Chopper Pilot");
+	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_Ceda]))
+		AddMenuItem(hMenu, "12", "CEDA");
+	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_Clown]))
+		AddMenuItem(hMenu, "13", "Clown");
+	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_Jimmy]))
+		AddMenuItem(hMenu, "14", "Jimmy Gibs");
+	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_Fallen]))
+		AddMenuItem(hMenu, "15", "Fallen Survivor");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Nick]))
+		AddMenuItem(hMenu, "16", "Nick");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Rochelle]))
+		AddMenuItem(hMenu, "17", "Rochelle");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Coach]))
+		AddMenuItem(hMenu, "18", "Coach");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Ellis]))
+		AddMenuItem(hMenu, "19", "Ellis");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Bill]))
+		AddMenuItem(hMenu, "20", "Bill");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Zoey]))// not going to filter light model other checks will get that.
+		AddMenuItem(hMenu, "21", "Zoey");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Francis]))// not going to filter light model other checks will get that.
+		AddMenuItem(hMenu, "22", "Francis");
+	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Louis]))
+		AddMenuItem(hMenu, "23", "Louis");
 	
 	if(g_bTankModel)
 	{
-		AddMenuItem(hMenu, "24", "Tank");
-		AddMenuItem(hMenu, "25", "Tank DLC");
+		if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Tank]))
+			AddMenuItem(hMenu, "24", "Tank");
+		if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_TankDLC3]))
+			AddMenuItem(hMenu, "25", "Tank DLC");
 	}
 	SetMenuExitButton(hMenu, true);
 	DisplayMenu(hMenu, iClient, 15);
@@ -582,8 +628,17 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		case 2:
 		{
 			static int iChoice = 0;//+1 each time any player picks a common infected
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Common, iChoice))
+			static int iLastValidModel = 0;// just try until we have a valid model to give people.
+			if(!IsModelValid(iClient, LMCModelSectionType_Common, iChoice))
+			{
+				if(IsModelValid(iClient, LMCModelSectionType_Common, iLastValidModel))
+					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sCommonPaths[iLastValidModel]));
+			}
+			else
+			{
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sCommonPaths[iChoice]));
+				iLastValidModel = iChoice;
+			}
 			
 			if(++iChoice >= COMMON_MODEL_PATH_SIZE)
 				iChoice = 0;
@@ -596,7 +651,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 3: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Witch)))
+			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Witch)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Witch]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -607,7 +662,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 4: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_WitchBride)))
+			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_WitchBride)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_WitchBride]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -618,7 +673,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 5: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Boomer)))
+			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Boomer)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Boomer]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -629,7 +684,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 6: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Boomette)))
+			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Boomette)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Boomette]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -640,7 +695,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 7: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Hunter)))
+			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Hunter)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Hunter]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -650,7 +705,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 8: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Smoker)))
+			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Smoker)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Smoker]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -661,7 +716,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 9: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_RiotCop)))
+			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_RiotCop)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_RiotCop]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -672,7 +727,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 10: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_MudMan)))
+			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_MudMan)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_MudMan]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -683,7 +738,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 11: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Pilot)))
+			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Pilot)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Pilot]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -694,7 +749,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 12: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Ceda)))
+			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Ceda)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_Ceda]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -705,7 +760,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 13: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Clown)))
+			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Clown)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_Clown]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -716,7 +771,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 14: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Jimmy)))
+			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Jimmy)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_Jimmy]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -727,7 +782,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 15: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Fallen)))
+			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Fallen)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_Fallen]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -739,7 +794,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 
 		case 16: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Nick)))
+			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Nick)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Nick]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -750,7 +805,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 17: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Rochelle)))
+			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Rochelle)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Rochelle]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -761,7 +816,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 18: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Coach)))
+			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Coach)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Coach]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -772,7 +827,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 19: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Ellis)))
+			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Ellis)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Ellis]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -783,7 +838,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 20: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Bill)))
+			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Bill)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Bill]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -796,13 +851,15 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		{
 			if(GetRandomInt(1, 100) >= 50)
 			{
-				if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Zoey)))
+				if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Zoey)))
 					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Zoey]));
 			}
 			else
 			{
-				if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_ZoeyLight)))
+				if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_ZoeyLight)))
 					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_ZoeyLight]));
+				else if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Zoey)))
+					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Zoey]));
 			}
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -815,13 +872,15 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		{
 			if(GetRandomInt(1, 100) >= 50)
 			{
-				if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Francis)))
+				if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Francis)))
 					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Francis]));
 			}
 			else
 			{
-				if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_FrancisLight)))
+				if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_FrancisLight)))
 					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_FrancisLight]));
+				else if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Francis)))
+					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Francis]));
 			}
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -832,7 +891,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		}
 		case 23: 
 		{
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Louis)))
+			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Louis)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Louis]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -846,7 +905,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!g_bTankModel)
 				return;
 			
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Tank)))
+			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Tank)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Tank]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -860,7 +919,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!g_bTankModel)
 				return;
 			
-			if(!CheckForSameModel(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_TankDLC3)))
+			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_TankDLC3)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_TankDLC3]));
 			
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
@@ -924,7 +983,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 	return Plugin_Stop;
 }
 
-bool CheckForSameModel(int iClient, LMCModelSectionType iModelSectionType, int iModelIndex)
+bool IsModelValid(int iClient, LMCModelSectionType iModelSectionType, int iModelIndex)
 {
 	char sCurrentModel[PLATFORM_MAX_PATH];
 	GetClientModel(iClient, sCurrentModel, sizeof(sCurrentModel));
@@ -933,39 +992,55 @@ bool CheckForSameModel(int iClient, LMCModelSectionType iModelSectionType, int i
 	{
 		case LMCModelSectionType_Human:
 		{
-			if(!StrEqual(sCurrentModel, sHumanPaths[iModelIndex], false))
-				return false;
+			bool bSameModel = false;
+			bSameModel = StrEqual(sCurrentModel, sHumanPaths[iModelIndex], false);
+			if(!bSameModel && IsModelPrecached(sHumanPaths[iModelIndex]))
+				return true;
+				
+			if(bSameModel)
+				ResetDefaultModel(iClient);
 			
-			ResetDefaultModel(iClient);
-			return true;
+			return false;
 		}
 		case LMCModelSectionType_Special:
 		{
-			if(!StrEqual(sCurrentModel, sSpecialPaths[iModelIndex], false))
-				return false;
+			bool bSameModel = false;
+			bSameModel = StrEqual(sCurrentModel, sSpecialPaths[iModelIndex], false);
+			if(!bSameModel && IsModelPrecached(sSpecialPaths[iModelIndex]))
+				return true;
 			
-			ResetDefaultModel(iClient);
-			return true;
+			if(bSameModel)
+				ResetDefaultModel(iClient);
+			
+			return false;
 		}
 		case LMCModelSectionType_UnCommon:
 		{
-			if(!StrEqual(sCurrentModel, sUnCommonPaths[iModelIndex], false))
-				return false;
+			bool bSameModel = false;
+			bSameModel = StrEqual(sCurrentModel, sUnCommonPaths[iModelIndex], false);
+			if(!bSameModel && IsModelPrecached(sUnCommonPaths[iModelIndex]))
+				return true;
 			
-			ResetDefaultModel(iClient);
-			return true;
+			if(bSameModel)
+				ResetDefaultModel(iClient);
+			
+			return false;
 		}
 		case LMCModelSectionType_Common:
 		{
-			if(!StrEqual(sCurrentModel, sCommonPaths[iModelIndex], false))
-				return false;
+			bool bSameModel = false;
+			bSameModel = StrEqual(sCurrentModel, sCommonPaths[iModelIndex], false);
+			if(!bSameModel && IsModelPrecached(sCommonPaths[iModelIndex]))
+				return true;
 			
-			ResetDefaultModel(iClient);
-			return true;
+			if(bSameModel)
+				ResetDefaultModel(iClient);
+			
+			return false;
 		}
 	}
 	ResetDefaultModel(iClient);
-	return true;
+	return false;
 	
 }
 
