@@ -2,7 +2,7 @@
 #include <sourcemod>
 #pragma newdecls required
 
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.0.1"
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {

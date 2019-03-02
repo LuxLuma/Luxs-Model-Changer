@@ -12,7 +12,7 @@
 
 
 #define PLUGIN_NAME "LMC_L4D2_RandomSpawns"
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.0.1"
 
 #define HUMAN_MODEL_PATH_SIZE 10
 #define SPECIAL_MODEL_PATH_SIZE 7
