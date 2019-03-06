@@ -26,6 +26,7 @@
 #define UNCOMMON_MODEL_PATH_SIZE 6
 #define COMMON_MODEL_PATH_SIZE 34
 
+#define SILVERS_THIRDPERSON_PLUGIN_TIME 99999.3
 
 enum ZOMBIECLASS
 {
@@ -184,12 +185,15 @@ static bool g_bTankModel = false;
 
 static Handle hCookie_LmcCookie = INVALID_HANDLE;
 
+static Handle hCvar_AdminOnlyModel = INVALID_HANDLE;
 static Handle hCvar_AnnounceDelay = INVALID_HANDLE;
 static Handle hCvar_AnnounceMode = INVALID_HANDLE;
-static Handle hCvar_AdminOnlyModel = INVALID_HANDLE;
+static Handle hCvar_ThirdPersonTime = INVALID_HANDLE;
+
 static float g_fAnnounceDelay = 15.0;
 static int g_iAnnounceMode = 1;
 static bool g_bAdminOnly = false;
+static float g_fThirdPersonTime = 2.0;
 
 static int iSavedModel[MAXPLAYERS+1] = {0, ...};
 static bool bAutoApplyMsg[MAXPLAYERS+1];
@@ -217,19 +221,21 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	CreateConVar("lmc_l4d2_menu_choosing", PLUGIN_VERSION, "LMC_L4D2_Menu_Choosing_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
-	
+
 	hCvar_AdminOnlyModel = CreateConVar("lmc_adminonly", "0", "Allow admins to only change models? (1 = true) NOTE: this will disable announcement to player who join. ((#define COMMAND_ACCESS ADMFLAG_CHAT) change to w/o flag you want or (Use override file))", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	hCvar_AnnounceDelay = CreateConVar("lmc_announcedelay", "15.0", "Delay On which a message is displayed for !lmc command", FCVAR_NOTIFY, true, 1.0, true, 360.0);
 	hCvar_AnnounceMode = CreateConVar("lmc_announcemode", "1", "Display Mode for !lmc command (0 = off, 1 = Print to chat, 2 = Center text, 3 = Director Hint)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
+	hCvar_ThirdPersonTime = CreateConVar("lmc_thirdpersontime", "2.0", "How long (in seconds) the client will be in thirdperson view after selecting a model from !lmc command. (0 = off)", FCVAR_NOTIFY, true, 0.0, true, 360.0);
 	HookConVarChange(hCvar_AdminOnlyModel, eConvarChanged);
 	HookConVarChange(hCvar_AnnounceDelay, eConvarChanged);
 	HookConVarChange(hCvar_AnnounceMode, eConvarChanged);
+	HookConVarChange(hCvar_ThirdPersonTime, eConvarChanged);
 	AutoExecConfig(true, "LMC_L4D2_Menu_Choosing");
 	CvarsChanged();
-	
+
 	hCookie_LmcCookie = RegClientCookie("lmc_cookie", "", CookieAccess_Protected);
 	RegConsoleCmd("sm_lmc", ShowMenu, "Brings up a menu to select a client's model");
-	
+
 	HookEvent("player_spawn", ePlayerSpawn);
 }
 
@@ -252,10 +258,11 @@ void CvarsChanged()
 		g_bAllowSurvivors = GetConVarInt(hCvar_ArrayIndex[4]) > 0;
 	if(hCvar_ArrayIndex[5] != INVALID_HANDLE)
 		g_bTankModel = GetConVarInt(hCvar_ArrayIndex[5]) > 0;
-	
+
 	g_bAdminOnly = GetConVarInt(hCvar_AdminOnlyModel) > 0;
 	g_fAnnounceDelay = GetConVarFloat(hCvar_AnnounceDelay);
 	g_iAnnounceMode = GetConVarInt(hCvar_AnnounceMode);
+	g_fThirdPersonTime = GetConVarFloat(hCvar_ThirdPersonTime);
 }
 
 void HookCvars()
@@ -264,7 +271,7 @@ void HookCvars()
 	{
 		if(hCvar_ArrayIndex[i] != INVALID_HANDLE)
 			continue;
-		
+
 		if((hCvar_ArrayIndex[i] = FindConVar(sSharedCvarNames[i])) == INVALID_HANDLE)
 		{
 			PrintToServer("[LMC]Unable to find shared cvar \"%s\" using fallback value plugin:(%s)", sSharedCvarNames[i], PLUGIN_NAME);
@@ -284,38 +291,38 @@ public void OnMapStart()
 		char sMap[67];
 		GetConVarString(FindConVar(sSharedCvarNames[6]), sCvarString, sizeof(sCvarString));
 		GetCurrentMap(sMap, sizeof(sMap));
-		
+
 		Format(sMap, sizeof(sMap), ",%s,", sMap);
 		Format(sCvarString, sizeof(sCvarString), ",%s,", sCvarString);
-		
+
 		if(StrContains(sCvarString, sMap, false) != -1)
 			bPrecacheModels = false;
-		
+
 		if(!bPrecacheModels)
 		{
 			ReplaceString(sMap, sizeof(sMap), ",", "", false);
 			PrintToServer("[%s] \"%s\" Model Precaching Disabled.", PLUGIN_NAME, sMap);
 		}
 	}
-	
+
 	if(bPrecacheModels)
 	{
 		int i;
 		for(i = 0; i < HUMAN_MODEL_PATH_SIZE; i++)
 			PrecacheModel(sHumanPaths[i], true);
-		
+
 		for(i = 0; i < SPECIAL_MODEL_PATH_SIZE; i++)
 			PrecacheModel(sSpecialPaths[i], true);
-		
+
 		for(i = 0; i < UNCOMMON_MODEL_PATH_SIZE; i++)
 			PrecacheModel(sUnCommonPaths[i], true);
-		
+
 		for(i = 0; i < COMMON_MODEL_PATH_SIZE; i++)
 			PrecacheModel(sCommonPaths[i], true);
 	}
-	
+
 	PrecacheSound(sJoinSound, true);
-	
+
 	HookCvars();
 	CvarsChanged();
 }
@@ -326,15 +333,15 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if(iClient < 1 || iClient > MaxClients)
 		return;
-	
+
 	if(!IsClientInGame(iClient) || IsFakeClient(iClient) || !IsPlayerAlive(iClient))
 		return;
-		
+
 	LMC_ResetRenderMode(iClient);
-	
+
 	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS))
 			return;
-	
+
 	switch(GetClientTeam(iClient))
 	{
 		case 3:
@@ -381,11 +388,11 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 			return;
 		}
 	}
-	
-		
+
+
 	if(iSavedModel[iClient] < 2)
 		return;
-		
+
 	RequestFrame(NextFrame, GetClientUserId(iClient));
 }
 
@@ -394,7 +401,7 @@ public void NextFrame(int iUserID)
 	int iClient = GetClientOfUserId(iUserID);
 	if(iClient < 1 || !IsClientInGame(iClient))
 		return;
-	
+
 	ModelIndex(iClient, iSavedModel[iClient], false);
 }
 
@@ -420,7 +427,7 @@ public Action ShowMenu(int iClient, int iArgs)
 	}
 	Handle hMenu = CreateMenu(CharMenu);
 	SetMenuTitle(hMenu, "Lux's Model Changer");//1.4
-	
+
 	AddMenuItem(hMenu, "1", "Normal Models");
 	AddMenuItem(hMenu, "2", "Random Common");
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Witch]))
@@ -465,7 +472,7 @@ public Action ShowMenu(int iClient, int iArgs)
 		AddMenuItem(hMenu, "22", "Francis");
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Louis]))
 		AddMenuItem(hMenu, "23", "Louis");
-	
+
 	if(g_bTankModel)
 	{
 		if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Tank]))
@@ -491,7 +498,7 @@ public int CharMenu(Handle hMenu, MenuAction action, int param1, int param2)
 		}
 		case MenuAction_Cancel:
 		{
-			
+
 		}
 		case MenuAction_End:
 		{
@@ -509,10 +516,10 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		SetClientCookie(iClient, hCookie_LmcCookie, sCookie);
 	}
 	iSavedModel[iClient] = iCaseNum;
-	
+
 	if(!IsPlayerAlive(iClient))
 		return;
-	
+
 	switch(GetClientTeam(iClient))
 	{
 		case 3:
@@ -525,7 +532,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 					{
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][0])
 							return;
-						
+
 						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Smoker");
 						bAutoBlockedMsg[iClient][0] = false;
 						return;
@@ -537,7 +544,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 					{
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][1])
 							return;
-						
+
 						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Boomer");
 						bAutoBlockedMsg[iClient][1] = false;
 						return;
@@ -549,7 +556,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 					{
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][2])
 							return;
-						
+
 						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Hunter");
 						bAutoBlockedMsg[iClient][2] = false;
 						return;
@@ -559,7 +566,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				{
 					if(!bUsingMenu && !bAutoBlockedMsg[iClient][3])
 						return;
-					
+
 					PrintToChat(iClient, "\x04[LMC] \x03Models Don't Work for \x04Spitter");
 					bAutoBlockedMsg[iClient][3] = false;
 					return;
@@ -568,7 +575,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				{
 					if(!bUsingMenu && !bAutoBlockedMsg[iClient][4])
 						return;
-					
+
 					PrintToChat(iClient, "\x04[LMC] \x03Models Don't Work for \x04Jockey");
 					bAutoBlockedMsg[iClient][4] = false;
 					return;
@@ -577,10 +584,10 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				{
 					if(IsFakeClient(iClient))
 						return;
-					
+
 					if(!bUsingMenu && !bAutoBlockedMsg[iClient][5])
 						return;
-					
+
 					PrintToChat(iClient, "\x04[LMC] \x03Models Don't Work for \x04Charger");
 					bAutoBlockedMsg[iClient][5] = false;
 					return;
@@ -591,7 +598,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 					{
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][6])
 							return;
-						
+
 						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Tank");
 						bAutoBlockedMsg[iClient][6] = false;
 						return;
@@ -605,7 +612,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			{
 				if(!bUsingMenu && !bAutoBlockedMsg[iClient][7])
 					return;
-				
+
 				PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Survivors");
 				bAutoBlockedMsg[iClient][7] = false;
 				return;
@@ -614,17 +621,18 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 		default:
 			return;
 	}
-	
-	//model selection	
+
+	//model selection
 	switch(iCaseNum)
 	{
-		case 1: 
+		case 1:
 		{
 			ResetDefaultModel(iClient);
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Models will be default");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 			return;
 		}
@@ -642,215 +650,234 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sCommonPaths[iChoice]));
 				iLastValidModel = iChoice;
 			}
-			
+
 			if(++iChoice >= COMMON_MODEL_PATH_SIZE)
 				iChoice = 0;
-				
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Common Infected");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 3: 
+		case 3:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Witch)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Witch]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Witch");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 4: 
+		case 4:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_WitchBride)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_WitchBride]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Witch Bride");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 5: 
+		case 5:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Boomer)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Boomer]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Boomer");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 6: 
+		case 6:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Boomette)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Boomette]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Boomette");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 7: 
+		case 7:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Hunter)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Hunter]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Hunter");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 8: 
+		case 8:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Smoker)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Smoker]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Smoker");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 9: 
+		case 9:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_RiotCop)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_RiotCop]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04RiotCop");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 10: 
+		case 10:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_MudMan)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_MudMan]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04MudMen");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 11: 
+		case 11:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Pilot)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Pilot]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Chopper Pilot");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 12: 
+		case 12:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Ceda)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_Ceda]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04CEDA Suit");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 13: 
+		case 13:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Clown)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_Clown]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Clown");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 14: 
+		case 14:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Jimmy)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_Jimmy]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Jimmy Gibs");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 15: 
+		case 15:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_UnCommon, view_as<int>(LMCUnCommonModelType_Fallen)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sUnCommonPaths[LMCUnCommonModelType_Fallen]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Fallen Survivor");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
 
-		case 16: 
+		case 16:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Nick)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Nick]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Nick");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 17: 
+		case 17:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Rochelle)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Rochelle]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Rochelle");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 18: 
+		case 18:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Coach)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Coach]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Coach");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 19: 
+		case 19:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Ellis)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Ellis]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Ellis");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 20: 
+		case 20:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Bill)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Bill]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Bill");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 21: 
+		case 21:
 		{
 			if(GetRandomInt(1, 100) >= 50)
 			{
@@ -864,14 +891,15 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				else if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Zoey)))
 					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Zoey]));
 			}
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Zoey");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 22: 
+		case 22:
 		{
 			if(GetRandomInt(1, 100) >= 50)
 			{
@@ -885,50 +913,54 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				else if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Francis)))
 					LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Francis]));
 			}
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Francis");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
-		case 23: 
+		case 23:
 		{
 			if(IsModelValid(iClient, LMCModelSectionType_Human, view_as<int>(LMCHumanModelType_Louis)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sHumanPaths[LMCHumanModelType_Louis]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Louis");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 24:
 		{
 			if(!g_bTankModel)
 				return;
-			
+
 			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_Tank)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_Tank]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Tank");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 25:
 		{
 			if(!g_bTankModel)
 				return;
-			
+
 			if(IsModelValid(iClient, LMCModelSectionType_Special, view_as<int>(LMCSpecialModelType_TankDLC3)))
 				LMC_L4D2_SetTransmit(iClient, LMC_SetClientOverlayModel(iClient, sSpecialPaths[LMCSpecialModelType_TankDLC3]));
-			
+
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			
+
 			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Tank DLC");
+			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
 	}
@@ -939,7 +971,7 @@ public void OnClientPostAdminCheck(int iClient)
 {
 	if(IsFakeClient(iClient))
 		return;
-	
+
 	if(g_iAnnounceMode != 0 && !g_bAdminOnly)
 		CreateTimer(g_fAnnounceDelay, iClientInfo, GetClientUserId(iClient), TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -949,7 +981,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 	int iClient = GetClientOfUserId(iUserID);
 	if(iClient < 1 || iClient > MaxClients || !IsClientInGame(iClient))
 		return Plugin_Stop;
-	
+
 	switch(g_iAnnounceMode)
 	{
 		case 1:
@@ -961,13 +993,13 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 		case 3:
 		{
 			int iEntity = CreateEntityByName("env_instructor_hint");
-			
+
 			char sValues[64];
-			
+
 			FormatEx(sValues, sizeof(sValues), "hint%d", iClient);
 			DispatchKeyValue(iClient, "targetname", sValues);
 			DispatchKeyValue(iEntity, "hint_target", sValues);
-			
+
 			Format(sValues, sizeof(sValues), "10");
 			DispatchKeyValue(iEntity, "hint_timeout", sValues);
 			DispatchKeyValue(iEntity, "hint_range", "100");
@@ -977,7 +1009,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 			DispatchKeyValue(iEntity, "hint_color", sValues);
 			DispatchSpawn(iEntity);
 			AcceptEntityInput(iEntity, "ShowHint", iClient);
-			
+
 			SetVariantString("OnUser1 !self:Kill::6:1");
 			AcceptEntityInput(iEntity, "AddOutput");
 			AcceptEntityInput(iEntity, "FireUser1");
@@ -990,7 +1022,7 @@ bool IsModelValid(int iClient, LMCModelSectionType iModelSectionType, int iModel
 {
 	char sCurrentModel[PLATFORM_MAX_PATH];
 	GetClientModel(iClient, sCurrentModel, sizeof(sCurrentModel));
-	
+
 	switch(iModelSectionType)
 	{
 		case LMCModelSectionType_Human:
@@ -999,10 +1031,10 @@ bool IsModelValid(int iClient, LMCModelSectionType iModelSectionType, int iModel
 			bSameModel = StrEqual(sCurrentModel, sHumanPaths[iModelIndex], false);
 			if(!bSameModel && IsModelPrecached(sHumanPaths[iModelIndex]))
 				return true;
-				
+
 			if(bSameModel)
 				ResetDefaultModel(iClient);
-			
+
 			return false;
 		}
 		case LMCModelSectionType_Special:
@@ -1011,10 +1043,10 @@ bool IsModelValid(int iClient, LMCModelSectionType iModelSectionType, int iModel
 			bSameModel = StrEqual(sCurrentModel, sSpecialPaths[iModelIndex], false);
 			if(!bSameModel && IsModelPrecached(sSpecialPaths[iModelIndex]))
 				return true;
-			
+
 			if(bSameModel)
 				ResetDefaultModel(iClient);
-			
+
 			return false;
 		}
 		case LMCModelSectionType_UnCommon:
@@ -1023,10 +1055,10 @@ bool IsModelValid(int iClient, LMCModelSectionType iModelSectionType, int iModel
 			bSameModel = StrEqual(sCurrentModel, sUnCommonPaths[iModelIndex], false);
 			if(!bSameModel && IsModelPrecached(sUnCommonPaths[iModelIndex]))
 				return true;
-			
+
 			if(bSameModel)
 				ResetDefaultModel(iClient);
-			
+
 			return false;
 		}
 		case LMCModelSectionType_Common:
@@ -1035,16 +1067,16 @@ bool IsModelValid(int iClient, LMCModelSectionType iModelSectionType, int iModel
 			bSameModel = StrEqual(sCurrentModel, sCommonPaths[iModelIndex], false);
 			if(!bSameModel && IsModelPrecached(sCommonPaths[iModelIndex]))
 				return true;
-			
+
 			if(bSameModel)
 				ResetDefaultModel(iClient);
-			
+
 			return false;
 		}
 	}
 	ResetDefaultModel(iClient);
 	return false;
-	
+
 }
 
 void ResetDefaultModel(int iClient)
@@ -1052,7 +1084,7 @@ void ResetDefaultModel(int iClient)
 	int iOverlayModel = LMC_GetClientOverlayModel(iClient);
 	if(iOverlayModel > -1)
 		AcceptEntityInput(iOverlayModel, "kill");
-	
+
 	LMC_ResetRenderMode(iClient);
 }
 
@@ -1068,25 +1100,25 @@ public void OnClientDisconnect(int iClient)
 	bAutoApplyMsg[iClient] = true;//1.4
 	for(int i = 0; i < sizeof(bAutoBlockedMsg[]); i++)//1.4
 		bAutoBlockedMsg[iClient][i] = true;
-	
+
 	iSavedModel[iClient] = 0;
 }
 
 public void OnClientCookiesCached(int iClient)
-{	
+{
 	char sCookie[3];
 	GetClientCookie(iClient, hCookie_LmcCookie, sCookie, sizeof(sCookie));
 	if(StrEqual(sCookie, "\0", false))
 		return;
-	
+
 	iSavedModel[iClient] = StringToInt(sCookie);
-	
+
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
 		return;
-	
+
 	if(g_bAdminOnly && !CheckCommandAccess(iClient, "", COMMAND_ACCESS, true))
 			return;
-	
+
 	ModelIndex(iClient, iSavedModel[iClient], false);
 }
 
@@ -1094,4 +1126,36 @@ public void LMC_OnClientModelApplied(int iClient, int iEntity, const char sModel
 {
 	if(bBaseReattach)//if true because orignal overlay model has been killed
 		LMC_L4D2_SetTransmit(iClient, iEntity);
+}
+
+/**
+ * Sets the view to thirdperson mode for a while.
+ *
+ * @param offset	Client index.
+ * @noreturn
+ */
+void SetExternalView(int client)
+{
+	if (g_fThirdPersonTime == 0)
+		return;
+
+	if (IsThirdPersonActivated(client))
+		return;
+
+	float time = GetGameTime() + g_fThirdPersonTime;
+	if (time == SILVERS_THIRDPERSON_PLUGIN_TIME)
+		time = SILVERS_THIRDPERSON_PLUGIN_TIME + 0.1;
+
+	SetEntPropFloat(client, Prop_Send, "m_TimeForceExternalView", time);
+}
+
+/**
+ * Validates if the client has the thirdperson view active.
+ *
+ * @param offset	Client index.
+ * @return			True if client has the thirdperson view active, false otherwise.
+ */
+bool IsThirdPersonActivated(int client)
+{
+	return (GetEntPropFloat(client, Prop_Send, "m_TimeForceExternalView") == SILVERS_THIRDPERSON_PLUGIN_TIME); //Silvers Survivor Thirdperson plugin sets time to 99999.3
 }
