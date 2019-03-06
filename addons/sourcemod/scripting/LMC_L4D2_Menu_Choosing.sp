@@ -199,6 +199,8 @@ static int iSavedModel[MAXPLAYERS+1] = {0, ...};
 static bool bAutoApplyMsg[MAXPLAYERS+1];
 static bool bAutoBlockedMsg[MAXPLAYERS+1][9];
 
+static int iCurrentPage[MAXPLAYERS+1];
+
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
 	if(GetEngineVersion() != Engine_Left4Dead2 )
@@ -234,7 +236,7 @@ public void OnPluginStart()
 	CvarsChanged();
 
 	hCookie_LmcCookie = RegClientCookie("lmc_cookie", "", CookieAccess_Protected);
-	RegConsoleCmd("sm_lmc", ShowMenu, "Brings up a menu to select a client's model");
+	RegConsoleCmd("sm_lmc", ShowMenuCmd, "Brings up a menu to select a client's model");
 
 	HookEvent("player_spawn", ePlayerSpawn);
 }
@@ -405,7 +407,11 @@ public void NextFrame(int iUserID)
 	ModelIndex(iClient, iSavedModel[iClient], false);
 }
 
-
+public Action ShowMenuCmd(int iClient, int iArgs)
+{
+	iCurrentPage[iClient] = 0;
+	ShowMenu(iClient, iArgs);
+}
 
 /*borrowed some code from csm*/
 public Action ShowMenu(int iClient, int iArgs)
@@ -481,7 +487,8 @@ public Action ShowMenu(int iClient, int iArgs)
 			AddMenuItem(hMenu, "25", "Tank DLC");
 	}
 	SetMenuExitButton(hMenu, true);
-	DisplayMenu(hMenu, iClient, 15);
+	//DisplayMenu(hMenu, iClient, 15);
+	DisplayMenuAtItem(hMenu, iClient, iCurrentPage[iClient], 15);
 	return Plugin_Continue;
 }
 
@@ -494,11 +501,12 @@ public int CharMenu(Handle hMenu, MenuAction action, int param1, int param2)
 			char sItem[4];
 			GetMenuItem(hMenu, param2, sItem, sizeof(sItem));
 			ModelIndex(param1, StringToInt(sItem), true);
+			iCurrentPage[param1] = GetMenuSelectionPosition();
 			ShowMenu(param1, 0);
 		}
 		case MenuAction_Cancel:
 		{
-
+			iCurrentPage[param1] = 0;
 		}
 		case MenuAction_End:
 		{
@@ -1097,6 +1105,7 @@ public void OnClientDisconnect(int iClient)
 		IntToString(iSavedModel[iClient], sCookie, sizeof(sCookie));
 		SetClientCookie(iClient, hCookie_LmcCookie, sCookie);
 	}
+	iCurrentPage[iClient] = 0;
 	bAutoApplyMsg[iClient] = true;//1.4
 	for(int i = 0; i < sizeof(bAutoBlockedMsg[]); i++)//1.4
 		bAutoBlockedMsg[iClient][i] = true;
