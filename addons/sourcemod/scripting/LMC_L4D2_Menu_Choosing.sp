@@ -1139,38 +1139,26 @@ public void LMC_OnClientModelApplied(int iClient, int iEntity, const char sModel
 		LMC_L4D2_SetTransmit(iClient, iEntity);
 }
 
-/**
- * Sets the view to thirdperson mode for a while.
- *
- * @param int	Client index.
- * @noreturn
- */
+
 void SetExternalView(int iClient)
 {
 	if(g_fThirdPersonTime < 0.5)// best time any lower is kinda pointless
 		return;
 	
 	float fCurrentTPtime = GetForcedThirdPerson(iClient);
-	if(fCurrentTPtime == SILVERS_THIRDPERSON_PLUGIN_TIME)// i dislike this method but if it helps not break plugins it is fine, maybe should we submit changes to silvers about those plugins, it is kinda hacky?
-		return;
-	
 	float fTime = GetGameTime();
 	if(fCurrentTPtime > (fTime + g_fThirdPersonTime))
 		return;
 	
-	if(fCurrentTPtime > fTime - 2.5)//helps to prevent a strange rare bug with models that include particles(e.g. witch) model spamming just about to go back to firstperson, causing stuff to not render correctly (Could be only me) this seems to be client bug.
-		return;
+	if(fCurrentTPtime < fTime + 0.5)
+		if(fCurrentTPtime > fTime - 1.0)//helps to prevent a strange rare bug with models that include particles(e.g. witch) model spamming just about to go back to firstperson, causing stuff to not render correctly (Could be only me) this seems to be client bug, this only seems to happen on maps with modded func_precipitation.
+			return;
 	
 	SetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView", fTime + g_fThirdPersonTime);
 }
 
-/**
- * Validates if the client has the thirdperson view active.
- *
- * @param	int		Client index.
- * @return	float	Current forced view time
- */
+
 float GetForcedThirdPerson(int iClient)
 {
-	return GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView"); //NOTE:Silvers Survivor Thirdperson plugin sets time to 99999.3
+	return GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView");
 }
