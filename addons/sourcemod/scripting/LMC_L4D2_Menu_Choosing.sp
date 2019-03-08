@@ -16,7 +16,7 @@
 
 
 #define PLUGIN_NAME "LMC_L4D2_Menu_Choosing"
-#define PLUGIN_VERSION "1.0.2"
+#define PLUGIN_VERSION "1.0.5"
 
 //change me to whatever flag you want
 #define COMMAND_ACCESS ADMFLAG_CHAT
@@ -1001,13 +1001,15 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 		case 3:
 		{
 			int iEntity = CreateEntityByName("env_instructor_hint");
-
+			if(iEntity < 1)
+				return Plugin_Stop;
+				
 			char sValues[64];
-
+			
 			FormatEx(sValues, sizeof(sValues), "hint%d", iClient);
 			DispatchKeyValue(iClient, "targetname", sValues);
 			DispatchKeyValue(iEntity, "hint_target", sValues);
-
+			
 			Format(sValues, sizeof(sValues), "10");
 			DispatchKeyValue(iEntity, "hint_timeout", sValues);
 			DispatchKeyValue(iEntity, "hint_range", "100");
@@ -1017,7 +1019,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 			DispatchKeyValue(iEntity, "hint_color", sValues);
 			DispatchSpawn(iEntity);
 			AcceptEntityInput(iEntity, "ShowHint", iClient);
-
+			
 			SetVariantString("OnUser1 !self:Kill::6:1");
 			AcceptEntityInput(iEntity, "AddOutput");
 			AcceptEntityInput(iEntity, "FireUser1");
@@ -1125,7 +1127,7 @@ public void OnClientCookiesCached(int iClient)
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
 		return;
 
-	if(g_bAdminOnly && !CheckCommandAccess(iClient, "", COMMAND_ACCESS, true))
+	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS, true))
 			return;
 
 	ModelIndex(iClient, iSavedModel[iClient], false);
@@ -1140,31 +1142,35 @@ public void LMC_OnClientModelApplied(int iClient, int iEntity, const char sModel
 /**
  * Sets the view to thirdperson mode for a while.
  *
- * @param offset	Client index.
+ * @param int	Client index.
  * @noreturn
  */
-void SetExternalView(int client)
+void SetExternalView(int iClient)
 {
-	if (g_fThirdPersonTime == 0)
+	if(g_fThirdPersonTime < 0.5)// best time any lower is kinda pointless
 		return;
-
-	if (IsThirdPersonActivated(client))
+	
+	float fCurrentTPtime = GetForcedThirdPerson(iClient);
+	if(fCurrentTPtime == SILVERS_THIRDPERSON_PLUGIN_TIME)// i dislike this method but if it helps not break plugins it is fine, maybe should we submit changes to silvers about those plugins, it is kinda hacky?
 		return;
-
-	float time = GetGameTime() + g_fThirdPersonTime;
-	if (time == SILVERS_THIRDPERSON_PLUGIN_TIME)
-		time = SILVERS_THIRDPERSON_PLUGIN_TIME + 0.1;
-
-	SetEntPropFloat(client, Prop_Send, "m_TimeForceExternalView", time);
+	
+	float fTime = GetGameTime();
+	if(fCurrentTPtime > (fTime + g_fThirdPersonTime))
+		return;
+	
+	if(fCurrentTPtime > fTime - 2.5)//helps to prevent a strange rare bug with models that include particles(e.g. witch) model spamming just about to go back to firstperson, causing stuff to not render correctly (Could be only me) this seems to be client bug.
+		return;
+	
+	SetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView", fTime + g_fThirdPersonTime);
 }
 
 /**
  * Validates if the client has the thirdperson view active.
  *
- * @param offset	Client index.
- * @return			True if client has the thirdperson view active, false otherwise.
+ * @param	int		Client index.
+ * @return	float	Current forced view time
  */
-bool IsThirdPersonActivated(int client)
+float GetForcedThirdPerson(int iClient)
 {
-	return (GetEntPropFloat(client, Prop_Send, "m_TimeForceExternalView") == SILVERS_THIRDPERSON_PLUGIN_TIME); //Silvers Survivor Thirdperson plugin sets time to 99999.3
+	return GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView"); //NOTE:Silvers Survivor Thirdperson plugin sets time to 99999.3
 }
