@@ -6,7 +6,7 @@
 
 
 #define PLUGIN_NAME "LMCL4D2SetTransmit"
-#define PLUGIN_VERSION "1.0.1"
+#define PLUGIN_VERSION "1.0.2"
 
 enum ZOMBIECLASS
 {
@@ -146,7 +146,7 @@ static bool IsSurvivorThirdPerson(int iClient, bool bSpecCheck)
 		return true;
 	if(GetEntProp(iClient, Prop_Send, "m_isHangingFromLedge") > 0)
 		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_reviveOwner") > 0)
+	if(GetEntPropEnt(iClient, Prop_Send, "m_reviveTarget") > 0)
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
 		return true;
