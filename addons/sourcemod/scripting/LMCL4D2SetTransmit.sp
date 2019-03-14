@@ -6,7 +6,7 @@
 
 
 #define PLUGIN_NAME "LMCL4D2SetTransmit"
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.0.1"
 
 enum ZOMBIECLASS
 {
@@ -58,9 +58,28 @@ public Action HideModel(int iEntity, int iClient)
 	static int iOwner;
 	iOwner = GetClientOfUserId(iHiddenOwner[iEntity]);
 	if(!IsPlayerAlive(iClient))
+	{
 		if(GetEntProp(iClient, Prop_Send, "m_iObserverMode") == 4)
+		{
 			if(GetEntPropEnt(iClient, Prop_Send, "m_hObserverTarget") == iOwner)
+			{
+				switch(GetClientTeam(iOwner))
+				{
+					case 2:
+					{
+						if(IsSurvivorThirdPerson(iOwner, true))
+							return Plugin_Continue;
+					}
+					case 3:
+					{
+						if(IsInfectedThirdPerson(iOwner, true))
+							return Plugin_Continue;
+					}
+				}
 				return Plugin_Handled;
+			}
+		}
+	}
 	
 	
 	if(iOwner < 1 || !IsClientInGame(iOwner))
@@ -73,7 +92,7 @@ public Action HideModel(int iEntity, int iClient)
 			if(iOwner != iClient)
 				return Plugin_Continue;
 			
-			if(!IsSurvivorThirdPerson(iClient))
+			if(!IsSurvivorThirdPerson(iClient, false))
 				return Plugin_Handled;
 		}
 		case 3: 
@@ -93,7 +112,7 @@ public Action HideModel(int iEntity, int iClient)
 				if(bIsGhost)
 					SetEntityRenderMode(iOwner, RENDER_NONE);
 				
-				if(!IsInfectedThirdPerson(iOwner))
+				if(!IsInfectedThirdPerson(iOwner, false))
 					return Plugin_Handled;
 			}
 		}
@@ -103,15 +122,19 @@ public Action HideModel(int iEntity, int iClient)
 }
 
 
-static bool IsSurvivorThirdPerson(int iClient)
+static bool IsSurvivorThirdPerson(int iClient, bool bSpecCheck)
 {
-	if(bThirdPerson[iClient])
-		return true;
+	if(!bSpecCheck)
+	{
+		if(bThirdPerson[iClient])
+			return true;
+		
+		if(GetEntProp(iClient, Prop_Send, "m_iObserverMode") == 1)
+			return true;
+	}
 	if(GetEntPropEnt(iClient, Prop_Send, "m_hViewEntity") > 0)
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
-		return true;
-	if(GetEntProp(iClient, Prop_Send, "m_iObserverMode") == 1)
 		return true;
 	if(GetEntPropEnt(iClient, Prop_Send, "m_pummelAttacker") > 0)
 		return true;
@@ -123,7 +146,7 @@ static bool IsSurvivorThirdPerson(int iClient)
 		return true;
 	if(GetEntProp(iClient, Prop_Send, "m_isHangingFromLedge") > 0)
 		return true;
-	if(GetEntPropEnt(iClient, Prop_Send, "m_reviveTarget") > 0)
+	if(GetEntPropEnt(iClient, Prop_Send, "m_reviveOwner") > 0)
 		return true;
 	if(GetEntPropFloat(iClient, Prop_Send, "m_staggerTimer", 1) > -1.0)
 		return true;
@@ -225,11 +248,13 @@ static bool IsSurvivorThirdPerson(int iClient)
 	return false;
 }
 
-static bool IsInfectedThirdPerson(int iClient)
+static bool IsInfectedThirdPerson(int iClient, bool bSpecCheck)
 {
-	//This shit is busted rightnow but it works on otherplugins :P
-	if(bThirdPerson[iClient])
-		return true;
+	if(!bSpecCheck)
+	{
+		if(bThirdPerson[iClient])
+			return true;
+	}
 	
 	if(GetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView") > GetGameTime())
 		return true;
