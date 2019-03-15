@@ -34,7 +34,7 @@ public SharedPlugin __pl_LMCL4D2SetTransmit =
 };
 
 #if !defined REQUIRE_PLUGIN
-public void __pl_LMCL4D2SetTransmit_SetNTVOptional()
+public void __pl_LMCL4D1SetTransmit_SetNTVOptional()
 {
 	MarkNativeAsOptional("LMC_L4D1_SetTransmit");
 }
