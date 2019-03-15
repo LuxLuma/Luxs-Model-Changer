@@ -6,7 +6,7 @@
 
 
 #define PLUGIN_NAME "LMCL4D1SetTransmit"
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.0.1"
 
 enum ZOMBIECLASS
 {
@@ -151,7 +151,7 @@ static bool IsSurvivorThirdPerson(int iClient, bool bSpecCheck)
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 535, 537, 539, 540, 541, 542:
+				case 535, 537, 539, 540, 541:
 				return true;
 			}
 		}
@@ -159,7 +159,7 @@ static bool IsSurvivorThirdPerson(int iClient, bool bSpecCheck)
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 517, 519, 521, 522, 523, 524:
+				case 517, 519, 521, 522, 523:
 				return true;
 			}
 		}
@@ -167,7 +167,7 @@ static bool IsSurvivorThirdPerson(int iClient, bool bSpecCheck)
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 536, 538, 540, 541, 542, 543:
+				case 536, 538, 540, 541, 542:
 				return true;
 			}
 		}
@@ -175,7 +175,7 @@ static bool IsSurvivorThirdPerson(int iClient, bool bSpecCheck)
 		{
 			switch(GetEntProp(iClient, Prop_Send, "m_nSequence"))
 			{
-				case 535, 537, 539, 540, 541, 542:
+				case 535, 537, 539, 540, 541:
 				return true;
 			}
 		}
