@@ -5,20 +5,7 @@
 #pragma newdecls required
 
 
-#define PLUGIN_VERSION "3.0.1"
-
-enum ZOMBIECLASS
-{
-	ZOMBIECLASS_SMOKER = 1,
-	ZOMBIECLASS_BOOMER,
-	ZOMBIECLASS_HUNTER,
-	ZOMBIECLASS_SPITTER,
-	ZOMBIECLASS_JOCKEY,
-	ZOMBIECLASS_CHARGER,
-	ZOMBIECLASS_UNKNOWN,
-	ZOMBIECLASS_TANK,
-}
-
+#define PLUGIN_VERSION "3.0.2"
 
 static int iHiddenEntity[2048+1] = {0, ...};
 static int iHiddenEntityRef[2048+1];

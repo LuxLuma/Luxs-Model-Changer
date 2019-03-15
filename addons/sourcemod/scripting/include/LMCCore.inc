@@ -22,7 +22,7 @@
 #define _LMCCore_included
 
 
-#define LMCCore_version "2.5.2"
+#define LMCCore_version "3.0.2"
 
 #if defined REQUIRE_PLUGIN
 	#undef REQUIRE_PLUGIN
