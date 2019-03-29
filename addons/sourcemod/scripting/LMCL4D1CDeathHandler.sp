@@ -31,15 +31,11 @@
 
 
 #define PLUGIN_NAME "LMCL4D1CDeathHandler"
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 
 static char sModelStrings[MAXPLAYERS+1][PLATFORM_MAX_PATH];
-
-static int iDeathModelRef = INVALID_ENT_REFERENCE;
 static int iCSRagdollRef = INVALID_ENT_REFERENCE;
-static bool bIgnore = false;
 
-Handle g_hOnClientDeathModelCreated = INVALID_HANDLE;
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {

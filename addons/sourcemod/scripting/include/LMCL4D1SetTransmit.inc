@@ -22,7 +22,7 @@
 */
 native bool LMC_L4D1_SetTransmit(int iClient, int iEntity, bool HookAction=true);
 
-public SharedPlugin __pl_LMCL4D2SetTransmit = 
+public SharedPlugin __pl_LMCL4D1SetTransmit = 
 {
 	name = "LMCL4D1SetTransmit",
 	file = "LMCL4D1SetTransmit.smx",

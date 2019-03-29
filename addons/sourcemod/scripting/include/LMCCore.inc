@@ -22,17 +22,7 @@
 #define _LMCCore_included
 
 
-#define LMCCore_version "3.0.2"
-
-#if defined REQUIRE_PLUGIN
-	#undef REQUIRE_PLUGIN
-	#include <LMCL4D2SetTransmit>
-	#include <LMCL4D2CDeathHandler>
-	#define REQUIRE_PLUGIN
-#else
-	#include <LMCL4D2SetTransmit>
-	#include <LMCL4D2CDeathHandler>
-#endif
+#define LMCCore_version "3.0.4"
 
 
 /**
@@ -212,14 +202,4 @@ public void __pl_LMCCore_SetNTVOptional()
 	MarkNativeAsOptional("LMC_ResetRenderMode");
 	MarkNativeAsOptional("LMC_HideClientOverlayModel");
 }
-#endif
-
-#if defined REQUIRE_PLUGIN
-#undef REQUIRE_PLUGIN
-#include <LMCL4D2SetTransmit>
-#include <LMCL4D2CDeathHandler>
-#define REQUIRE_PLUGIN
-#else
-#include <LMCL4D2SetTransmit>
-#include <LMCCore>
 #endif
