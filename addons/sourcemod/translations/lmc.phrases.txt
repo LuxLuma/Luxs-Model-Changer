@@ -14,7 +14,7 @@
 		"ru"		"[LMC] Меню доступно только в игре."
 		"pl"		"[LMC] REPLACEME."
 		"sv"		"[LMC] Menyn är endast tillgänlig i spelet."
-		"es"        "[LMC] El menú solo funciona dentro del juego."
+		"es"		"[LMC] El menú solo funciona dentro del juego."
 	}
 	"Admin only"
 	{
@@ -22,7 +22,7 @@
 		"ru"		"{orange}[LMC] {cyan}Смена модели доступна только для админов."
 		"pl"		"{orange}[LMC] {cyan}REPLACEME."
 		"sv"		"{orange}[LMC] {cyan}Byta modell är endast tillgängligt för admins."
-		"es"        "{orange}[LMC] {cyan}Cambio de modelo solo disponible para administradores."
+		"es"		"{orange}[LMC] {cyan}Cambio de modelo solo disponible para administradores."
 	}
 	"Alive only"
 	{
@@ -30,7 +30,7 @@
 		"ru"		"{orange}[LMC] {cyan}Сменить модель можно при следующем возрождении"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Välj en modell som ska tillämpas nästa gång du spawnar."
-		"es"        "{orange}[LMC] {cyan}Elige un modelo para aplicarlo al reaparecer"
+		"es"		"{orange}[LMC] {cyan}Elige un modelo para aplicarlo al reaparecer"
 	}
 	"Lux's Model Changer"
 	{
@@ -38,7 +38,7 @@
 		"ru"		"Смена персонажа (от Lux)"
 		"pl"		"REPLACEME"
 		"sv"		"Lux's modelländrare"
-		"es"        "Cambiador de Modelo (de Lux)"
+		"es"		"Cambiador de Modelo (de Lux)"
 	}
 	"Normal Models"
 	{
@@ -54,7 +54,7 @@
 		"ru"		"Случайный зомби"
 		"pl"		"REPLACEME"
 		"sv"		"Slumpmässig gemensam"
-		"es"        "Comúnes aleatorios"
+		"es"		"Comúnes aleatorios"
 	}
 	"Witch"
 	{
@@ -62,7 +62,7 @@
 		"ru"		"Ведьма"
 		"pl"		"REPLACEME"
 		"sv"		"Häxa"
-		"es"        "Bruja"
+		"es"		"Bruja"
 	}
 	"Witch Bride"
 	{
