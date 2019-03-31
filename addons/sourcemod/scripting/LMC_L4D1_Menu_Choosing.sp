@@ -28,13 +28,14 @@
 #define REQUIRE_PLUGIN
 #include <LMCL4D1SetTransmit>
 #include <LMCCore>
+
 #undef REQUIRE_PLUGIN
 
 #pragma newdecls required
 
 
 #define PLUGIN_NAME "LMC_L4D1_Menu_Choosing"
-#define PLUGIN_VERSION "1.0"
+#define PLUGIN_VERSION "1.1"
 
 //change me to whatever flag you want
 #define COMMAND_ACCESS ADMFLAG_CHAT
@@ -176,6 +177,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations("l4d_lmc.phrases");
+
 	CreateConVar("lmc_l4d1_menu_choosing", PLUGIN_VERSION, "LMC_L4D1_Menu_Choosing_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
 
 	hCvar_AdminOnlyModel = CreateConVar("lmc_adminonly", "0", "Allow admins to only change models? (1 = true) NOTE: this will disable announcement to player who join. ((#define COMMAND_ACCESS ADMFLAG_CHAT) change to w/o flag you want or (Use override file))", FCVAR_NOTIFY, true, 0.0, true, 1.0);
@@ -366,49 +369,49 @@ public Action ShowMenu(int iClient, int iArgs)
 {
 	if(iClient == 0)
 	{
-		ReplyToCommand(iClient, "[LMC] Menu is in-game only.");
+		ReplyToCommand(iClient, Translate(iClient, "%t", "In-game only")); // "[LMC] Menu is in-game only.");
 		return Plugin_Continue;
 	}
 	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS))
 	{
-		ReplyToCommand(iClient, "\x04[LMC] \x03Model Changer is only available to admins.");
+		ReplyToCommand(iClient, Translate(iClient, "%t", "Admin only")); // "\x04[LMC] \x03Model Changer is only available to admins.");
 		return Plugin_Continue;
 	}
 	if(!IsPlayerAlive(iClient) && bAutoBlockedMsg[iClient][5])
 	{
-		ReplyToCommand(iClient, "\x04[LMC] \x03Pick a Model to be Applied NextSpawn");
+		ReplyToCommand(iClient, Translate(iClient, "%t", "Alive only")); // "\x04[LMC] \x03Pick a Model to be Applied NextSpawn");
 		bAutoBlockedMsg[iClient][5] = false;
 	}
 	Handle hMenu = CreateMenu(CharMenu);
-	SetMenuTitle(hMenu, "Lux's Model Changer");//1.4
+	SetMenuTitle(hMenu, Translate(iClient, "%t", "Lux's Model Changer"));//1.4
 
-	AddMenuItem(hMenu, "1", "Normal Models");
-	AddMenuItem(hMenu, "2", "Random Common");
+	AddMenuItem(hMenu, "1", Translate(iClient, "%t", "Normal Models"));
+	AddMenuItem(hMenu, "2", Translate(iClient, "%t", "Random Common"));
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Witch]))
-		AddMenuItem(hMenu, "3", "Witch");
+		AddMenuItem(hMenu, "3", Translate(iClient, "%t", "Witch"));
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Boomer]))
-		AddMenuItem(hMenu, "4", "Boomer");
+		AddMenuItem(hMenu, "4", Translate(iClient, "%t", "Boomer"));
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Hunter]))
-		AddMenuItem(hMenu, "5", "Hunter");
+		AddMenuItem(hMenu, "5", Translate(iClient, "%t", "Hunter"));
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Smoker]))
-		AddMenuItem(hMenu, "6", "Smoker");
+		AddMenuItem(hMenu, "6", Translate(iClient, "%t", "Smoker"));
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Pilot]))
-		AddMenuItem(hMenu, "7", "Chopper Pilot");
+		AddMenuItem(hMenu, "7", Translate(iClient, "%t", "Chopper Pilot"));
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Bill]))
-		AddMenuItem(hMenu, "8", "Bill");
+		AddMenuItem(hMenu, "8", Translate(iClient, "%t", "Bill"));
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Zoey]))
-		AddMenuItem(hMenu, "9", "Zoey");
+		AddMenuItem(hMenu, "9", Translate(iClient, "%t", "Zoey"));
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Francis]))
-		AddMenuItem(hMenu, "10", "Francis");
+		AddMenuItem(hMenu, "10", Translate(iClient, "%t", "Francis"));
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Louis]))
-		AddMenuItem(hMenu, "11", "Louis");
+		AddMenuItem(hMenu, "11", Translate(iClient, "%t", "Louis"));
 
 	if(g_bTankModel)
 	{
 		if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Tank]))
-			AddMenuItem(hMenu, "12", "Tank");
+			AddMenuItem(hMenu, "12", Translate(iClient, "%t", "Tank"));
 		if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_TankDLC3]))
-			AddMenuItem(hMenu, "13", "Tank DLC");
+			AddMenuItem(hMenu, "13", Translate(iClient, "%t", "Tank DLC"));
 	}
 	SetMenuExitButton(hMenu, true);
 	
@@ -465,7 +468,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][0])
 							return;
 
-						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Smoker");
+						CPrintToChat(iClient, "%t", "Disabled_Models_Smoker"); // "\x04[LMC] \x03Server Has Disabled Models for \x04Smoker");
 						bAutoBlockedMsg[iClient][0] = false;
 						return;
 					}
@@ -477,7 +480,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][1])
 							return;
 
-						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Boomer");
+						CPrintToChat(iClient, "%t", "Disabled_Models_Boomer"); // "\x04[LMC] \x03Server Has Disabled Models for \x04Boomer");
 						bAutoBlockedMsg[iClient][1] = false;
 						return;
 					}
@@ -489,7 +492,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][2])
 							return;
 
-						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Hunter");
+						CPrintToChat(iClient, "%t", "Disabled_Models_Hunter"); // "\x04[LMC] \x03Server Has Disabled Models for \x04Hunter");
 						bAutoBlockedMsg[iClient][2] = false;
 						return;
 					}
@@ -501,7 +504,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][3])
 							return;
 
-						PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Tank");
+						CPrintToChat(iClient, "%t", ""); // "\x04[LMC] \x03Server Has Disabled Models for \x04Tank");
 						bAutoBlockedMsg[iClient][3] = false;
 						return;
 					}
@@ -515,7 +518,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				if(!bUsingMenu && !bAutoBlockedMsg[iClient][4])
 					return;
 
-				PrintToChat(iClient, "\x04[LMC] \x03Server Has Disabled Models for \x04Survivors");
+				CPrintToChat(iClient, "%t", "Disabled_Models_Tank"); // "\x04[LMC] \x03Server Has Disabled Models for \x04Survivors");
 				bAutoBlockedMsg[iClient][4] = false;
 				return;
 			}
@@ -533,7 +536,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Models will be default");
+			CPrintToChat(iClient, "%t", "Default_Models"); // "\x04[LMC] \x03Models will be default");
 			bAutoApplyMsg[iClient] = false;
 			return;
 		}
@@ -558,7 +561,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Common Infected");
+			CPrintToChat(iClient, "%t", "Model_Common"); // "\x04[LMC] \x03Model is \x04Common Infected");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 3:
@@ -569,7 +572,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Witch");
+			CPrintToChat(iClient, "%t", "Model_Witch"); // "\x04[LMC] \x03Model is \x04Witch");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 4:
@@ -580,7 +583,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Boomer");
+			CPrintToChat(iClient, "%t", "Model_Boomer"); // "\x04[LMC] \x03Model is \x04Boomer");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 5:
@@ -590,7 +593,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Hunter");
+			CPrintToChat(iClient, "%t", "Model_Hunter"); // "\x04[LMC] \x03Model is \x04Hunter");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 6:
@@ -601,7 +604,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Smoker");
+			CPrintToChat(iClient, "%t", "Model_Smoker"); // "\x04[LMC] \x03Model is \x04Smoker");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 7:
@@ -612,7 +615,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Chopper Pilot");
+			CPrintToChat(iClient, "%t", "Model_Chopper_Pilot"); // "\x04[LMC] \x03Model is \x04Chopper Pilot");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 8:
@@ -623,7 +626,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Bill");
+			CPrintToChat(iClient, "%t", "Model_Bill"); // "\x04[LMC] \x03Model is \x04Bill");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 9:
@@ -634,7 +637,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Zoey");
+			CPrintToChat(iClient, "%t", "Model_Zoey"); // "\x04[LMC] \x03Model is \x04Zoey");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 10:
@@ -645,7 +648,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Francis");
+			CPrintToChat(iClient, "%t", "Model_Francis"); // "\x04[LMC] \x03Model is \x04Francis");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 11:
@@ -656,7 +659,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Louis");
+			CPrintToChat(iClient, "%t", "Model_Louis"); // "\x04[LMC] \x03Model is \x04Louis");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 12:
@@ -670,7 +673,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Tank");
+			CPrintToChat(iClient, "%t", "Model_Tank"); // "\x04[LMC] \x03Model is \x04Tank");
 			bAutoApplyMsg[iClient] = false;
 		}
 		case 13:
@@ -684,7 +687,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			PrintToChat(iClient, "\x04[LMC] \x03Model is \x04Tank DLC");
+			CPrintToChat(iClient, "%t", "Model_Tank_DLC"); // "\x04[LMC] \x03Model is \x04Tank DLC");
 			bAutoApplyMsg[iClient] = false;
 		}
 	}
@@ -710,10 +713,10 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 	{
 		case 1:
 		{
-			PrintToChat(iClient, "\x04[LMC] \x03To Change Model use chat Command \x04!lmc\x03");
+			CPrintToChat(iClient, "%t", "Change_Model_Help_Chat"); // "\x04[LMC] \x03To Change Model use chat Command \x04!lmc\x03");
 			EmitSoundToClient(iClient, sJoinSound, SOUND_FROM_PLAYER, SNDCHAN_STATIC);
 		}
-		case 2: PrintHintText(iClient, "[LMC] To Change Model use chat Command !lmc");
+		case 2: PrintHintText(iClient, "%t", "Change_Model_Help_Hint"); // "[LMC] To Change Model use chat Command !lmc");
 	}
 	return Plugin_Stop;
 }
