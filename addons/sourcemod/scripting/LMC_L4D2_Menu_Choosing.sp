@@ -804,7 +804,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			CPrintToChat(iClient, "%t", "Model_Chopper_CEDA"); // "\x04[LMC] \x03Model is \x04CEDA Suit");
+			CPrintToChat(iClient, "%t", "Model_CEDA"); // "\x04[LMC] \x03Model is \x04CEDA Suit");
 			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -816,7 +816,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			CPrintToChat(iClient, "%t", "Model_Chopper_Clown"); // "\x04[LMC] \x03Model is \x04Clown");
+			CPrintToChat(iClient, "%t", "Model_Clown"); // "\x04[LMC] \x03Model is \x04Clown");
 			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -828,7 +828,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			CPrintToChat(iClient, "%t", "Model_Chopper_Jimmy_Gibs"); // "\x04[LMC] \x03Model is \x04Jimmy Gibs");
+			CPrintToChat(iClient, "%t", "Model_Jimmy_Gibs"); // "\x04[LMC] \x03Model is \x04Jimmy Gibs");
 			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -840,7 +840,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			CPrintToChat(iClient, "%t", "Model_Chopper_Fallen_Survivor"); // "\x04[LMC] \x03Model is \x04Fallen Survivor");
+			CPrintToChat(iClient, "%t", "Model_Fallen_Survivor"); // "\x04[LMC] \x03Model is \x04Fallen Survivor");
 			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -853,7 +853,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			CPrintToChat(iClient, "%t", "Model_Chopper_Nick"); // "\x04[LMC] \x03Model is \x04Nick");
+			CPrintToChat(iClient, "%t", "Model_Nick"); // "\x04[LMC] \x03Model is \x04Nick");
 			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -865,7 +865,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			CPrintToChat(iClient, "%t", "Model_Chopper_Rochelle"); // "\x04[LMC] \x03Model is \x04Rochelle");
+			CPrintToChat(iClient, "%t", "Model_Rochelle"); // "\x04[LMC] \x03Model is \x04Rochelle");
 			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -877,7 +877,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			CPrintToChat(iClient, "%t", "Model_Chopper_Coach"); // "\x04[LMC] \x03Model is \x04Coach");
+			CPrintToChat(iClient, "%t", "Model_Coach"); // "\x04[LMC] \x03Model is \x04Coach");
 			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
@@ -889,7 +889,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 			if(!bUsingMenu && !bAutoApplyMsg[iClient])
 				return;
 
-			CPrintToChat(iClient, "%t", "Model_Chopper_Ellis"); // "\x04[LMC] \x03Model is \x04Ellis");
+			CPrintToChat(iClient, "%t", "Model_Ellis"); // "\x04[LMC] \x03Model is \x04Ellis");
 			SetExternalView(iClient);
 			bAutoApplyMsg[iClient] = false;
 		}
