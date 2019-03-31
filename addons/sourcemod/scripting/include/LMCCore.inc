@@ -96,6 +96,119 @@ forward void LMC_OnClientModelApplied(int iClient, int iEntity, const char sMode
 */
 forward void LMC_OnClientModelDestroyed(int iClient, int iEntity);
 
+/**
+*   @note Used for in-line string translation.
+*
+*   @param  iClient     Client Index, translation is apllied to.
+*   @param  format      String formatting rules. By default, you should pass at least "%t" specifier.
+*   @param  ...			Variable number of format parameters.
+*   @return char[192]	Resulting string. Note: output buffer is hardly limited.
+*/
+stock char[] Translate(int iClient, const char[] format, any ...)
+{
+	char buffer[192];
+	SetGlobalTransTarget(iClient);
+	VFormat(buffer, sizeof(buffer), format, 3);
+	return buffer;
+}
+
+/**
+*   @note Prints a message to a specific client in the chat area. Supports named colors in translation file.
+*
+*   @param  iClient     Client Index.
+*   @param  format		Formatting rules.
+*   @param  ...			Variable number of format parameters.
+*   @no return
+*/
+stock void CPrintToChat(int iClient, const char[] format, any ...)
+{
+    char buffer[192];
+    SetGlobalTransTarget(iClient);
+    VFormat(buffer, sizeof(buffer), format, 3);
+    ReplaceColor(buffer, sizeof(buffer));
+    PrintToChat(iClient, "\x01%s", buffer);
+}
+
+/**
+*   @note Prints a message to all clients in the chat area. Supports named colors in translation file.
+*
+*   @param  format		Formatting rules.
+*   @param  ...			Variable number of format parameters.
+*   @no return
+*/
+stock void CPrintToChatAll(const char[] format, any ...)
+{
+    char buffer[192];
+    for( int i = 1; i <= MaxClients; i++ )
+    {
+        if( IsClientInGame(i) && !IsFakeClient(i) )
+        {
+            SetGlobalTransTarget(i);
+            VFormat(buffer, sizeof(buffer), format, 2);
+            ReplaceColor(buffer, sizeof(buffer));
+            PrintToChat(i, "\x01%s", buffer);
+        }
+    }
+}
+
+/**
+*   @note Converts named color to control character. Used internally by string translation functions.
+*
+*   @param  char[]		Input/Output string for convertion.
+*   @param  maxLen		Maximum length of string buffer (includes NULL terminator).
+*   @no return
+*/
+stock void ReplaceColor(char[] message, int maxLen)
+{
+    ReplaceString(message, maxLen, "{white}", "\x01", false);
+    ReplaceString(message, maxLen, "{cyan}", "\x03", false);
+    ReplaceString(message, maxLen, "{orange}", "\x04", false);
+    ReplaceString(message, maxLen, "{green}", "\x05", false);
+}
+
+/**
+*   @note Prints a hint message to all clients. Supports individual string translation for each client.
+*
+*   @param  format		Formatting rules.
+*   @param  ...			Variable number of format parameters.
+*   @no return
+*/
+stock void CPrintHintTextToAll(const char[] format, any ...)
+{
+    char buffer[192];
+    for( int i = 1; i <= MaxClients; i++ )
+    {
+        if( IsClientInGame(i) && !IsFakeClient(i) )
+        {
+            SetGlobalTransTarget(i);
+            VFormat(buffer, sizeof(buffer), format, 2);
+            PrintHintText(i, buffer);
+        }
+    }
+}
+
+/**
+*   @note Prints a center screen message to all clients. Supports individual string translation for each client.
+*
+*   @param  format		Formatting rules.
+*   @param  ...			Variable number of format parameters.
+*   @no return
+*/
+stock void CPrintCenterTextAll(const char[] format, any ...)
+{
+    char buffer[192];
+    for( int i = 1; i <= MaxClients; i++ )
+    {
+        if( IsClientInGame(i) && !IsFakeClient(i) )
+        {
+            SetGlobalTransTarget(i);
+            VFormat(buffer, sizeof(buffer), format, 2);
+            PrintCenterText(i, buffer);
+        }
+    }
+}
+
+
 
 
 
