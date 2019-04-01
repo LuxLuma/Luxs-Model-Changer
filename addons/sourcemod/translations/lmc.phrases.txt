@@ -15,7 +15,7 @@
 		"pl"		"[LMC] REPLACEME."
 		"sv"		"[LMC] Menyn är endast tillgänlig i spelet."
 		"es"		"[LMC] El menú solo funciona dentro del juego."
-		"hu"		"[LMC] A menü csak játékon belüli."
+		"hu"		"[LMC] A menü csak játékon belül használható."
 	}
 	"Admin only"
 	{
@@ -24,7 +24,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME."
 		"sv"		"{orange}[LMC] {cyan}Byta modell är endast tillgängligt för admins."
 		"es"		"{orange}[LMC] {cyan}Cambio de modelo solo disponible para administradores."
-		"hu"		"{orange}[LMC] {cyan}A Model Váltás csak az adminoknak elérhető."
+		"hu"		"{orange}[LMC] {cyan}A Model váltás csak az adminoknak elérhető."
 	}
 	"Alive only"
 	{
@@ -42,7 +42,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Lux's modelländrare"
 		"es"		"Cambiador de Modelo (de Lux)"
-		"hu"		"Lux Model Váltója"
+		"hu"		"Lux Model váltója"
 	}
 	"Normal Models"
 	{
@@ -51,7 +51,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Vanliga modeller"
 		"es"		"Modelos Normales"
-		"hu"		"Normál Modellek"
+		"hu"		"Normál modellek"
 	}
 	"Random Common"
 	{
@@ -78,7 +78,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Gift Häxa"
 		"es"		"Bruja (Novia)"
-		"hu"		"Boszorka Menyasszony"
+		"hu"		"Boszorka menyasszony"
 	}
 	"Boomer"
 	{
@@ -123,7 +123,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Kravallpolis"
 		"es"		"Antidisturbios"
-		"hu"		"Rohamrendőrség"
+		"hu"		"Rohamrendőr"
 	}
 	"MudMan"
 	{
@@ -141,7 +141,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Helikopter Pilot"
 		"es"		"Piloto"
-		"hu"		"Helikopter Pilóta"
+		"hu"		"Helikopter pilóta"
 	}
 	"CEDA"
 	{
@@ -177,7 +177,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Stupad Överlevare"
 		"es"		"Superviviente caído"
-		"hu"		"Bukott Túlélő"
+		"hu"		"Bukott túlélő"
 	}
 	"Nick"
 	{
@@ -276,6 +276,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Rökare"
 		"es"		"{orange}[LMC] {cyan}El servidor ha deshabilitado los modelos de {orange}Smoker"
+		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Füstös"
 	}
 	"Disabled_Models_Boomer"
 	{
@@ -284,6 +285,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Boomer"
 		"es"		"{orange}[LMC] {cyan}El servidor ha deshabilitado los modelos de {orange}Boomer"
+		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Pukkancs"
 	}
 	"Disabled_Models_Hunter"
 	{
@@ -292,6 +294,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Jägare"
 		"es"		"{orange}[LMC] {cyan}El servidor ha deshabilitado los modelos de {orange}Hunter"
+		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Vadász"
 	}
 	"Disabled_Models_Tank"
 	{
@@ -300,6 +303,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Tank"
 		"es"		"{orange}[LMC] {cyan}El servidor ha deshabilitado los modelos de {orange}Tank"
+		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Tank"
 	}
 	"Disabled_Models_Survivors"
 	{
@@ -308,6 +312,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Överlevare"
 		"es"		"{orange}[LMC] {cyan}El servidor ha deshabilitado los modelos de {orange}Supervivientes"
+		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Túlélők"
 	}
 	"Default_Models"
 	{
@@ -316,6 +321,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellerna kommer vara standard"
 		"es"		"{orange}[LMC] {cyan}Los modelos serán por defecto"
+		"hu"		"{orange}[LMC] {cyan}A modellek alapértelmezettek lesznek"
 	}
 	"Unsupported_Spitter"
 	{
@@ -324,6 +330,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellerna fungerar ej för {orange}Spitter"
 		"es"		"{orange}[LMC] {cyan}Los modelos no funcionan para {orange}Spitter"
+		"hu"		"{orange}[LMC] {cyan}A modellek nem működnek rajta: {orange}Köpködő"
 	}
 	"Unsupported_Jockey"
 	{
@@ -332,6 +339,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellerna funger ej för {orange}Jockey"
 		"es"		"{orange}[LMC] {cyan}Los modelos no funcionan para {orange}Jockey"
+		"hu"		"{orange}[LMC] {cyan}A modellek nem működnek rajta: {orange}Zsoké"
 	}
 	"Unsupported_Charger"
 	{
@@ -340,6 +348,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellerna fungerar ej för {orange}Charger"
 		"es"		"{orange}[LMC] {cyan}Los modelos no funcionan para {orange}Charger"
+		"hu"		"{orange}[LMC] {cyanA modellek nem működnek rajta: {orange}Rohanó"
 	}
 	"Model_Common"
 	{
@@ -348,6 +357,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Vanlig Infekterad"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Infectado común"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Közönséges fertőzött"
 	}
 	"Model_Witch"
 	{
@@ -356,6 +366,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Häxa"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Bruja"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Boszorka"
 	}
 	"Model_Witch_Bride"
 	{
@@ -364,6 +375,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Gift Häxa"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Bruja(Novia)"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Boszorka Mennyasszony"
 	}
 	"Model_Boomer"
 	{
@@ -372,6 +384,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Boomer"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Boomer"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Pukkancs"
 	}
 	"Model_Boomette"
 	{
@@ -380,6 +393,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Boomette"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Boomette"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Pukkancsné"
 	}
 	"Model_Hunter"
 	{
@@ -388,6 +402,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Jägare"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Hunter"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Vadász"
 	}
 	"Model_Smoker"
 	{
@@ -396,6 +411,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Rökare"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Smoker"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Füstös"
 	}
 	"Model_RiotCop"
 	{
@@ -404,6 +420,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Kravalls Polis"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Antidisturbios"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Rohamrendőr"
 	}
 	"Model_MudMen"
 	{
@@ -412,6 +429,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Lerman"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Embarrado"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}MudMen"
 	}
 	"Model_Chopper_Pilot"
 	{
@@ -420,6 +438,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Helikopter Pilot"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Piloto"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Helikopter Pilóta"
 	}
 	"Model_CEDA"
 	{
@@ -428,6 +447,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}CEDA"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Agente de la CEDA"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}CEDA"
 	}
 	"Model_Clown"
 	{
@@ -435,7 +455,8 @@
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Клоун"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Clown"
-		"es"        "{orange}[LMC] {cyan}El modelo es {orange}Payaso"
+		"es"            "{orange}[LMC] {cyan}El modelo es {orange}Payaso"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Bohóc"
 	}
 	"Model_Jimmy_Gibs"
 	{
@@ -444,6 +465,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Jimmy Gibs"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Jimmy Gibs"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Jimmy Gibs"
 	}
 	"Model_Fallen_Survivor"
 	{
@@ -452,6 +474,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Stupad Överlevare"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Superviviente caído"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Bukott Túlélő"
 	}
 	"Model_Nick"
 	{
@@ -459,7 +482,8 @@
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Ник"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Nick"
-		"es"        "{orange}[LMC] {cyan}El modelo es {orange}Nick"
+		"es"            "{orange}[LMC] {cyan}El modelo es {orange}Nick"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Nick"
 	}
 	"Model_Rochelle"
 	{
@@ -468,6 +492,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Rochelle"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Rochelle"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Rochelle"
 	}
 	"Model_Coach"
 	{
@@ -476,6 +501,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tränare"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Coach"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Edző"
 	}
 	"Model_Ellis"
 	{
@@ -484,6 +510,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Ellis"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Ellis"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Ellis"
 	}
 	"Model_Bill"
 	{
@@ -492,6 +519,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Bill"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Bill"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Bill"
 	}
 	"Model_Zoey"
 	{
@@ -500,6 +528,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Zoey"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Zoey"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Zoey"
 	}
 	"Model_Francis"
 	{
@@ -508,6 +537,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Francis"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Francis"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Francis"
 	}
 	"Model_Louis"
 	{
@@ -516,6 +546,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Louis"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Louis"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Louis"
 	}
 	"Model_Tank"
 	{
@@ -524,6 +555,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tank"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Tank"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Tank"
 	}
 	"Model_Tank_DLC"
 	{
@@ -532,6 +564,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tank DLC"
 		"es"		"{orange}[LMC] {cyan}El modelo es {orange}Tank DLC"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}Tank DLC"
 	}
 	"Change_Model_Help_Chat"
 	{
@@ -540,6 +573,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}!lmc"
 		"sv"		"{orange}[LMC] {cyan}För att ändra modell, använd chattkommandot {orange}!lmc"
 		"es"		"{orange}[LMC] {cyan}Para cambiar el modelo use el Comando en el chat {orange}!lmc"
+		"hu"		"{orange}[LMC] {cyan}Model váltáshoz használd a chat parancsott {orange}!lmc"
 	}
 	"Change_Model_Help_Hint"
 	{
@@ -548,5 +582,6 @@
 		"pl"		"[LMC] REPLACEME !lmc"
 		"sv"		"[LMC] För att ändra modell, använd chattkommandot !lmc"
 		"es"		"[LMC] Para cambiar el modelo use el Commando en el chat !lmc"
+		"hu"		"[LMC] Model váltáshoz használd a chat parancsott !lmc"
 	}
 }
