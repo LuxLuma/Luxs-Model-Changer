@@ -11,6 +11,7 @@
 	"In-game only"
 	{
 		"en"		"[LMC] Menu is in-game only."
+		"chi"		"[LMC] 这个菜单只能在游戏中使用"
 		"ru"		"[LMC] Меню доступно только в игре."
 		"pl"		"[LMC] REPLACEME."
 		"sv"		"[LMC] Menyn är endast tillgänlig i spelet."
@@ -19,6 +20,7 @@
 	"Admin only"
 	{
 		"en"		"{orange}[LMC] {cyan}Model Changer is only available to admins."
+		"chi"		"{orange}[LMC] {cyan}只有管理员可以修改人物皮肤模型."
 		"ru"		"{orange}[LMC] {cyan}Смена модели доступна только для админов."
 		"pl"		"{orange}[LMC] {cyan}REPLACEME."
 		"sv"		"{orange}[LMC] {cyan}Byta modell är endast tillgängligt för admins."
@@ -27,6 +29,7 @@
 	"Alive only"
 	{
 		"en"		"{orange}[LMC] {cyan}Pick a Model to be Applied NextSpawn"
+		"chi"		"{orange}[LMC] {cyan}请选择下次重生之后的皮肤模型"
 		"ru"		"{orange}[LMC] {cyan}Сменить модель можно при следующем возрождении"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Välj en modell som ska tillämpas nästa gång du spawnar."
@@ -35,6 +38,7 @@
 	"Lux's Model Changer"
 	{
 		"en"		"Lux's Model Changer"
+		"chi"		"Lux的皮肤模型修改器"
 		"ru"		"Смена персонажа (от Lux)"
 		"pl"		"REPLACEME"
 		"sv"		"Lux's modelländrare"
@@ -43,6 +47,7 @@
 	"Normal Models"
 	{
 		"en"		"Normal Models"
+		"chi"		"正常模型"
 		"ru"		"Обычные модели"
 		"pl"		"REPLACEME"
 		"sv"		"Vanliga modeller"
@@ -51,6 +56,7 @@
 	"Random Common"
 	{
 		"en"		"Random Common"
+		"chi"		"随机模型"
 		"ru"		"Случайный зомби"
 		"pl"		"REPLACEME"
 		"sv"		"Slumpmässig gemensam"
@@ -59,6 +65,7 @@
 	"Witch"
 	{
 		"en"		"Witch"
+		"chi"		"女巫"
 		"ru"		"Ведьма"
 		"pl"		"REPLACEME"
 		"sv"		"Häxa"
@@ -67,6 +74,7 @@
 	"Witch Bride"
 	{
 		"en"		"Witch Bride"
+		"chi"		"新娘女巫"
 		"ru"		"Ведьма-невеста"
 		"pl"		"REPLACEME"
 		"sv"		"Gift Häxa"
@@ -75,6 +83,7 @@
 	"Boomer"
 	{
 		"en"		"Boomer"
+		"chi"		"Boomer(胖子)"
 		"ru"		"Толстяк"
 		"pl"		"REPLACEME"
 		"sv"		"Boomer"
@@ -83,6 +92,7 @@
 	"Boomette"
 	{
 		"en"		"Boomette"
+		"chi"		"Boomette(女胖子)"
 		"ru"		"Толстунья"
 		"pl"		"REPLACEME"
 		"sv"		"Boomette"
@@ -91,6 +101,7 @@
 	"Hunter"
 	{
 		"en"		"Hunter"
+		"chi"		"Hunter(猎人/跳跳)"
 		"ru"		"Охотник"
 		"pl"		"REPLACEME"
 		"sv"		"Jägare"
@@ -99,6 +110,7 @@
 	"Smoker"
 	{
 		"en"		"Smoker"
+		"chi"		"Smoker(烟鬼/舌头)"
 		"ru"		"Курильщик"
 		"pl"		"REPLACEME"
 		"sv"		"Rökare"
@@ -107,6 +119,7 @@
 	"Riot Cop"
 	{
 		"en"		"Riot Cop"
+		"chi"		"防暴警察"
 		"ru"		"Спецназ"
 		"pl"		"REPLACEME"
 		"sv"		"Kravallpolis"
@@ -115,6 +128,7 @@
 	"MudMan"
 	{
 		"en"		"MudMan"
+		"chi"		"泥人"
 		"ru"		"Грязевик"
 		"pl"		"REPLACEME"
 		"sv"		"Lerman"
@@ -123,6 +137,7 @@
 	"Chopper Pilot"
 	{
 		"en"		"Chopper Pilot"
+		"chi"		"直升机飞行员"
 		"ru"		"Пилот вертолёта"
 		"pl"		"REPLACEME"
 		"sv"		"Helikopter Pilot"
@@ -131,6 +146,7 @@
 	"CEDA"
 	{
 		"en"		"CEDA"
+		"chi"		"CEDA防化人员"
 		"ru"		"Агент АЧС"
 		"pl"		"REPLACEME"
 		"sv"		"CEDA"
@@ -139,6 +155,7 @@
 	"Clown"
 	{
 		"en"		"Clown"
+		"chi"		"小丑僵尸"
 		"ru"		"Клоун"
 		"pl"		"REPLACEME"
 		"sv"		"Clown"
@@ -147,6 +164,7 @@
 	"Jimmy Gibs"
 	{
 		"en"		"Jimmy Gibs"
+		"chi"		"赛车手僵尸"
 		"ru"		"Джимми Гибс"
 		"pl"		"REPLACEME"
 		"sv"		"Jimmy Gibs"
@@ -155,6 +173,7 @@
 	"Fallen Survivor"
 	{
 		"en"		"Fallen Survivor"
+		"chi"		"堕落幸存者"
 		"ru"		"Падший выживший"
 		"pl"		"REPLACEME"
 		"sv"		"Stupad Överlevare"
@@ -163,6 +182,7 @@
 	"Nick"
 	{
 		"en"		"Nick"
+		"chi"		"Nick"
 		"ru"		"Ник"
 		"pl"		"REPLACEME"
 		"sv"		"Nick"
@@ -171,6 +191,7 @@
 	"Rochelle"
 	{
 		"en"		"Rochelle"
+		"chi"		"Rochelle"
 		"ru"		"Рошель"
 		"pl"		"REPLACEME"
 		"sv"		"Rochelle"
@@ -179,6 +200,7 @@
 	"Coach"
 	{
 		"en"		"Coach"
+		"chi"		"Coach"
 		"ru"		"Тренер"
 		"pl"		"REPLACEME"
 		"sv"		"Tränare"
@@ -187,6 +209,7 @@
 	"Ellis"
 	{
 		"en"		"Ellis"
+		"chi"		"Ellis"
 		"ru"		"Эллис"
 		"pl"		"REPLACEME"
 		"sv"		"Ellis"
@@ -195,6 +218,7 @@
 	"Bill"
 	{
 		"en"		"Bill"
+		"chi"		"Bill"
 		"ru"		"Билл"
 		"pl"		"REPLACEME"
 		"sv"		"Bill"
@@ -203,6 +227,7 @@
 	"Zoey"
 	{
 		"en"		"Zoey"
+		"chi"		"Zoey"
 		"ru"		"Зои"
 		"pl"		"REPLACEME"
 		"sv"		"Zoey"
@@ -211,6 +236,7 @@
 	"Francis"
 	{
 		"en"		"Francis"
+		"chi"		"Francis"
 		"ru"		"Френсис"
 		"pl"		"REPLACEME"
 		"sv"		"Francis"
@@ -219,6 +245,7 @@
 	"Louis"
 	{
 		"en"		"Louis"
+		"chi"		"Louis"
 		"ru"		"Луис"
 		"pl"		"REPLACEME"
 		"sv"		"Louis"
@@ -227,6 +254,7 @@
 	"Tank"
 	{
 		"en"		"Tank"
+		"chi"		"坦克"
 		"ru"		"Танк"
 		"pl"		"REPLACEME"
 		"sv"		"Tank"
@@ -235,6 +263,7 @@
 	"Tank DLC"
 	{
 		"en"		"Tank DLC"
+		"chi"		"DLC坦克"
 		"ru"		"Танк DLC"
 		"pl"		"REPLACEME"
 		"sv"		"Tank DLC"
@@ -243,6 +272,7 @@
 	"Disabled_Models_Smoker"
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Smoker"
+		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}Smoker(烟鬼){cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Курильщика"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Rökare"
@@ -251,6 +281,7 @@
 	"Disabled_Models_Boomer"
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Boomer"
+		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}Boomer(胖子){cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Толстяка"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Boomer"
@@ -259,6 +290,7 @@
 	"Disabled_Models_Hunter"
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Hunter"
+		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}Hunter(猎人/跳跳){cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Охотника"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Jägare"
@@ -267,6 +299,7 @@
 	"Disabled_Models_Tank"
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Tank"
+		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}坦克{cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Танка"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Tank"
@@ -275,6 +308,7 @@
 	"Disabled_Models_Survivors"
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Survivors"
+		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}幸存者{cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Выживших"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Överlevare"
@@ -283,6 +317,7 @@
 	"Default_Models"
 	{
 		"en"		"{orange}[LMC] {cyan}Models will be default"
+		"chi"		"{orange}[LMC] {cyan}将使用默认模型"
 		"ru"		"{orange}[LMC] {cyan}Выбрана стандартная модель"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellerna kommer vara standard"
@@ -291,6 +326,7 @@
 	"Unsupported_Spitter"
 	{
 		"en"		"{orange}[LMC] {cyan}Models Don't Work for {orange}Spitter"
+		"chi"		"{orange}[LMC] {orange}Spitter(口水){cyan}无法使用这个模型"
 		"ru"		"{orange}[LMC] {cyan}Модели не работают для {orange}Плевальщицы"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellerna fungerar ej för {orange}Spitter"
@@ -299,6 +335,7 @@
 	"Unsupported_Jockey"
 	{
 		"en"		"{orange}[LMC] {cyan}Models Don't Work for {orange}Jockey"
+		"chi"		"{orange}[LMC] {orange}Jockey(猴子){cyan}无法使用这个模型"
 		"ru"		"{orange}[LMC] {cyan}Модели не работают для {orange}Жокея"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellerna funger ej för {orange}Jockey"
@@ -307,6 +344,7 @@
 	"Unsupported_Charger"
 	{
 		"en"		"{orange}[LMC] {cyan}Models Don't Work for {orange}Charger"
+		"chi"		"{orange}[LMC] {orange}Charger(牛){cyan}无法使用这个模型"
 		"ru"		"{orange}[LMC] {cyan}Модели не работают для {orange}Громилы"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellerna fungerar ej för {orange}Charger"
@@ -315,6 +353,7 @@
 	"Model_Common"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Common Infected"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}普通感染者"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Обычный заражённый"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Vanlig Infekterad"
@@ -323,6 +362,7 @@
 	"Model_Witch"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Witch"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}女巫"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Ведьма"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Häxa"
@@ -331,6 +371,7 @@
 	"Model_Witch_Bride"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Witch Bride"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}新娘女巫"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Ведьма-невеста"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Gift Häxa"
@@ -339,6 +380,7 @@
 	"Model_Boomer"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Boomer"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Boomer(胖子)"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Толстяк"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Boomer"
@@ -347,6 +389,7 @@
 	"Model_Boomette"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Boomette"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Boomette(女胖子)"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Толстунья"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Boomette"
@@ -355,6 +398,7 @@
 	"Model_Hunter"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Hunter"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Hunter(猎人/跳跳)"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Охотник"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Jägare"
@@ -363,6 +407,7 @@
 	"Model_Smoker"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Smoker"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Smoker(烟鬼/舌头)"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Курильщик"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Rökare"
@@ -371,6 +416,7 @@
 	"Model_RiotCop"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}RiotCop"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}防暴警察僵尸"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Спецназ"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Kravalls Polis"
@@ -379,6 +425,7 @@
 	"Model_MudMen"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}MudMen"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}泥人"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Грязевик"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Lerman"
@@ -387,6 +434,7 @@
 	"Model_Chopper_Pilot"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Chopper Pilot"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}直升机飞行员僵尸"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Пилот вертолёта"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Helikopter Pilot"
@@ -395,6 +443,7 @@
 	"Model_CEDA"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}CEDA"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}CEDA防化人员"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Агент АЧС"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}CEDA"
@@ -403,6 +452,7 @@
 	"Model_Clown"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Clown"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}小丑僵尸"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Клоун"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Clown"
@@ -411,6 +461,7 @@
 	"Model_Jimmy_Gibs"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Jimmy Gibs"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}赛车手僵尸"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Джимми Гибс"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Jimmy Gibs"
@@ -419,6 +470,7 @@
 	"Model_Fallen_Survivor"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Fallen Survivor"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}堕落幸存者"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Падший выживший"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Stupad Överlevare"
@@ -427,6 +479,7 @@
 	"Model_Nick"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Nick"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Nick"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Ник"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Nick"
@@ -435,6 +488,7 @@
 	"Model_Rochelle"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Rochelle"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Rochelle"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Рошель"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Rochelle"
@@ -443,6 +497,7 @@
 	"Model_Coach"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Coach"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Coach"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Тренер"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tränare"
@@ -451,6 +506,7 @@
 	"Model_Ellis"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Ellis"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Ellis"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Эллис"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Ellis"
@@ -459,6 +515,7 @@
 	"Model_Bill"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Bill"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Bill"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Билл"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Bill"
@@ -467,6 +524,7 @@
 	"Model_Zoey"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Zoey"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Zoey"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Зоя"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Zoey"
@@ -475,6 +533,7 @@
 	"Model_Francis"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Francis"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Francis"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Френсис"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Francis"
@@ -483,6 +542,7 @@
 	"Model_Louis"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Louis"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Louis"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Луис"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Louis"
@@ -491,6 +551,7 @@
 	"Model_Tank"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Tank"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}坦克"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Танк"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tank"
@@ -499,6 +560,7 @@
 	"Model_Tank_DLC"
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Tank DLC"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}DLC坦克"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Танк DLC"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tank DLC"
@@ -507,6 +569,7 @@
 	"Change_Model_Help_Chat"
 	{
 		"en"		"{orange}[LMC] {cyan}To Change Model use chat Command {orange}!lmc"
+		"chi"		"{orange}[LMC] {cyan}使用{orange}!lmc{cyan}来选择皮肤模型."
 		"ru"		"{orange}[LMC] {cyan}Для смены модели введите в чат {orange}!lmc"
 		"pl"		"{orange}[LMC] {cyan}REPLACEME {orange}!lmc"
 		"sv"		"{orange}[LMC] {cyan}För att ändra modell, använd chattkommandot {orange}!lmc"
@@ -515,6 +578,7 @@
 	"Change_Model_Help_Hint"
 	{
 		"en"		"[LMC] To Change Model use chat Command !lmc"
+		"chi"		"[LMC] 使用!lmc来选择皮肤模型."
 		"ru"		"[LMC] Для смены модели введите в чат !lmc"
 		"pl"		"[LMC] REPLACEME !lmc"
 		"sv"		"[LMC] För att ändra modell, använd chattkommandot !lmc"
