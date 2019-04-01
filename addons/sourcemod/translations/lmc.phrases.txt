@@ -26,7 +26,7 @@
 		"sv"		"{orange}[LMC] {cyan}Byta modell är endast tillgängligt för admins."
 		"es"		"{orange}[LMC] {cyan}Cambio de modelo solo disponible para administradores."
 		"hu"		"{orange}[LMC] {cyan}A Model váltás csak az adminoknak elérhető."
-		"de"		"{orange}[LMC] {cyan}Model Changer steht nur Administratoren zur verfügung."
+		"de"		"{orange}[LMC] {cyan}Modellwechsler steht nur Administratoren zur verfügung."
 	}
 	"Alive only"
 	{
@@ -36,7 +36,7 @@
 		"sv"		"{orange}[LMC] {cyan}Välj en modell som ska tillämpas nästa gång du spawnar."
 		"es"		"{orange}[LMC] {cyan}Elige un modelo para aplicarlo al reaparecer"
 		"hu"		"{orange}[LMC] {cyan}Válasz egy modelt hogy újjászületsénél azt alkalmazzuk."
-		"de"		"{orange}[LMC] {cyan}Wähle ein model aus, dass beim nächsten Spawnen angewndet wird."
+		"de"		"{orange}[LMC] {cyan}Wähle ein model aus, dass beim nächsten Spawnen angewendet wird."
 	}
 	"Lux's Model Changer"
 	{
@@ -46,7 +46,7 @@
 		"sv"		"Lux's modelländrare"
 		"es"		"Cambiador de Modelo (de Lux)"
 		"hu"		"Lux Model váltója"
-		"de"		"Lux's Model Changer"
+		"de"		"Lux's Modellwechsler"
 	}
 	"Normal Models"
 	{
