@@ -123,7 +123,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Kravallpolis"
 		"es"		"Antidisturbios"
-		"hu"		""
+		"hu"		"Rohamrendőrség"
 	}
 	"MudMan"
 	{
