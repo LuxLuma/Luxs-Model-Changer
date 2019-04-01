@@ -18,6 +18,7 @@
 		"hu"		"[LMC] A menü csak játékon belül használható."
 		"de"		"[LMC] Das Menu is nur im Spiel verfügbar."
 		"it"		"[LMC] il Menu è solo in-game."
+		"fr"		"[LMC] Le menu est en jeu uniqement."
 	}
 	"Admin only"
 	{
@@ -29,6 +30,7 @@
 		"hu"		"{orange}[LMC] {cyan}A Model váltás csak az adminoknak elérhető."
 		"de"		"{orange}[LMC] {cyan}Modellwechsler steht nur Administratoren zur verfügung."
 		"it"		"{orange}[LMC] {cyan}il Model Changer è solo disponibile per gli admins."
+		"fr"		"{orange}[LMC] {cyan}Changeur de Modèle est disponible uniquement pour les admins."
 		
 	}
 	"Alive only"
@@ -41,6 +43,7 @@
 		"hu"		"{orange}[LMC] {cyan}Válasz egy modelt hogy újjászületsénél azt alkalmazzuk."
 		"de"		"{orange}[LMC] {cyan}Wähle ein model aus, dass beim nächsten Spawnen angewendet wird."
 		"it"		"{orange}[LMC] {cyan}Scegli un modello da applicare NextSpawn"
+		"fr"		"{orange}[LMC] {cyan}Choisissez un modèle pour le prochain spawn"
 	}
 	"Lux's Model Changer"
 	{
@@ -52,6 +55,7 @@
 		"hu"		"Lux Model váltója"
 		"de"		"Lux's Modellwechsler"
 		"it"		"Il Model Changer di Lux"
+		"fr"		"Changeur de Modèle de Lux"
 	}
 	"Normal Models"
 	{
@@ -63,6 +67,7 @@
 		"hu"		"Normál modellek"
 		"de"		"Normale Modelle"
 		"it"		"Modelli normali"
+		"fr"		"Modèles normeaux"
 	}
 	"Random Common"
 	{
@@ -74,6 +79,7 @@
 		"hu"		"Véletlenszerű Közönséges"
 		"de"		"Zufälliger verbreiterter infizierter"
 		"it"		"Common casuali"
+		"fr"		"Commun Aléatoire"
 	}
 	"Witch"
 	{
@@ -85,6 +91,7 @@
 		"hu"		"Boszorka"
 		"de"		"Witch"
 		"it"		"Witch"
+		"fr"		"Sorcière"
 	}
 	"Witch Bride"
 	{
@@ -96,6 +103,7 @@
 		"hu"		"Boszorka menyasszony"
 		"de"		"Witch Braut"
 		"it"		"Witch sposa"
+		"fr"		"Sorcière Mariée"
 	}
 	"Boomer"
 	{
@@ -107,6 +115,7 @@
 		"hu"		"Pukkancs"
 		"de"		"Boomer"
 		"it"		"Boomer"
+		"fr"		"Boomer"
 	}
 	"Boomette"
 	{
@@ -118,6 +127,7 @@
 		"hu"		"Pukkancsné"
 		"de"		"Boomette"
 		"it"		"Boomette"
+		"fr"		"Boomette"
 	}
 	"Hunter"
 	{
@@ -129,6 +139,7 @@
 		"hu"		"Vadász"
 		"de"		"Hunter"
 		"it"		"Hunter"
+		"fr"		"Chasseur"
 	}
 	"Smoker"
 	{
@@ -140,6 +151,7 @@
 		"hu"		"Füstös"
 		"de"		"Smoker"
 		"it"		"Smoker"
+		"fr"		"Fumeur"
 	}
 	"Riot Cop"
 	{
@@ -151,6 +163,7 @@
 		"hu"		"Rohamrendőr"
 		"de"		"Bereitschaftspolizist"
 		"it"		"Poliziotto antisommossa"
+		"fr"		"Flic anti-émeute"
 	}
 	"MudMan"
 	{
@@ -162,6 +175,7 @@
 		"hu"		"MudMan"
 		"de"		"Schlammmann"
 		"it"		"UomoFango"
+		"fr"		"Homme de boue"
 	}
 	"Chopper Pilot"
 	{
@@ -173,6 +187,7 @@
 		"hu"		"Helikopter pilóta"
 		"de"		"Helikopterpilot"
 		"it"		"Pilota di Elicottero"
+		"fr"		"Pilote d'hélico"
 	}
 	"CEDA"
 	{
@@ -184,6 +199,7 @@
 		"hu"		"CEDA"
 		"de"		"CEDA Agent"
 		"it"		"CEDA"
+		"fr"		"CEDA"
 	}
 	"Clown"
 	{
@@ -195,6 +211,7 @@
 		"hu"		"Bohóc"
 		"de"		"Clown"
 		"it"		"Pagliaccio"
+		"fr"		"Clown"
 	}
 	"Jimmy Gibs"
 	{
@@ -206,6 +223,7 @@
 		"hu"		"Jimmy Gibs"
 		"de"		"Jimmy Gibs"
 		"it"		"Jimmy Gibs"
+		"fr"		"Jimmy Gibs"
 	}
 	"Fallen Survivor"
 	{
@@ -217,6 +235,7 @@
 		"hu"		"Bukott túlélő"
 		"de"		"Gefallener Überlebender"
 		"it"		"Survivor Caduto"
+		"fr"		"Survivant Décédé"
 	}
 	"Nick"
 	{
@@ -228,6 +247,7 @@
 		"hu"		"Nick"
 		"de"		"Nick"
 		"it"		"Nick"
+		"fr"		"Nick"
 	}
 	"Rochelle"
 	{
@@ -239,6 +259,7 @@
 		"hu"		"Rochelle"
 		"de"		"Rochelle"
 		"it"		"Rochelle"
+		"fr"		"Rochelle"
 	}
 	"Coach"
 	{
@@ -250,6 +271,7 @@
 		"hu"		"Edző"
 		"de"		"Coach"
 		"it"		"Coach"
+		"fr"		"Coach"
 	}
 	"Ellis"
 	{
@@ -261,6 +283,7 @@
 		"hu"		"Ellis"
 		"de"		"Ellis"
 		"it"		"Ellis"
+		"fr"		"Ellis"
 	}
 	"Bill"
 	{
@@ -272,6 +295,7 @@
 		"hu"		"Bill"
 		"de"		"Bill"
 		"it"		"Bill"
+		"fr"		"Bill"
 	}
 	"Zoey"
 	{
@@ -283,6 +307,7 @@
 		"hu"		"Zoey"
 		"de"		"Zoey"
 		"it"		"Zoey"
+		"fr"		"Zoey"
 	}
 	"Francis"
 	{
@@ -294,6 +319,7 @@
 		"hu"		"Francis"
 		"de"		"Francis"
 		"it"		"Francis"
+		"fr"		"Francis"
 	}
 	"Louis"
 	{
@@ -305,6 +331,7 @@
 		"hu"		"Louis"
 		"de"		"Louis"
 		"it"		"Louis"
+		"fr"		"Louis"
 	}
 	"Tank"
 	{
@@ -316,6 +343,7 @@
 		"hu"		"Tank"
 		"de"		"Tank"
 		"it"		"Tank"
+		"fr"		"Tank"
 	}
 	"Tank DLC"
 	{
@@ -327,6 +355,7 @@
 		"hu"		"Tank DLC"
 		"de"		"Tank DLC"
 		"it"		"Tank DLC"
+		"fr"		"Tank du DLC"
 	}
 	"Disabled_Models_Smoker"
 	{
@@ -338,6 +367,7 @@
 		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Füstös"
 		"de"		"{orange}[LMC] {cyan}Der Server hat Modelle für {orange}Smoker {cyan}deaktiviert"
 		"it"		"{orange}[LMC] {cyan}Il Server ha Disabilitato i Modelli per {orange}Smoker"
+		"fr"		"{orange}[LMC] {cyan}Le serveur a désactivé les modèles de{orange}Fumeur"
 	}
 	"Disabled_Models_Boomer"
 	{
@@ -349,6 +379,7 @@
 		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Pukkancs"
 		"de"		"{orange}[LMC] {cyan}Der Server hat Modelle für {orange}Boomer {cyan}deaktiviert"
 		"it"		"{orange}[LMC] {cyan}Il Server ha Disabilitato i Modelli per {orange}Boomer"
+		"fr"		"{orange}[LMC] {cyan}Le serveur a désactivé les modèles de {orange}Boomer"
 	}
 	"Disabled_Models_Hunter"
 	{
@@ -360,6 +391,7 @@
 		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Vadász"
 		"de"		"{orange}[LMC] {cyan}Der Server hat Modelle für {orange}Hunter {cyan}deaktiviert"
 		"it"		"{orange}[LMC] {cyan}Il Server ha Disabilitato i Modelli per {orange}Hunter"
+		"fr"		"{orange}[LMC] {cyan}Le serveur a désactivé les modèles de {orange}Chasseur"
 	}
 	"Disabled_Models_Tank"
 	{
@@ -371,6 +403,7 @@
 		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Tank"
 		"de"		"{orange}[LMC] {cyan}Der Server hat Modelle für {orange}Tanks {cyan}deaktiviert"
 		"it"		"{orange}[LMC] {cyan}Il Server ha Disabilitato i Modelli per {orange}Tank"
+		"fr"		"{orange}[LMC] {cyan}Le serveur a désactivé les modèles de {orange}Tank"
 	}
 	"Disabled_Models_Survivors"
 	{
@@ -382,6 +415,7 @@
 		"hu"		"{orange}[LMC] {cyan}A szerveren ki van kapcsolva a model számára: {orange}Túlélők"
 		"de"		"{orange}[LMC] {cyan}Der Server hat Modelle für {orange}Überlebende {cyan}deaktiviert"
 		"it"		"{orange}[LMC] {cyan}Il Server ha Disabilitato i Modelli per {orange}Tank"
+		"fr"		"{orange}[LMC] {cyan}Le serveur a désactivé les modèles de {orange}Survivants"
 	}
 	"Default_Models"
 	{
@@ -393,6 +427,7 @@
 		"hu"		"{orange}[LMC] {cyan}A modellek alapértelmezettek lesznek"
 		"de"		"{orange}[LMC] {cyan}Modelle standardmäßig verwenden"
 		"it"		"{orange}[LMC] {cyan}I Modelli saranno default {orange}REPLACEME"
+		"fr"		"{orange}[LMC] {cyan}Les modèles seront par défaut"
 	}
 	"Unsupported_Spitter"
 	{
@@ -404,6 +439,7 @@
 		"hu"		"{orange}[LMC] {cyan}A modellek nem működnek rajta: {orange}Köpködő"
 		"de"		"{orange}[LMC] {cyan}Modelle für {orange}Spitter {cyan}werden nicht unterstützt"
 		"it"		"{orange}[LMC] {cyan}I Modelli non Funzionano per {orange}Spitter"
+		"fr"		"{orange}[LMC] {cyan}Les modèles ne fonctionnent pas pour {orange}Cracheuse"
 	}
 	"Unsupported_Jockey"
 	{
@@ -415,6 +451,7 @@
 		"hu"		"{orange}[LMC] {cyan}A modellek nem működnek rajta: {orange}Zsoké"
 		"de"		"{orange}[LMC] {cyan}Modelle für {orange}Jockey {cyan}werden nicht unterstützt"
 		"it"		"{orange}[LMC] {cyan}I Modelli non Funzionano per {orange}Jockey"
+		"fr"		"{orange}[LMC] {cyan}Les modèles ne fonctionnent pas pour {orange}Jockey"
 	}
 	"Unsupported_Charger"
 	{
@@ -426,6 +463,7 @@
 		"hu"		"{orange}[LMC] {cyanA modellek nem működnek rajta: {orange}Rohanó"
 		"de"		"{orange}[LMC] {cyan}Modelle für {orange}Charger {cyan}werden nicht unterstützt"
 		"it"		"{orange}[LMC] {cyan}I Modelli non Funzionano per {orange}Charger"
+		"fr"		"{orange}[LMC] {cyan}Les modèles ne fonctionnent pas pour {orange}Chargeur"
 	}
 	"Model_Common"
 	{
@@ -437,6 +475,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Közönséges fertőzött"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Verbreiteter Infizierter"
 		"it"		"{orange}[LMC] {cyan}I Modelli non Funzionano per {orange}Infetti Comuni"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Infecté Commun"
 	}
 	"Model_Witch"
 	{
@@ -448,6 +487,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Boszorka"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Witch"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Witch"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Sorcière"
 	}
 	"Model_Witch_Bride"
 	{
@@ -459,6 +499,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Boszorka Mennyasszony"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Witch Braut"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Witch Sposa"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Sorcière Mariée"
 		
 	}
 	"Model_Boomer"
@@ -471,6 +512,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Pukkancs"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Boomer"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Boomer"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Boomer"
 	}
 	"Model_Boomette"
 	{
@@ -482,6 +524,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Pukkancsné"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Boomette"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Boomette"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Boomette"
 	}
 	"Model_Hunter"
 	{
@@ -493,6 +536,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Vadász"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Hunter"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Hunter"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Chasseur"
 	}
 	"Model_Smoker"
 	{
@@ -504,6 +548,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Füstös"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Smoker"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Smoker"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Fumeur"
 	}
 	"Model_RiotCop"
 	{
@@ -515,6 +560,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Rohamrendőr"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Bereitschaftspolizist"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}PoliziottoAntisommossa"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Flic anti-émeute"
 	}
 	"Model_MudMen"
 	{
@@ -526,6 +572,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}MudMen"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Schlammmann"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}UomoFango"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Homme de Boue"
 	}
 	"Model_Chopper_Pilot"
 	{
@@ -537,6 +584,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Helikopter Pilóta"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Helikopterpilot"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Pilota di Elicottero"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Pilote d'hélico"
 	}
 	"Model_CEDA"
 	{
@@ -548,6 +596,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}CEDA"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}CEDA"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}CEDA"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}CEDA"
 	}
 	"Model_Clown"
 	{
@@ -559,6 +608,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Bohóc"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Clown"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Pagliaccio"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Clown"
 	}
 	"Model_Jimmy_Gibs"
 	{
@@ -570,6 +620,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Jimmy Gibs"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Jimmy Gibs"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Jimmy Gibs"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Jimmy Gibs"
 	}
 	"Model_Fallen_Survivor"
 	{
@@ -581,6 +632,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Bukott Túlélő"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Gefallener Überlebender"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Survivor Caduto"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Survivant Décédé"
 	}
 	"Model_Nick"
 	{
@@ -592,6 +644,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Nick"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Nick"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Nick"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Nick"
 	}
 	"Model_Rochelle"
 	{
@@ -603,6 +656,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Rochelle"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Rochelle"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Rochelle"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Rochelle"
 	}
 	"Model_Coach"
 	{
@@ -614,6 +668,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Edző"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Coach"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Coach"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Coach"
 	}
 	"Model_Ellis"
 	{
@@ -625,6 +680,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Ellis"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Ellis"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Ellis"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Ellis"
 	}
 	"Model_Bill"
 	{
@@ -636,6 +692,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Bill"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Bill"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Bill"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Bill"
 	}
 	"Model_Zoey"
 	{
@@ -647,6 +704,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Zoey"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Zoey"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Zoey"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Zoey"
 	}
 	"Model_Francis"
 	{
@@ -658,6 +716,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Francis"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Francis"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Francis"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Francis"
 	}
 	"Model_Louis"
 	{
@@ -669,6 +728,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Louis"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Louis"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Louis"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Louis"
 	}
 	"Model_Tank"
 	{
@@ -680,6 +740,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Tank"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Tank"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Tank"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Tank"
 	}
 	"Model_Tank_DLC"
 	{
@@ -691,6 +752,7 @@
 		"hu"		"{orange}[LMC] {cyan}A model {orange}Tank DLC"
 		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}Tank DLC"
 		"it"		"{orange}[LMC] {cyan}Il Modello è {orange}Tank DLC"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Tank du DLC"
 		
 	}
 	"Change_Model_Help_Chat"
@@ -703,6 +765,7 @@
 		"hu"		"{orange}[LMC] {cyan}Model váltáshoz használd a chat parancsott {orange}!lmc"
 		"de"		"{orange}[LMC] {cyan}Benutze den Chat-Befehl {orange}!lmc {cyan}um dein Modell zu ändern"
 		"it"		"{orange}[LMC] {cyan}Per Cambiare Modello usa il Comando chat {orange}!lmc"
+		"fr"		"{orange}[LMC] {cyan}Pour changer le modèle, utilisez la commande chat{orange}!lmc"
 	}
 	"Change_Model_Help_Hint"
 	{
@@ -714,5 +777,6 @@
 		"hu"		"[LMC] Model váltáshoz használd a chat parancsott !lmc"
 		"de"		"[LMC] Benutze den Chat-Befehl !lmc um dein Modell zu ändern"
 		"it"		"[LMC] Per Cambiare Modelle usa il Comando Chat !lmc"
+		"fr"		"[LMC] Pour changer le modèle, utilisez la commande chat !lmc"
 	}
 }
