@@ -15,6 +15,7 @@
 		"pl"		"[LMC] REPLACEME."
 		"sv"		"[LMC] Menyn är endast tillgänlig i spelet."
 		"es"		"[LMC] El menú solo funciona dentro del juego."
+		"hu"		"[LMC] A menü csak játékon belüli."
 	}
 	"Admin only"
 	{
@@ -23,6 +24,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME."
 		"sv"		"{orange}[LMC] {cyan}Byta modell är endast tillgängligt för admins."
 		"es"		"{orange}[LMC] {cyan}Cambio de modelo solo disponible para administradores."
+		"hu"		"{orange}[LMC] {cyan}A Model Váltás csak az adminoknak elérhető."
 	}
 	"Alive only"
 	{
@@ -31,6 +33,7 @@
 		"pl"		"{orange}[LMC] {cyan}REPLACEME"
 		"sv"		"{orange}[LMC] {cyan}Välj en modell som ska tillämpas nästa gång du spawnar."
 		"es"		"{orange}[LMC] {cyan}Elige un modelo para aplicarlo al reaparecer"
+		"hu"		"{orange}[LMC] {cyan}Válasz egy modelt hogy újjászületsénél azt alkalmazzuk."
 	}
 	"Lux's Model Changer"
 	{
@@ -39,6 +42,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Lux's modelländrare"
 		"es"		"Cambiador de Modelo (de Lux)"
+		"hu"		"Lux Model Váltója"
 	}
 	"Normal Models"
 	{
@@ -47,6 +51,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Vanliga modeller"
 		"es"		"Modelos Normales"
+		"hu"		"Normál Modellek"
 	}
 	"Random Common"
 	{
@@ -55,6 +60,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Slumpmässig gemensam"
 		"es"		"Comúnes aleatorios"
+		"hu"		"Véletlenszerű Közönséges"
 	}
 	"Witch"
 	{
@@ -63,6 +69,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Häxa"
 		"es"		"Bruja"
+		"hu"		"Boszorka"
 	}
 	"Witch Bride"
 	{
@@ -71,6 +78,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Gift Häxa"
 		"es"		"Bruja (Novia)"
+		"hu"		"Boszorka Menyasszony"
 	}
 	"Boomer"
 	{
@@ -79,6 +87,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Boomer"
 		"es"		"Boomer"
+		"hu"		"Pukkancs"
 	}
 	"Boomette"
 	{
@@ -87,6 +96,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Boomette"
 		"es"		"Boomette"
+		"hu"		"Pukkancsné"
 	}
 	"Hunter"
 	{
@@ -95,6 +105,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Jägare"
 		"es"		"Hunter"
+		"hu"		"Vadász"
 	}
 	"Smoker"
 	{
@@ -103,6 +114,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Rökare"
 		"es"		"Smoker"
+		"hu"		"Füstös"
 	}
 	"Riot Cop"
 	{
@@ -111,6 +123,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Kravallpolis"
 		"es"		"Antidisturbios"
+		"hu"		""
 	}
 	"MudMan"
 	{
@@ -119,6 +132,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Lerman"
 		"es"		"Embarrados"
+		"hu"		"MudMan"
 	}
 	"Chopper Pilot"
 	{
@@ -127,6 +141,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Helikopter Pilot"
 		"es"		"Piloto"
+		"hu"		"Helikopter Pilóta"
 	}
 	"CEDA"
 	{
@@ -135,6 +150,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"CEDA"
 		"es"		"Agente de la CEDA"
+		"hu"		"CEDA"
 	}
 	"Clown"
 	{
@@ -143,6 +159,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Clown"
 		"es"		"Payaso"
+		"hu"		"Bohóc"
 	}
 	"Jimmy Gibs"
 	{
@@ -151,6 +168,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Jimmy Gibs"
 		"es"		"Jimmy Gibs"
+		"hu"		"Jimmy Gibs"
 	}
 	"Fallen Survivor"
 	{
@@ -159,6 +177,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Stupad Överlevare"
 		"es"		"Superviviente caído"
+		"hu"		"Bukott Túlélő"
 	}
 	"Nick"
 	{
@@ -167,6 +186,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Nick"
 		"es"		"Nick"
+		"hu"		"Nick"
 	}
 	"Rochelle"
 	{
@@ -175,6 +195,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Rochelle"
 		"es"		"Rochelle"
+		"hu"		"Rochelle"
 	}
 	"Coach"
 	{
@@ -183,6 +204,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Tränare"
 		"es"		"Coach"
+		"hu"		"Edző"
 	}
 	"Ellis"
 	{
@@ -191,6 +213,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Ellis"
 		"es"		"Ellis"
+		"hu"		"Ellis"
 	}
 	"Bill"
 	{
@@ -199,6 +222,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Bill"
 		"es"		"Bill"
+		"hu"		"Bill"
 	}
 	"Zoey"
 	{
@@ -207,6 +231,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Zoey"
 		"es"		"Zoey"
+		"hu"		"Zoey"
 	}
 	"Francis"
 	{
@@ -215,6 +240,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Francis"
 		"es"		"Francis"
+		"hu"		"Francis"
 	}
 	"Louis"
 	{
@@ -223,6 +249,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Louis"
 		"es"		"Louis"
+		"hu"		"Louis"
 	}
 	"Tank"
 	{
@@ -231,6 +258,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Tank"
 		"es"		"Tank"
+		"hu"		"Tank"
 	}
 	"Tank DLC"
 	{
@@ -239,6 +267,7 @@
 		"pl"		"REPLACEME"
 		"sv"		"Tank DLC"
 		"es"		"Tank DLC"
+		"hu"		"Tank DLC"
 	}
 	"Disabled_Models_Smoker"
 	{
