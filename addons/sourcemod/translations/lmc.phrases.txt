@@ -166,7 +166,7 @@
 		"sv"		"CEDA"
 		"es"		"Agente de la CEDA"
 		"hu"		"CEDA"
-		"de"		"CEDA"
+		"de"		"CEDA Agent"
 	}
 	"Clown"
 	{
@@ -356,7 +356,7 @@
 		"sv"		"{orange}[LMC] {cyan}Modellerna kommer vara standard"
 		"es"		"{orange}[LMC] {cyan}Los modelos serán por defecto"
 		"hu"		"{orange}[LMC] {cyan}A modellek alapértelmezettek lesznek"
-		"de"		"{orange}[LMC] {cyan}Modell standardmäßig verwenden"
+		"de"		"{orange}[LMC] {cyan}Modelle standardmäßig verwenden"
 	}
 	"Unsupported_Spitter"
 	{
