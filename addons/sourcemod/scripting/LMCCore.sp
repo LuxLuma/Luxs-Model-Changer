@@ -116,9 +116,6 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 		AcceptEntityInput(iHiddenIndex[iClient], "kill");
 		iHiddenIndex[iClient] = -1;
 	}
-	
-	SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 0);
-	SetEntProp(iClient, Prop_Send, "m_nMaxGPULevel", 0);
 }
 
 int BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
@@ -164,9 +161,6 @@ int BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
 	iHiddenIndex[iClient] = EntIndexToEntRef(iEntity);
 	iHiddenOwner[iEntity] = GetClientUserId(iClient);
 	
-	SetEntProp(iClient, Prop_Send, "m_nMinGPULevel", 1);
-	SetEntProp(iClient, Prop_Send, "m_nMaxGPULevel", 1);
-	
 	Call_StartForward(g_hOnClientModelApplied);
 	Call_PushCell(iClient);
 	Call_PushCell(iEntity);
@@ -211,9 +205,6 @@ int BeWitchOther(int iEntity, const char[] sModel)// dont pass refs
 	
 	SetEntityRenderFx(iEntity, RENDERFX_HOLOGRAM);
 	SetEntityRenderColor(iEntity, 0, 0, 0, 0);
-	
-	SetEntProp(iEntity, Prop_Send, "m_nMinGPULevel", 1);
-	SetEntProp(iEntity, Prop_Send, "m_nMaxGPULevel", 1);
 	return iEnt;
 }
 
@@ -452,8 +443,6 @@ void ResetRender(int iEntity)
 	if(iEntity < MaxClients+1)
 	{
 		SetEntityRenderMode(iEntity, RENDER_NORMAL);
-		SetEntProp(iEntity, Prop_Send, "m_nMinGPULevel", 0);
-		SetEntProp(iEntity, Prop_Send, "m_nMaxGPULevel", 0);
 	}
 	else
 	{
