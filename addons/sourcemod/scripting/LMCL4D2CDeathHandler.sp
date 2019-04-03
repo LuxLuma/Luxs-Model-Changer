@@ -136,8 +136,6 @@ public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroad
 			{
 				iEntity = LMC_SetEntityOverlayModel(iEnt, sModel);
 				SetEntityRenderMode(iEnt, RENDER_NONE);
-				SetEntProp(iEnt, Prop_Send, "m_nMinGPULevel", 1);
-				SetEntProp(iEnt, Prop_Send, "m_nMaxGPULevel", 1);
 			}
 		}
 		Call_StartForward(g_hOnClientDeathModelCreated);

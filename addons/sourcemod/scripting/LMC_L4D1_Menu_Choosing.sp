@@ -35,7 +35,7 @@
 
 
 #define PLUGIN_NAME "LMC_L4D1_Menu_Choosing"
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.1.1"
 
 //change me to whatever flag you want
 #define COMMAND_ACCESS ADMFLAG_CHAT
@@ -177,7 +177,7 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
-	LoadTranslations("l4d_lmc.phrases");
+	LoadTranslations("lmc.phrases");
 
 	CreateConVar("lmc_l4d1_menu_choosing", PLUGIN_VERSION, "LMC_L4D1_Menu_Choosing_Version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
 
