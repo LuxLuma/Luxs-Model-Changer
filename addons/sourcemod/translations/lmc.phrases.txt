@@ -45,7 +45,7 @@
 		"ua"		"{orange}[LMC] {cyan}Змінити модель можна з наступним відродженням"
 		"sv"		"{orange}[LMC] {cyan}Välj en modell som ska tillämpas nästa gång du spawnar."
 		"es"		"{orange}[LMC] {cyan}Elige un modelo para aplicarlo al reaparecer"
-		"hu"		"{orange}[LMC] {cyan}Válasz egy modelt hogy újjászületsénél azt alkalmazzuk."
+		"hu"		"{orange}[LMC] {cyan}Válassz egy modelt hogy újjászületésnél azt alkalmazzuk."
 		"de"		"{orange}[LMC] {cyan}Wähle ein model aus, dass beim nächsten Spawnen angewendet wird."
 		"it"		"{orange}[LMC] {cyan}Scegli un modello da applicare NextSpawn"
 		"fr"		"{orange}[LMC] {cyan}Choisissez un modèle pour le prochain spawn"
