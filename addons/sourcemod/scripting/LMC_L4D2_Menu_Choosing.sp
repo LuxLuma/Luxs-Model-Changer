@@ -246,7 +246,7 @@ public void OnPluginStart()
 
 	hCvar_AdminOnlyModel = CreateConVar("lmc_adminonly", "0", "Allow admins to only change models? (1 = true) NOTE: this will disable announcement to player who join. ((#define COMMAND_ACCESS ADMFLAG_CHAT) change to w/o flag you want or (Use override file))", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	hCvar_AnnounceDelay = CreateConVar("lmc_announcedelay", "15.0", "Delay On which a message is displayed for !lmc command", FCVAR_NOTIFY, true, 1.0, true, 360.0);
-	hCvar_AnnounceMode = CreateConVar("lmc_announcemode", "1", "Display Mode for !lmc command (0 = off, 1 = Print to chat, 2 = Center text, 3 = Director Hint)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
+	hCvar_AnnounceMode = CreateConVar("lmc_announcemode", "1", "Display Mode for !lmc command (0 = off, 1 = Print to chat, 2 = Hint text, 3 = Director Hint)", FCVAR_NOTIFY, true, 0.0, true, 3.0);
 	hCvar_ThirdPersonTime = CreateConVar("lmc_thirdpersontime", "0.0", "How long (in seconds) the client will be in thirdperson view after selecting a model from !lmc command. (0.5 < = off)", FCVAR_NOTIFY, true, 0.0, true, 360.0);
 	HookConVarChange(hCvar_AdminOnlyModel, eConvarChanged);
 	HookConVarChange(hCvar_AnnounceDelay, eConvarChanged);
@@ -1017,7 +1017,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 			CPrintToChat(iClient, "%t", "Change_Model_Help_Chat"); // "\x04[LMC] \x03To Change Model use chat Command \x04!lmc\x03");
 			EmitSoundToClient(iClient, sJoinSound, SOUND_FROM_PLAYER, SNDCHAN_STATIC);
 		}
-		case 2: PrintHintText(iClient, "%t", "Change_Model_Help_Hint"); // "[LMC] To Change Model use chat Command !lmc");
+		case 2: PrintHintText(iClient, "%t", TranslateNoColor(iClient, "%t", "Change_Model_Help_Hint")); // "[LMC] To Change Model use chat Command !lmc");
 		case 3:
 		{
 			int iEntity = CreateEntityByName("env_instructor_hint");
