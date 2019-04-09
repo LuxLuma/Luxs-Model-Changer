@@ -1017,7 +1017,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 			CPrintToChat(iClient, "%t", "Change_Model_Help_Chat"); // "\x04[LMC] \x03To Change Model use chat Command \x04!lmc\x03");
 			EmitSoundToClient(iClient, sJoinSound, SOUND_FROM_PLAYER, SNDCHAN_STATIC);
 		}
-		case 2: PrintHintText(iClient, "%t", TranslateNoColor(iClient, "%t", "Change_Model_Help_Hint")); // "[LMC] To Change Model use chat Command !lmc");
+		case 2: PrintHintText(iClient, "%t", TranslateNoColor(iClient, "%t", "Change_Model_Help_Chat")); // "[LMC] To Change Model use chat Command !lmc");
 		case 3:
 		{
 			int iEntity = CreateEntityByName("env_instructor_hint");
@@ -1034,7 +1034,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 			DispatchKeyValue(iEntity, "hint_timeout", sValues);
 			DispatchKeyValue(iEntity, "hint_range", "100");
 			DispatchKeyValue(iEntity, "hint_icon_onscreen", "icon_tip");
-			DispatchKeyValue(iEntity, "hint_caption", Translate(iClient, "%t", "Change_Model_Help_Hint")); // "[LMC] To Change Model use chat Command !lmc");
+			DispatchKeyValue(iEntity, "hint_caption", TranslateNoColor(iClient, "%t", "Change_Model_Help_Chat")); // "[LMC] To Change Model use chat Command !lmc");
 			Format(sValues, sizeof(sValues), "%i %i %i", GetRandomInt(1, 255), GetRandomInt(100, 255), GetRandomInt(1, 255));
 			DispatchKeyValue(iEntity, "hint_color", sValues);
 			DispatchSpawn(iEntity);
