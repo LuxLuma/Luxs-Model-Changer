@@ -67,7 +67,7 @@
 		"it"		"Il Model Changer di Lux"
 		"fr"		"Changeur de Modèle de Lux"
 		"pl"		"Zmiana Modeli od Luxa"
-		"pt"		"Alterador de Modelo (autor: Lux)"
+		"pt"		"Alterador de Modelo (feito por Lux)"
 	}
 	"Normal Models"
 	{
@@ -578,6 +578,22 @@
 		"fr"		"{orange}[LMC] {cyan}Les modèles ne fonctionnent pas pour {orange}Chargeur"
 		"pl"		"{orange}[LMC] {cyan}Model nie dziala na {orange}Czarger"
 		"pt"		"{orange}[LMC] {cyan}A alteração de modelo não funciona para {orange}Charger"
+	}
+	"Model_Is"
+	{
+		"#format"	"{1:s}"
+		"en"		"{orange}[LMC] {cyan}Model is {orange}{1}"
+		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}{1}"
+		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}{1}"
+		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}{1}"
+		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}{1}"
+		"es"		"{orange}[LMC] {cyan}El modelo es {orange}{1}"
+		"hu"		"{orange}[LMC] {cyan}A model {orange}{1}"
+		"de"		"{orange}[LMC] {cyan}Dein Modell ist nun: {orange}{1}"
+		"it"		"{orange}[LMC] {cyan}I Modelli non Funzionano per {orange}{1}"
+		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}{1}"
+		"pl"		"{orange}[LMC] {cyan}Model jest {orange}{1}"
+		"pt"		"{orange}[LMC] {cyan}Alterado modelo para {orange}{1}"
 	}
 	"Model_Common"
 	{
