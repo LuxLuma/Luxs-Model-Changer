@@ -113,6 +113,23 @@ stock char[] Translate(int iClient, const char[] format, any ...)
 }
 
 /**
+*   @note Used for in-line string translation.
+*
+*   @param  iClient     Client Index, translation is apllied to.
+*   @param  format      String formatting rules. By default, you should pass at least "%t" specifier.
+*   @param  ...			Variable number of format parameters.
+*   @return char[192]	Resulting string. Note: output buffer is hardly limited.
+*/
+stock char[] TranslateNoColor(int iClient, const char[] format, any ...)
+{
+	char buffer[192];
+	SetGlobalTransTarget(iClient);
+	VFormat(buffer, sizeof(buffer), format, 3);
+	RemoveColor(buffer, sizeof(buffer));
+	return buffer;
+}
+
+/**
 *   @note Prints a message to a specific client in the chat area. Supports named colors in translation file.
 *
 *   @param  iClient     Client Index.
@@ -164,6 +181,21 @@ stock void ReplaceColor(char[] message, int maxLen)
     ReplaceString(message, maxLen, "{cyan}", "\x03", false);
     ReplaceString(message, maxLen, "{orange}", "\x04", false);
     ReplaceString(message, maxLen, "{green}", "\x05", false);
+}
+
+/**
+* @note Removes named color to empty string. Used internally by string translation functions.
+*
+*   @param  char[]		Input/Output string for convertion.
+*   @param  maxLen		Maximum length of string buffer (includes NULL terminator).
+*   @no return
+*/
+void RemoveColor(char[] message, int maxLen)
+{
+    ReplaceString(message, maxLen, "{white}", "", false);
+    ReplaceString(message, maxLen, "{cyan}", "", false);
+    ReplaceString(message, maxLen, "{orange}", "", false);
+    ReplaceString(message, maxLen, "{green}", "", false);
 }
 
 /**
