@@ -190,7 +190,7 @@ stock void ReplaceColor(char[] message, int maxLen)
 *   @param  maxLen		Maximum length of string buffer (includes NULL terminator).
 *   @no return
 */
-void RemoveColor(char[] message, int maxLen)
+stock void RemoveColor(char[] message, int maxLen)
 {
     ReplaceString(message, maxLen, "{white}", "", false);
     ReplaceString(message, maxLen, "{cyan}", "", false);
