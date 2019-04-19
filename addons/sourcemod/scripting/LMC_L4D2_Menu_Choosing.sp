@@ -1147,7 +1147,7 @@ public void OnClientCookiesCached(int iClient)
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
 		return;
 
-	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS, true))
+	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS))
 			return;
 
 	ModelIndex(iClient, iSavedModel[iClient], false);
