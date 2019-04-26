@@ -194,6 +194,7 @@ public void OnPluginStart()
 	RegConsoleCmd("sm_lmc", ShowMenuCmd, "Brings up a menu to select a client's model");
 
 	HookEvent("player_spawn", ePlayerSpawn);
+	HookEvent("player_bot_replace", ePlayerBotReplace);
 }
 
 public void eConvarChanged(Handle hCvar, const char[] sOldVal, const char[] sNewVal)
@@ -347,6 +348,77 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 		return;
 
 	RequestFrame(NextFrame, GetClientUserId(iClient));
+}
+
+public void ePlayerBotReplace(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
+{
+	int iClient = GetClientOfUserId(GetEventInt(hEvent, "player"));
+	int iBot = GetClientOfUserId(GetEventInt(hEvent, "bot"));
+	
+	if(iBot < 1 || iBot > MaxClients)
+		return;
+
+	if(!IsFakeClient(iBot))
+		return;
+
+	LMC_ResetRenderMode(iBot);
+
+	if(g_bAdminOnly && !CheckCommandAccess(iBot, "sm_lmc", COMMAND_ACCESS))
+			return;
+
+	switch(GetClientTeam(iBot))
+	{
+		case 3:
+		{
+			switch(GetEntProp(iBot, Prop_Send, "m_zombieClass"))//1.4
+			{
+				case ZOMBIECLASS_SMOKER:
+				{
+					if(!g_bAllowSmoker)
+						return;
+				}
+				case ZOMBIECLASS_BOOMER:
+				{
+					if(!g_bAllowBoomer)
+						return;
+				}
+				case ZOMBIECLASS_HUNTER:
+				{
+					if(!g_bAllowHunter)
+						return;
+				}
+				case ZOMBIECLASS_UNKNOWN:
+				{
+					return;
+				}
+				case ZOMBIECLASS_TANK:
+				{
+					if(!g_bAllowTank)
+						return;
+				}
+				default:
+				{
+					return;
+				}
+			}
+		}
+		case 2:
+		{
+			if(!g_bAllowSurvivors)
+				return;
+		}
+		default:
+		{
+			return;
+		}
+	}
+
+	iSavedModel[iBot] = iSavedModel[iClient];
+
+	if(iSavedModel[iBot] < 2)
+		return;
+
+	RequestFrame(NextFrame, GetClientUserId(iBot));
 }
 
 public void NextFrame(int iUserID)
