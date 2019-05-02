@@ -1,4 +1,4 @@
-/*  
+/*
 *    LMC_L4D2_Menu_Choosing - Allows humans to choose LMC model with cookiesaving
 *    Copyright (C) 2019  LuxLuma		acceliacat@gmail.com
 *
@@ -221,7 +221,7 @@ static int iCurrentPage[MAXPLAYERS+1];
 
 public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
 {
-	if(GetEngineVersion() != Engine_Left4Dead2 )
+	if(GetEngineVersion() != Engine_Left4Dead2)
 	{
 		strcopy(error, err_max, "Plugin only supports Left 4 Dead 2");
 		return APLRes_SilentFailure;
@@ -423,7 +423,7 @@ public void ePlayerBotReplace(Handle hEvent, const char[] sEventName, bool bDont
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "player"));
 	int iBot = GetClientOfUserId(GetEventInt(hEvent, "bot"));
-	
+
 	if(iBot < 1 || iBot > MaxClients)
 		return;
 
@@ -579,7 +579,7 @@ public Action ShowMenu(int iClient, int iArgs)
 			AddMenuItem(hMenu, "25", Translate(iClient, "%t", "Tank DLC"));
 	}
 	SetMenuExitButton(hMenu, true);
-	//DisplayMenu(hMenu, iClient, 15);
+
 	DisplayMenuAtItem(hMenu, iClient, iCurrentPage[iClient], 15);
 	return Plugin_Continue;
 }
@@ -1095,13 +1095,13 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 			int iEntity = CreateEntityByName("env_instructor_hint");
 			if(iEntity < 1)
 				return Plugin_Stop;
-				
+
 			char sValues[64];
-			
+
 			FormatEx(sValues, sizeof(sValues), "hint%d", iClient);
 			DispatchKeyValue(iClient, "targetname", sValues);
 			DispatchKeyValue(iEntity, "hint_target", sValues);
-			
+
 			Format(sValues, sizeof(sValues), "10");
 			DispatchKeyValue(iEntity, "hint_timeout", sValues);
 			DispatchKeyValue(iEntity, "hint_range", "100");
@@ -1111,7 +1111,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 			DispatchKeyValue(iEntity, "hint_color", sValues);
 			DispatchSpawn(iEntity);
 			AcceptEntityInput(iEntity, "ShowHint", iClient);
-			
+
 			SetVariantString("OnUser1 !self:Kill::6:1");
 			AcceptEntityInput(iEntity, "AddOutput");
 			AcceptEntityInput(iEntity, "FireUser1");
@@ -1236,16 +1236,16 @@ void SetExternalView(int iClient)
 {
 	if(g_fThirdPersonTime < 0.5)// best time any lower is kinda pointless
 		return;
-	
+
 	float fCurrentTPtime = GetForcedThirdPerson(iClient);
 	float fTime = GetGameTime();
 	if(fCurrentTPtime > (fTime + g_fThirdPersonTime))
 		return;
-	
+
 	if(fCurrentTPtime < fTime + 0.5)
 		if(fCurrentTPtime > fTime - 1.0)//helps to prevent a strange rare bug with models that include particles(e.g. witch) model spamming just about to go back to firstperson, causing stuff to not render correctly (Could be only me) this seems to be client bug, this only seems to happen on maps with modded func_precipitation.
 			return;
-	
+
 	SetEntPropFloat(iClient, Prop_Send, "m_TimeForceExternalView", fTime + g_fThirdPersonTime);
 }
 
