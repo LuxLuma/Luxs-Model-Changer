@@ -1,9 +1,9 @@
 /*
 	Following named colors are supported:
-	 - {white}	(use instead of \x01 )
-	 - {cyan}	(use instead of \x03 )
-	 - {orange}	(use instead of \x04 )
-	 - {green}	(use instead of \x05 )
+	 - {white}	(use instead of \x01)
+	 - {cyan}	(use instead of \x03)
+	 - {orange}	(use instead of \x04)
+	 - {green}	(use instead of \x05)
 */
 
 "Phrases"
@@ -37,7 +37,6 @@
 		"fr"		"{orange}[LMC] {cyan}Changeur de Modèle est disponible uniquement pour les admins."
 		"pl"		"{orange}[LMC] {cyan}Zmiana Modeli dostepna tylko dla adminów."
 		"pt"		"{orange}[LMC] {cyan}A alteração de modelo é apenas para administradores."
-
 	}
 	"Alive only"
 	{
@@ -623,7 +622,6 @@
 		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Sorcière Mariée"
 		"pl"		"{orange}[LMC] {cyan}Model jest {orange}Panna Mloda Wiedzma"
 		"pt"		"{orange}[LMC] {cyan}Alterado modelo para {orange}Witch (noiva)"
-
 	}
 	"Model_Boomer"
 	{
@@ -939,7 +937,6 @@
 		"fr"		"{orange}[LMC] {cyan}Le modèle est {orange}Tank du DLC"
 		"pl"		"{orange}[LMC] {cyan}Model jest {orange}Tank DLC"
 		"pt"		"{orange}[LMC] {cyan}Alterado modelo para {orange}Tank DLC"
-
 	}
 	"Change_Model_Help_Chat"
 	{
@@ -955,20 +952,5 @@
 		"fr"		"{orange}[LMC] {cyan}Pour changer le modèle, utilisez la commande chat{orange}!lmc"
 		"pl"		"{orange}[LMC] {cyan}Zeby zmienic swój model, w czacie wpisz {orange}!lmc"
 		"pt"		"{orange}[LMC] {cyan}Para mudar o modelo do personagem use o comando {orange}!lmc no chat"
-	}
-	"Change_Model_Help_Hint"
-	{
-		"en"		"[LMC] To Change Model use chat Command !lmc"
-		"chi"		"[LMC] 使用!lmc来选择皮肤模型"
-		"ru"		"[LMC] Для смены модели введите в чат !lmc"
-		"ua"		"[LMC] Для зміни моделі введіть у чат !lmc"
-		"sv"		"[LMC] För att ändra modell, använd chattkommandot !lmc"
-		"es"		"[LMC] Para cambiar el modelo use el Commando en el chat !lmc"
-		"hu"		"[LMC] Modell váltáshoz használd a chat parancsot !lmc"
-		"de"		"[LMC] Benutze den Chat-Befehl !lmc um dein Modell zu ändern"
-		"it"		"[LMC] Per Cambiare Modelle usa il Comando Chat !lmc"
-		"fr"		"[LMC] Pour changer le modèle, utilisez la commande chat !lmc"
-		"pl"		"[LMC] Zeby zmienic model, w czacie wpisz !lmc"
-		"pt"		"[LMC] Para mudar o modelo do personagem use o comando !lmc no chat"
 	}
 }

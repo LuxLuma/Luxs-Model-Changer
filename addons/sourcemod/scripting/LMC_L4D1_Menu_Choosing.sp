@@ -1,5 +1,5 @@
-/*  
-*    LMC_L4D1_Menu_Choosing - Allows you to use most models with Most characters in L4D-1/2
+/*
+*    LMC_L4D1_Menu_Choosing - Allows humans to choose LMC model with cookiesaving
 *    Copyright (C) 2019  LuxLuma		acceliacat@gmail.com
 *
 *    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 *    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
- 
+
 #pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
@@ -26,8 +26,8 @@
 #undef REQUIRE_EXTENSIONS
 
 #define REQUIRE_PLUGIN
-#include <LMCL4D1SetTransmit>
 #include <LMCCore>
+#include <LMCL4D1SetTransmit>
 
 #undef REQUIRE_PLUGIN
 
@@ -183,7 +183,7 @@ public void OnPluginStart()
 
 	hCvar_AdminOnlyModel = CreateConVar("lmc_adminonly", "0", "Allow admins to only change models? (1 = true) NOTE: this will disable announcement to player who join. ((#define COMMAND_ACCESS ADMFLAG_CHAT) change to w/o flag you want or (Use override file))", FCVAR_NOTIFY, true, 0.0, true, 1.0);
 	hCvar_AnnounceDelay = CreateConVar("lmc_announcedelay", "15.0", "Delay On which a message is displayed for !lmc command", FCVAR_NOTIFY, true, 1.0, true, 360.0);
-	hCvar_AnnounceMode = CreateConVar("lmc_announcemode", "1", "Display Mode for !lmc command (0 = off, 1 = Print to chat, 2 = Center text)", FCVAR_NOTIFY, true, 0.0, true, 2.0);
+	hCvar_AnnounceMode = CreateConVar("lmc_announcemode", "1", "Display Mode for !lmc command (0 = off, 1 = Print to chat, 2 = Hint text)", FCVAR_NOTIFY, true, 0.0, true, 2.0);
 	HookConVarChange(hCvar_AdminOnlyModel, eConvarChanged);
 	HookConVarChange(hCvar_AnnounceDelay, eConvarChanged);
 	HookConVarChange(hCvar_AnnounceMode, eConvarChanged);
@@ -267,10 +267,10 @@ public void OnMapStart()
 		int i;
 		for(i = 0; i < HUMAN_MODEL_PATH_SIZE; i++)
 			PrecacheModel(sHumanPaths[i], true);
-		
+
 		for(i = 0; i < SPECIAL_MODEL_PATH_SIZE; i++)
 			PrecacheModel(sSpecialPaths[i], true);
-		
+
 		for(i = 0; i < COMMON_MODEL_PATH_SIZE; i++)
 			PrecacheModel(sCommonPaths[i], true);
 	}
@@ -354,7 +354,7 @@ public void ePlayerBotReplace(Handle hEvent, const char[] sEventName, bool bDont
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "player"));
 	int iBot = GetClientOfUserId(GetEventInt(hEvent, "bot"));
-	
+
 	if(iBot < 1 || iBot > MaxClients)
 		return;
 
@@ -486,7 +486,7 @@ public Action ShowMenu(int iClient, int iArgs)
 			AddMenuItem(hMenu, "13", Translate(iClient, "%t", "Tank DLC"));
 	}
 	SetMenuExitButton(hMenu, true);
-	
+
 	DisplayMenuAtItem(hMenu, iClient, iCurrentPage[iClient], 15);
 	return Plugin_Continue;
 }
@@ -576,7 +576,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 						if(!bUsingMenu && !bAutoBlockedMsg[iClient][3])
 							return;
 
-						CPrintToChat(iClient, "%t", ""); // "\x04[LMC] \x03Server Has Disabled Models for \x04Tank");
+						CPrintToChat(iClient, "%t", "Disabled_Models_Tank"); // "\x04[LMC] \x03Server Has Disabled Models for \x04Tank");
 						bAutoBlockedMsg[iClient][3] = false;
 						return;
 					}
@@ -590,7 +590,7 @@ void ModelIndex(int iClient, int iCaseNum, bool bUsingMenu=false)
 				if(!bUsingMenu && !bAutoBlockedMsg[iClient][4])
 					return;
 
-				CPrintToChat(iClient, "%t", "Disabled_Models_Tank"); // "\x04[LMC] \x03Server Has Disabled Models for \x04Survivors");
+				CPrintToChat(iClient, "%t", "Disabled_Models_Survivors"); // "\x04[LMC] \x03Server Has Disabled Models for \x04Survivors");
 				bAutoBlockedMsg[iClient][4] = false;
 				return;
 			}
@@ -788,7 +788,7 @@ public Action iClientInfo(Handle hTimer, any iUserID)
 			CPrintToChat(iClient, "%t", "Change_Model_Help_Chat"); // "\x04[LMC] \x03To Change Model use chat Command \x04!lmc\x03");
 			EmitSoundToClient(iClient, sJoinSound, SOUND_FROM_PLAYER, SNDCHAN_STATIC);
 		}
-		case 2: PrintHintText(iClient, "%t", "Change_Model_Help_Hint"); // "[LMC] To Change Model use chat Command !lmc");
+		case 2: PrintHintText(iClient, "%s", TranslateNoColor(iClient, "%t", "Change_Model_Help_Chat")); // "[LMC] To Change Model use chat Command !lmc");
 	}
 	return Plugin_Stop;
 }
@@ -880,7 +880,7 @@ public void OnClientCookiesCached(int iClient)
 	if(!IsClientInGame(iClient) || !IsPlayerAlive(iClient))
 		return;
 
-	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS, true))
+	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS))
 			return;
 
 	ModelIndex(iClient, iSavedModel[iClient], false);
