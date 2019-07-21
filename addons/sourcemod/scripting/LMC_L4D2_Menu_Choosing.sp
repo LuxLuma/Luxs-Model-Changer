@@ -526,57 +526,57 @@ public Action ShowMenu(int iClient, int iArgs)
 	Handle hMenu = CreateMenu(CharMenu);
 	SetMenuTitle(hMenu, Translate(iClient, "%t", "Lux's Model Changer"));//1.4
 
-	AddMenuItem(hMenu, "1", Translate(iClient, "%t", "Normal Models"));
+	AddMenuItem(hMenu, "1", Translate(iClient, "%t", "Normal Models"), iSavedModel[iClient] == 1 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	AddMenuItem(hMenu, "2", Translate(iClient, "%t", "Random Common"));
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Witch]))
-		AddMenuItem(hMenu, "3", Translate(iClient, "%t", "Witch"));
+		AddMenuItem(hMenu, "3", Translate(iClient, "%t", "Witch"), iSavedModel[iClient] == 3 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_WitchBride]))
-		AddMenuItem(hMenu, "4", Translate(iClient, "%t", "Witch Bride"));
+		AddMenuItem(hMenu, "4", Translate(iClient, "%t", "Witch Bride"), iSavedModel[iClient] == 4 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Boomer]))
-		AddMenuItem(hMenu, "5", Translate(iClient, "%t", "Boomer"));
+		AddMenuItem(hMenu, "5", Translate(iClient, "%t", "Boomer"), iSavedModel[iClient] == 5 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Boomette]))
-		AddMenuItem(hMenu, "6", Translate(iClient, "%t", "Boomette"));
+		AddMenuItem(hMenu, "6", Translate(iClient, "%t", "Boomette"), iSavedModel[iClient] == 6 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Hunter]))
-		AddMenuItem(hMenu, "7", Translate(iClient, "%t", "Hunter"));
+		AddMenuItem(hMenu, "7", Translate(iClient, "%t", "Hunter"), iSavedModel[iClient] == 7 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Smoker]))
-		AddMenuItem(hMenu, "8", Translate(iClient, "%t", "Smoker"));
+		AddMenuItem(hMenu, "8", Translate(iClient, "%t", "Smoker"), iSavedModel[iClient] == 8 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_RiotCop]))
-		AddMenuItem(hMenu, "9", Translate(iClient, "%t", "Riot Cop"));
+		AddMenuItem(hMenu, "9", Translate(iClient, "%t", "Riot Cop"), iSavedModel[iClient] == 9 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_MudMan]))
-		AddMenuItem(hMenu, "10", Translate(iClient, "%t", "MudMan"));
+		AddMenuItem(hMenu, "10", Translate(iClient, "%t", "MudMan"), iSavedModel[iClient] == 10 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Pilot]))
-		AddMenuItem(hMenu, "11", Translate(iClient, "%t", "Chopper Pilot"));
+		AddMenuItem(hMenu, "11", Translate(iClient, "%t", "Chopper Pilot"), iSavedModel[iClient] == 11 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_Ceda]))
-		AddMenuItem(hMenu, "12", Translate(iClient, "%t", "CEDA"));
+		AddMenuItem(hMenu, "12", Translate(iClient, "%t", "CEDA"), iSavedModel[iClient] == 12 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_Clown]))
-		AddMenuItem(hMenu, "13", Translate(iClient, "%t", "Clown"));
+		AddMenuItem(hMenu, "13", Translate(iClient, "%t", "Clown"), iSavedModel[iClient] == 13 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_Jimmy]))
-		AddMenuItem(hMenu, "14", Translate(iClient, "%t", "Jimmy Gibs"));
+		AddMenuItem(hMenu, "14", Translate(iClient, "%t", "Jimmy Gibs"), iSavedModel[iClient] == 14 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sUnCommonPaths[LMCUnCommonModelType_Fallen]))
-		AddMenuItem(hMenu, "15", Translate(iClient, "%t", "Fallen Survivor"));
+		AddMenuItem(hMenu, "15", Translate(iClient, "%t", "Fallen Survivor"), iSavedModel[iClient] == 15 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Nick]))
-		AddMenuItem(hMenu, "16", Translate(iClient, "%t", "Nick"));
+		AddMenuItem(hMenu, "16", Translate(iClient, "%t", "Nick"), iSavedModel[iClient] == 16 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Rochelle]))
-		AddMenuItem(hMenu, "17", Translate(iClient, "%t", "Rochelle"));
+		AddMenuItem(hMenu, "17", Translate(iClient, "%t", "Rochelle"), iSavedModel[iClient] == 17 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Coach]))
-		AddMenuItem(hMenu, "18", Translate(iClient, "%t", "Coach"));
+		AddMenuItem(hMenu, "18", Translate(iClient, "%t", "Coach"), iSavedModel[iClient] == 18 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Ellis]))
-		AddMenuItem(hMenu, "19", Translate(iClient, "%t", "Ellis"));
+		AddMenuItem(hMenu, "19", Translate(iClient, "%t", "Ellis"), iSavedModel[iClient] == 19 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Bill]))
-		AddMenuItem(hMenu, "20", Translate(iClient, "%t", "Bill"));
+		AddMenuItem(hMenu, "20", Translate(iClient, "%t", "Bill"), iSavedModel[iClient] == 20 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Zoey]))// not going to filter light model other checks will get that.
-		AddMenuItem(hMenu, "21", Translate(iClient, "%t", "Zoey"));
+		AddMenuItem(hMenu, "21", Translate(iClient, "%t", "Zoey"), iSavedModel[iClient] == 21 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Francis]))// not going to filter light model other checks will get that.
-		AddMenuItem(hMenu, "22", Translate(iClient, "%t", "Francis"));
+		AddMenuItem(hMenu, "22", Translate(iClient, "%t", "Francis"), iSavedModel[iClient] == 22 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	if(IsModelPrecached(sHumanPaths[LMCHumanModelType_Louis]))
-		AddMenuItem(hMenu, "23", Translate(iClient, "%t", "Louis"));
+		AddMenuItem(hMenu, "23", Translate(iClient, "%t", "Louis"), iSavedModel[iClient] == 23 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 
 	if(g_bTankModel)
 	{
 		if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_Tank]))
-			AddMenuItem(hMenu, "24", Translate(iClient, "%t", "Tank"));
+			AddMenuItem(hMenu, "24", Translate(iClient, "%t", "Tank"), iSavedModel[iClient] == 24 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 		if(IsModelPrecached(sSpecialPaths[LMCSpecialModelType_TankDLC3]))
-			AddMenuItem(hMenu, "25", Translate(iClient, "%t", "Tank DLC"));
+			AddMenuItem(hMenu, "25", Translate(iClient, "%t", "Tank DLC"), iSavedModel[iClient] == 25 ? ITEMDRAW_DISABLED : ITEMDRAW_DEFAULT);
 	}
 	SetMenuExitButton(hMenu, true);
 
