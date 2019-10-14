@@ -35,7 +35,7 @@
 
 
 #define PLUGIN_NAME "LMC_L4D2_Menu_Choosing"
-#define PLUGIN_VERSION "1.0.9"
+#define PLUGIN_VERSION "1.1.0"
 
 //change me to whatever flag you want
 #define COMMAND_ACCESS ADMFLAG_CHAT
