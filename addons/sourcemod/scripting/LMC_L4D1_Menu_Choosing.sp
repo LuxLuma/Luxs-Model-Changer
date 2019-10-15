@@ -439,19 +439,19 @@ public Action ShowMenuCmd(int iClient, int iArgs)
 /*borrowed some code from csm*/
 public Action ShowMenu(int iClient, int iArgs)
 {
-	if(iClient == 0)
+	if(iClient == 0 || !IsClientInGame(iClient))
 	{
 		ReplyToCommand(iClient, Translate(iClient, "%t", "In-game only")); // "[LMC] Menu is in-game only.");
 		return Plugin_Continue;
 	}
 	if(g_bAdminOnly && !CheckCommandAccess(iClient, "sm_lmc", COMMAND_ACCESS))
 	{
-		ReplyToCommand(iClient, Translate(iClient, "%t", "Admin only")); // "\x04[LMC] \x03Model Changer is only available to admins.");
+		CPrintToChat(iClient, "%t", "Admin only");// "\x04[LMC] \x03Model Changer is only available to admins.");
 		return Plugin_Continue;
 	}
 	if(!IsPlayerAlive(iClient) && bAutoBlockedMsg[iClient][5])
 	{
-		ReplyToCommand(iClient, Translate(iClient, "%t", "Alive only")); // "\x04[LMC] \x03Pick a Model to be Applied NextSpawn");
+		CPrintToChat(iClient, "%t", "Alive only"); // "\x04[LMC] \x03Pick a Model to be Applied NextSpawn");
 		bAutoBlockedMsg[iClient][5] = false;
 	}
 	Handle hMenu = CreateMenu(CharMenu);
