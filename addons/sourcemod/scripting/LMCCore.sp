@@ -23,8 +23,30 @@
 #include <sdkhooks>
 #pragma newdecls required
 
+//Cannot really add crazy face toggle without making unnecessary checks
 
-#define PLUGIN_VERSION "3.0.2"
+#define PLUGIN_VERSION "3.1.0"
+
+//https://github.com/alliedmodders/hl2sdk/blob/0ef5d3d482157bc0bb3aafd37c08961373f87bfd/public/const.h#L281-L298
+// entity effects
+enum
+{
+	EF_BONEMERGE			= 0x001,	// Performs bone merge on client side
+	EF_BRIGHTLIGHT 			= 0x002,	// DLIGHT centered at entity origin
+	EF_DIMLIGHT 			= 0x004,	// player flashlight
+	EF_NOINTERP				= 0x008,	// don't interpolate the next frame
+	EF_NOSHADOW				= 0x010,	// Don't cast no shadow
+	EF_NODRAW				= 0x020,	// don't draw entity
+	EF_NORECEIVESHADOW		= 0x040,	// Don't receive no shadow
+	EF_BONEMERGE_FASTCULL	= 0x080,	// For use with EF_BONEMERGE. If this is set, then it places this ent's origin at its
+										// parent and uses the parent's bbox + the max extents of the aiment.
+										// Otherwise, it sets up the parent's bones every frame to figure out where to place
+										// the aiment, which is inefficient because it'll setup the parent's bones even if
+										// the parent is not in the PVS.
+	EF_ITEM_BLINK			= 0x100,	// blink an item so that the user notices it.
+	EF_PARENT_ANIMATES		= 0x200,	// always assume that the parent entity is animating
+	EF_MAX_BITS = 10
+};
 
 static int iHiddenEntity[2048+1] = {0, ...};
 static int iHiddenEntityRef[2048+1];
@@ -139,27 +161,26 @@ int BeWitched(int iClient, const char[] sModel, const bool bBaseReattach)
 	else if(bBaseReattach)
 		AcceptEntityInput(iEntity, "Kill");
 	
-	
-	iEntity = CreateEntityByName("prop_dynamic_ornament");
+	iEntity = CreateEntityByName("commentary_dummy");
 	if(iEntity < 0)
 		return -1;
 	
 	DispatchKeyValue(iEntity, "model", sModel);
 	
+	float fVec[3];
+	GetClientAbsOrigin(iClient, fVec);
+	TeleportEntity(iEntity, fVec, NULL_VECTOR, NULL_VECTOR);
+	
 	DispatchSpawn(iEntity);
 	ActivateEntity(iEntity);
 	
-	SetVariantString("!activator");
-	AcceptEntityInput(iEntity, "SetParent", iClient);
-	
-	SetVariantString("!activator");
-	AcceptEntityInput(iEntity, "SetAttached", iClient);
-	AcceptEntityInput(iEntity, "TurnOn");
+	SetAttach(iEntity, iClient);
 	
 	SetEntityRenderMode(iClient, RENDER_NONE);
 	
 	iHiddenIndex[iClient] = EntIndexToEntRef(iEntity);
 	iHiddenOwner[iEntity] = GetClientUserId(iClient);
+	
 	
 	Call_StartForward(g_hOnClientModelApplied);
 	Call_PushCell(iClient);
@@ -184,21 +205,20 @@ int BeWitchOther(int iEntity, const char[] sModel)// dont pass refs
 		return EntRefToEntIndex(iHiddenEntity[iEntity]);
 	}
 	
-	int iEnt = CreateEntityByName("prop_dynamic_ornament");
+	int iEnt = CreateEntityByName("commentary_dummy");
 	if(iEnt < 0)
 		return -1;
 	
 	DispatchKeyValue(iEnt, "model", sModel);
 	
+	float fVec[3];
+	GetEntPropVector(iEntity, Prop_Send, "m_vecOrigin", fVec);
+	TeleportEntity(iEnt, fVec, NULL_VECTOR, NULL_VECTOR);
+	
 	DispatchSpawn(iEnt);
 	ActivateEntity(iEnt);
 	
-	SetVariantString("!activator");
-	AcceptEntityInput(iEnt, "SetParent", iEntity);
-	
-	SetVariantString("!activator");
-	AcceptEntityInput(iEnt, "SetAttached", iEntity);
-	AcceptEntityInput(iEnt, "TurnOn");
+	SetAttach(iEnt, iEntity);
 	
 	iHiddenEntity[iEntity] = EntIndexToEntRef(iEnt);
 	iHiddenEntityRef[iEntity] = EntIndexToEntRef(iEntity);
@@ -220,6 +240,23 @@ void CheckForSameModel(int iEntity, const char[] sPendingModel)// justincase
 		return;
 	
 	PrintToServer("[LMC][%i]%s(NetClass) overlay_model is the same as base model! \"%s\"", iEntity, sNetClass, sModel);// used netclass because classname can be changed!
+}
+
+void SetAttach(int iEntToAttach, int iEntToAttachTo)
+{
+	SetVariantString("!activator");
+	AcceptEntityInput(iEntToAttach, "SetParent", iEntToAttachTo);
+	
+	SetEntityMoveType(iEntToAttach, MOVETYPE_NONE);
+	
+	SetEntProp(iEntToAttach, Prop_Send, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL|EF_PARENT_ANIMATES);
+	
+	//thanks smlib for flag understanding
+	int iFlags = GetEntProp(iEntToAttach, Prop_Data, "m_usSolidFlags", 2);
+	iFlags = iFlags |= 0x0004;
+	SetEntProp(iEntToAttach, Prop_Data, "m_usSolidFlags", iFlags, 2);
+	
+	TeleportEntity(iEntToAttach, view_as<float>({0.0, 0.0, 0.0}), view_as<float>({0.0, 0.0, 0.0}), NULL_VECTOR);
 }
 
 public void OnGameFrame()
@@ -269,7 +306,7 @@ public void OnGameFrame()
 			}
 		}
 	}
-	iClient++;
+	++iClient;
 	
 	
 	static int iEntity;
@@ -300,7 +337,7 @@ public void OnGameFrame()
 			}
 		}
 	}
-	iEntity++;
+	++iEntity;
 }
 
 
@@ -417,11 +454,6 @@ public int ResetRenderMode(Handle plugin, int numParams)
 public void OnEntityDestroyed(int iEntity)
 {
 	if(!IsServerProcessing() || iEntity < MaxClients+1 || iEntity > 2048)
-		return;
-	
-	static char sClassname[64];
-	GetEntityClassname(iEntity, sClassname, sizeof(sClassname));
-	if(sClassname[0] != 'p' || !StrEqual(sClassname, "prop_dynamic_ornament", false))
 		return;
 	
 	int iClient = GetClientOfUserId(iHiddenOwner[iEntity]);
