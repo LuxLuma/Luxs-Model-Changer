@@ -23,7 +23,6 @@
 #include <sdkhooks>
 
 #define REQUIRE_PLUGIN
-#include <LMCL4D1SetTransmit>
 #include <LMCCore>
 #undef REQUIRE_PLUGIN
 
@@ -31,7 +30,7 @@
 
 
 #define PLUGIN_NAME "LMCL4D1CDeathHandler"
-#define PLUGIN_VERSION "1.1"
+#define PLUGIN_VERSION "1.1.1"
 
 static char sModelStrings[MAXPLAYERS+1][PLATFORM_MAX_PATH];
 static int iCSRagdollRef = INVALID_ENT_REFERENCE;

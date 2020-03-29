@@ -22,7 +22,6 @@
 #include <sdkhooks>
 
 #define REQUIRE_PLUGIN
-#include <LMCL4D2SetTransmit>
 #include <LMCCore>
 #undef REQUIRE_PLUGIN
 
@@ -30,7 +29,7 @@
 
 
 #define PLUGIN_NAME "LMCL4D2CDeathHandler"
-#define PLUGIN_VERSION "1.1.5"
+#define PLUGIN_VERSION "1.1.6"
 
 static char sModelStrings[MAXPLAYERS+1][PLATFORM_MAX_PATH];
 
