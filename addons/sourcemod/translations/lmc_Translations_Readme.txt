@@ -45,6 +45,7 @@ you are limited to 191 characters for the translation of each key translation(i'
 {
 	"en"		"Lux's Model Changer"
 	"ru"		"Смена персонажа (от Lux)"
+	"zho"		"Lux的角色模型修改器"
 }
 
 And Repeat for each key.
