@@ -12,6 +12,7 @@
 	{
 		"en"		"[LMC] Menu is in-game only."
 		"chi"		"[LMC] 这个菜单只能在游戏中使用"
+		"zho"		"[LMC] 這個選項菜單只能在遊戲中使用"
 		"ru"		"[LMC] Меню доступно только в игре."
 		"ua"		"[LMC] Меню доступне тільки у грі."
 		"sv"		"[LMC] Menyn är endast tillgänlig i spelet."
@@ -27,6 +28,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model Changer is only available to admins."
 		"chi"		"{orange}[LMC] {cyan}只有管理员可以修改人物皮肤模型."
+		"zho"		"{orange}[LMC] {cyan}只有管理員可以更換角色模型."
 		"ru"		"{orange}[LMC] {cyan}Смена модели доступна только для админов."
 		"ua"		"{orange}[LMC] {cyan}Зміна моделі доступна тільки для адмінів."
 		"sv"		"{orange}[LMC] {cyan}Byta modell är endast tillgängligt för admins."
@@ -42,6 +44,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Pick a Model to be Applied NextSpawn"
 		"chi"		"{orange}[LMC] {cyan}请选择下次重生之后的皮肤模型"
+		"zho" 		"{orange}[LMC] {cyan}請選擇下次復活之後的角色模型"
 		"ru"		"{orange}[LMC] {cyan}Сменить модель можно при следующем возрождении"
 		"ua"		"{orange}[LMC] {cyan}Змінити модель можна з наступним відродженням"
 		"sv"		"{orange}[LMC] {cyan}Välj en modell som ska tillämpas nästa gång du spawnar"
@@ -57,6 +60,7 @@
 	{
 		"en"		"Lux's Model Changer"
 		"chi"		"Lux的皮肤模型修改器"
+		"zho" 		"Lux的角色模型修改器"
 		"ru"		"Смена персонажа (от Lux)"
 		"ua"		"Зміна персонажу (від Lux)"
 		"sv"		"Lux's modelländrare"
@@ -72,6 +76,7 @@
 	{
 		"en"		"Normal Models"
 		"chi"		"正常模型"
+		"zho"		"正常模型"
 		"ru"		"Обычные модели"
 		"ua"		"Звичайні моделі"
 		"sv"		"Vanliga modeller"
@@ -87,6 +92,7 @@
 	{
 		"en"		"Random Common"
 		"chi"		"随机模型"
+		"zho"		"隨機模型"
 		"ru"		"Случайный зомби"
 		"ua"		"Випадковий зомбі"
 		"sv"		"Slumpmässig gemensam"
@@ -102,6 +108,7 @@
 	{
 		"en"		"Witch"
 		"chi"		"女巫"
+		"zho"		"Witch"
 		"ru"		"Ведьма"
 		"ua"		"Відьма"
 		"sv"		"Häxa"
@@ -117,6 +124,7 @@
 	{
 		"en"		"Witch Bride"
 		"chi"		"新娘女巫"
+		"zho"		"新娘Witch"
 		"ru"		"Ведьма-невеста"
 		"ua"		"Відьма-наречена"
 		"sv"		"Gift Häxa"
@@ -132,6 +140,7 @@
 	{
 		"en"		"Boomer"
 		"chi"		"Boomer(胖子)"
+		"zho"		"Boomer"
 		"ru"		"Толстяк"
 		"ua"		"Товстун"
 		"sv"		"Boomer"
@@ -147,6 +156,7 @@
 	{
 		"en"		"Boomette"
 		"chi"		"Boomette(女胖子)"
+		"zho"		"女Boomer"
 		"ru"		"Толстушка"
 		"ua"		"Товстуха"
 		"sv"		"Boomette"
@@ -162,6 +172,7 @@
 	{
 		"en"		"Hunter"
 		"chi"		"Hunter(猎人/跳跳)"
+		"zho"		"Hunter"
 		"ru"		"Охотник"
 		"ua"		"Мисливець"
 		"sv"		"Jägare"
@@ -177,6 +188,7 @@
 	{
 		"en"		"Smoker"
 		"chi"		"Smoker(烟鬼/舌头)"
+		"zho"		"Smoker"
 		"ru"		"Курильщик"
 		"ua"		"Курець"
 		"sv"		"Rökare"
@@ -192,6 +204,7 @@
 	{
 		"en"		"Riot Cop"
 		"chi"		"防暴警察"
+		"zho"		"防暴警察"
 		"ru"		"Спецназ"
 		"ua"		"Спецназ"
 		"sv"		"Kravallpolis"
@@ -207,6 +220,7 @@
 	{
 		"en"		"MudMan"
 		"chi"		"泥人"
+		"zho"		"沼澤泥人"
 		"ru"		"Грязевик"
 		"ua"		"Грязьовик"
 		"sv"		"Lerman"
@@ -222,6 +236,7 @@
 	{
 		"en"		"Chopper Pilot"
 		"chi"		"直升机飞行员"
+		"zho"		"直升機飛行員"
 		"ru"		"Пилот вертолёта"
 		"ua"		"Пілот гелікоптера"
 		"sv"		"Helikopter Pilot"
@@ -237,6 +252,7 @@
 	{
 		"en"		"CEDA"
 		"chi"		"CEDA防化人员"
+		"zho"		"CEDA生化人員"
 		"ru"		"Агент АЧС"
 		"ua"		"Агент CEDA"
 		"sv"		"CEDA"
@@ -252,6 +268,7 @@
 	{
 		"en"		"Clown"
 		"chi"		"小丑僵尸"
+		"zho"		"小丑"
 		"ru"		"Клоун"
 		"ua"		"Клоун"
 		"sv"		"Clown"
@@ -267,6 +284,7 @@
 	{
 		"en"		"Jimmy Gibs"
 		"chi"		"赛车手僵尸"
+		"zho"		"Jimmy Gibs 賽車手"
 		"ru"		"Джимми Гибс"
 		"ua"		"Джиммі Гібс"
 		"sv"		"Jimmy Gibs"
@@ -282,6 +300,7 @@
 	{
 		"en"		"Fallen Survivor"
 		"chi"		"堕落幸存者"
+		"zho"		"墮落倖存者"
 		"ru"		"Падший выживший"
 		"ua"		"Павший, що вижив"
 		"sv"		"Stupad Överlevare"
@@ -297,6 +316,7 @@
 	{
 		"en"		"Nick"
 		"chi"		"Nick"
+		"zho"		"Nick"
 		"ru"		"Ник"
 		"ua"		"Нік"
 		"sv"		"Nick"
@@ -312,6 +332,7 @@
 	{
 		"en"		"Rochelle"
 		"chi"		"Rochelle"
+		"zho"		"Rochelle"
 		"ru"		"Рошель"
 		"ua"		"Рошель"
 		"sv"		"Rochelle"
@@ -327,6 +348,7 @@
 	{
 		"en"		"Coach"
 		"chi"		"Coach"
+		"zho"		"Coach"
 		"ru"		"Тренер"
 		"ua"		"Тренер"
 		"sv"		"Tränare"
@@ -342,6 +364,7 @@
 	{
 		"en"		"Ellis"
 		"chi"		"Ellis"
+		"zho"		"Ellis"
 		"ru"		"Эллис"
 		"ua"		"Еліс"
 		"sv"		"Ellis"
@@ -357,6 +380,7 @@
 	{
 		"en"		"Bill"
 		"chi"		"Bill"
+		"zho"		"Bill"
 		"ru"		"Билл"
 		"ua"		"Біл"
 		"sv"		"Bill"
@@ -372,6 +396,7 @@
 	{
 		"en"		"Zoey"
 		"chi"		"Zoey"
+		"zho"		"Zoey"
 		"ru"		"Зой"
 		"ua"		"Зой"
 		"sv"		"Zoey"
@@ -387,6 +412,7 @@
 	{
 		"en"		"Francis"
 		"chi"		"Francis"
+		"zho"		"Francis"
 		"ru"		"Френсис"
 		"ua"		"Френсіс"
 		"sv"		"Francis"
@@ -402,6 +428,7 @@
 	{
 		"en"		"Louis"
 		"chi"		"Louis"
+		"zho"		"Louis"
 		"ru"		"Луис"
 		"ua"		"Луіс"
 		"sv"		"Louis"
@@ -417,6 +444,7 @@
 	{
 		"en"		"Tank"
 		"chi"		"坦克"
+		"zho"		"Tank"
 		"ru"		"Танк"
 		"ua"		"Танк"
 		"sv"		"Tank"
@@ -432,6 +460,7 @@
 	{
 		"en"		"Tank DLC"
 		"chi"		"DLC坦克"
+		"zho"		"Tank DLC"
 		"ru"		"Танк DLC"
 		"ua"		"Танк DLC"
 		"sv"		"Tank DLC"
@@ -447,6 +476,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Smoker"
 		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}Smoker(烟鬼){cyan}的模型"
+		"zho"		"{orange}[LMC] {cyan}伺服器已禁用{orange}Smoker{cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Курильщика"
 		"ua"		"{orange}[LMC] {cyan}На сервері вимкнені моделі для {orange}Курця"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Rökare"
@@ -462,6 +492,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Boomer"
 		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}Boomer(胖子){cyan}的模型"
+		"zho"		"{orange}[LMC] {cyan}伺服器已禁用{orange}Boomer{cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Толстяка"
 		"ua"		"{orange}[LMC] {cyan}На сервері вимкнені моделі для {orange}Товстуна"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Boomer"
@@ -477,6 +508,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Hunter"
 		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}Hunter(猎人/跳跳){cyan}的模型"
+		"zho"		"{orange}[LMC] {cyan}伺服器已禁用{orange}Hunter{cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Охотника"
 		"ua"		"{orange}[LMC] {cyan}На сервері вимкнені моделі для {orange}Мисливця"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Jägare"
@@ -492,6 +524,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Tank"
 		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}坦克{cyan}的模型"
+		"zho"		"{orange}[LMC] {cyan}伺服器已禁用{orange}Tank{cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Танка"
 		"ua"		"{orange}[LMC] {cyan}На сервері вимкнені моделі для {orange}Танка"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Tank"
@@ -507,6 +540,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Server Has Disabled Models for {orange}Survivors"
 		"chi"		"{orange}[LMC] {cyan}服务器已经禁用了{orange}幸存者{cyan}的模型"
+		"zho"		"{orange}[LMC] {cyan}伺服器已禁用{orange}倖存者們{cyan}的模型"
 		"ru"		"{orange}[LMC] {cyan}На сервере отключены модели для {orange}Выживших"
 		"ua"		"{orange}[LMC] {cyan}На сервері вимкнені моделі для {orange}персонажів, що вижили"
 		"sv"		"{orange}[LMC] {cyan}Server har inaktiverat modellen för {orange}Överlevare"
@@ -522,6 +556,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Models will be default"
 		"chi"		"{orange}[LMC] {cyan}将使用默认模型"
+		"zho"		"{orange}[LMC] {cyan}將使用默認模型"
 		"ru"		"{orange}[LMC] {cyan}Выбрана стандартная модель"
 		"ua"		"{orange}[LMC] {cyan}Обрана стандартна модель"
 		"sv"		"{orange}[LMC] {cyan}Modellerna kommer vara standard"
@@ -537,6 +572,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Models Don't Work for {orange}Spitter"
 		"chi"		"{orange}[LMC] {orange}Spitter(口水){cyan}无法使用这个模型"
+		"zho"		"{orange}[LMC] {orange}Spitter{cyan} 模型無法使用"
 		"ru"		"{orange}[LMC] {cyan}Модели не работают для {orange}Плевальщицы"
 		"ua"		"{orange}[LMC] {cyan}Моделі не працюють для {orange}Плювальниці"
 		"sv"		"{orange}[LMC] {cyan}Modellerna fungerar ej för {orange}Spitter"
@@ -552,6 +588,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Models Don't Work for {orange}Jockey"
 		"chi"		"{orange}[LMC] {orange}Jockey(猴子){cyan}无法使用这个模型"
+		"zho"		"{orange}[LMC] {orange}Jockey{cyan} 模型無法使用"
 		"ru"		"{orange}[LMC] {cyan}Модели не работают для {orange}Жокея"
 		"ua"		"{orange}[LMC] {cyan}Моделі не працюють для {orange}Жокею"
 		"sv"		"{orange}[LMC] {cyan}Modellerna funger ej för {orange}Jockey"
@@ -567,6 +604,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Models Don't Work for {orange}Charger"
 		"chi"		"{orange}[LMC] {orange}Charger(牛){cyan}无法使用这个模型"
+		"zho"		"{orange}[LMC] {orange}Charger{cyan} 模型無法使用"
 		"ru"		"{orange}[LMC] {cyan}Модели не работают для {orange}Громилы"
 		"ua"		"{orange}[LMC] {cyan}Моделі не працюють для {orange}Громили"
 		"sv"		"{orange}[LMC] {cyan}Modellerna fungerar ej för {orange}Charger"
@@ -582,6 +620,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Common Infected"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}普通感染者"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}普通感染者"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Обычный заражённый"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Звичайний інфікований"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Vanlig Infekterad"
@@ -597,6 +636,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Witch"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}女巫"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Witch"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Ведьма"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Відьма"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Häxa"
@@ -612,6 +652,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Witch Bride"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}新娘女巫"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}新娘Witch"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Ведьма-невеста"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Відьма-наречена"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Gift Häxa"
@@ -627,6 +668,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Boomer"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Boomer(胖子)"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Boomer"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Толстяк"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Товтун"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Boomer"
@@ -642,6 +684,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Boomette"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Boomette(女胖子)"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}女Boomer"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Толстунья"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Товстуха"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Boomette"
@@ -657,6 +700,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Hunter"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Hunter(猎人/跳跳)"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Hunter"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Охотник"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Мисливець"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Jägare"
@@ -672,6 +716,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Smoker"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Smoker(烟鬼/舌头)"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Smoker"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Курильщик"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Курець"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Rökare"
@@ -687,6 +732,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}RiotCop"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}防暴警察僵尸"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}防暴警察"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Спецназ"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Спецназ"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Kravalls Polis"
@@ -702,6 +748,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}MudMen"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}泥人"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}沼澤泥人"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Грязевик"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Грязьовик"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Lerman"
@@ -717,6 +764,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Chopper Pilot"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}直升机飞行员僵尸"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}直升機飛行員"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Пилот вертолёта"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Пілот гелікоптеру"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Helikopter Pilot"
@@ -732,6 +780,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}CEDA"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}CEDA防化人员"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}CEDA生化人員"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Агент АЧС"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Агент CEDA"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}CEDA"
@@ -747,6 +796,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Clown"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}小丑僵尸"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}小丑"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Клоун"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Клоун"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Clown"
@@ -762,6 +812,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Jimmy Gibs"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}赛车手僵尸"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Jimmy Gibs 賽車手"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Джимми Гибс"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Джиммі Гібс"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Jimmy Gibs"
@@ -777,6 +828,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Fallen Survivor"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}堕落幸存者"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}墮落倖存者"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Падший выживший"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Павший, що вижив"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Stupad Överlevare"
@@ -792,6 +844,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Nick"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Nick"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Nick"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Ник"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Нік"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Nick"
@@ -807,6 +860,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Rochelle"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Rochelle"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Rochelle"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Рошель"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Рошель"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Rochelle"
@@ -822,6 +876,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Coach"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Coach"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Coach"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Тренер"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Тренер"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tränare"
@@ -837,6 +892,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Ellis"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Ellis"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Ellis"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Эллис"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Еліс"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Ellis"
@@ -852,6 +908,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Bill"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Bill"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Bill"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Билл"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Біл"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Bill"
@@ -867,6 +924,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Zoey"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Zoey"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Zoey"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Зой"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Зой"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Zoey"
@@ -882,6 +940,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Francis"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Francis"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Francis"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Френсис"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Френсіс"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Francis"
@@ -897,6 +956,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Louis"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}Louis"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Louis"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Луис"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Луіс"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Louis"
@@ -912,6 +972,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Tank"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}坦克"
+		"zho"		"{orange}[LMC] {orange}模型變為: {orange}Tank"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Танк"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Танк"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tank"
@@ -927,6 +988,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}Model is {orange}Tank DLC"
 		"chi"		"{orange}[LMC] {cyan}模型变为: {orange}DLC坦克"
+		"zho"		"{orange}[LMC] {cyan}模型變為: {orange}Tank DLC"
 		"ru"		"{orange}[LMC] {cyan}Выбрана модель - {orange}Танк DLC"
 		"ua"		"{orange}[LMC] {cyan}Обрана модель - {orange}Танк DLC"
 		"sv"		"{orange}[LMC] {cyan}Modellen är {orange}Tank DLC"
@@ -942,6 +1004,7 @@
 	{
 		"en"		"{orange}[LMC] {cyan}To Change Model use chat Command {orange}!lmc"
 		"chi"		"{orange}[LMC] {cyan}使用{orange}!lmc{cyan}来选择皮肤模型"
+		"zho"		"{orange}[LMC] {cyan}使用 {orange}!lmc{cyan} 選擇角色模型"
 		"ru"		"{orange}[LMC] {cyan}Для смены модели введите в чат {orange}!lmc"
 		"ua"		"{orange}[LMC] {cyan}Для зміни моделі введіть у чат {orange}!lmc"
 		"sv"		"{orange}[LMC] {cyan}För att ändra modell, använd chattkommandot {orange}!lmc"
