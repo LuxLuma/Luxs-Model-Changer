@@ -287,14 +287,14 @@ stock void SetAttached(int iEntToAttach, int iEntToAttachTo)
 */
 stock void Detach(int iEntity)
 {
-	AcceptEntityInput(iEntToAttach, "ClearParent");
+	AcceptEntityInput(iEntity, "ClearParent");
 	
 	//thanks smlib for flag understanding
-	int iFlags = GetEntProp(iEntToAttach, Prop_Data, "m_usSolidFlags", 2);
+	int iFlags = GetEntProp(iEntity, Prop_Data, "m_usSolidFlags", 2);
 	iFlags = iFlags |= 0x0004;
-	SetEntProp(iEntToAttach, Prop_Data, "m_usSolidFlags", iFlags, 2);
+	SetEntProp(iEntity, Prop_Data, "m_usSolidFlags", iFlags, 2);
 	
-	SetEntityMoveType(iEntToAttach, MOVETYPE_NONE);
+	SetEntityMoveType(iEntity, MOVETYPE_NONE);
 }
 
 
