@@ -68,10 +68,12 @@ public void OnPluginStart()
 	HookEvent("player_death", ePlayerDeath);
 }
 
-public Action SpawnHook(int iClient)
+Action SpawnHook(int iClient)
 {
 	SDKUnhook(iClient, SDKHook_Spawn, SpawnHook);
 	SetEntityModel(iClient, sModelStrings[iClient]);
+
+	return Plugin_Continue;
 }
 
 

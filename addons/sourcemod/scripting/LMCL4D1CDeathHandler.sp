@@ -63,14 +63,15 @@ public void OnPluginStart()
 	HookEvent("player_death", ePlayerDeath);
 }
 
-public Action SpawnHook(int iClient)
+Action SpawnHook(int iClient)
 {
 	SDKUnhook(iClient, SDKHook_Spawn, SpawnHook);
 	SetEntityModel(iClient, sModelStrings[iClient]);
+
+	return Plugin_Continue;
 }
 
-
-public void Cs_Ragdollhandler(int iRagdoll, int iClient)
+void Cs_Ragdollhandler(int iRagdoll, int iClient)
 {
 	SDKUnhook(iRagdoll, SDKHook_SetTransmit, Cs_Ragdollhandler);
 	int iOwner = GetEntPropEnt(iRagdoll, Prop_Send, "m_hPlayer");
@@ -82,7 +83,7 @@ public void Cs_Ragdollhandler(int iRagdoll, int iClient)
 	SetEntProp(iOwner, Prop_Send, "m_nModelIndex", GetEntProp(iRagdoll, Prop_Send, "m_nModelIndex", 2), 2);
 }
 
-public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
+void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iVictim = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if(iVictim < 1 || iVictim > MaxClients || !IsClientInGame(iVictim))

@@ -64,7 +64,7 @@ public void OnAllPluginsLoaded()// makesure my hook is last if it can
 	HookEvent("player_death", ePlayerDeath);
 }
 
-public void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
+void ePlayerDeath(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iVictim = GetEventInt(hEvent, "entityid");
 	if(iVictim < MaxClients+1 || iVictim > 2048 || !IsValidEntity(iVictim))
@@ -111,7 +111,7 @@ void NextBotRagdollHandler(int iEntity, int iPreRagdoll)
 	SDKHook(iEntity, SDKHook_SetTransmit, HideNextBot);
 }
 
-public Action HideNextBot(int iEntity, int iClient)
+Action HideNextBot(int iEntity, int iClient)
 {
 	return Plugin_Handled;
 }

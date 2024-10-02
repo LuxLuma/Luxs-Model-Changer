@@ -37,7 +37,7 @@
 #define COMMON_MODEL_PATH_SIZE 13
 
 
-enum ZOMBIECLASS
+enum /*ZOMBIECLASS*/
 {
 	ZOMBIECLASS_SMOKER = 1,
 	ZOMBIECLASS_BOOMER,
@@ -46,7 +46,7 @@ enum ZOMBIECLASS
 	ZOMBIECLASS_TANK,
 }
 
-enum LMCModelSectionType
+enum /*LMCModelSectionType*/
 {
 	LMCModelSectionType_Human = 0,
 	LMCModelSectionType_Special,
@@ -171,7 +171,7 @@ public void OnPluginStart()
 	HookEvent("player_spawn", ePlayerSpawn);
 }
 
-public void eConvarChanged(Handle hCvar, const char[] sOldVal, const char[] sNewVal)
+void eConvarChanged(Handle hCvar, const char[] sOldVal, const char[] sNewVal)
 {
 	CvarsChanged();
 }
@@ -252,7 +252,7 @@ public void OnMapStart()
 	CvarsChanged();
 }
 
-public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
+void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iUserID = GetEventInt(hEvent, "userid");
 	int iClient = GetClientOfUserId(iUserID);
@@ -318,7 +318,7 @@ public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroad
 	RequestFrame(NextFrame, iUserID);
 }
 
-public void NextFrame(int iUserID)
+void NextFrame(int iUserID)
 {
 	int iClient = GetClientOfUserId(iUserID);
 	if(iClient < 1 || !IsClientInGame(iClient) || !IsPlayerAlive(iClient))
@@ -353,7 +353,7 @@ public void NextFrame(int iUserID)
 
 bool ChooseRNGModel(char sModel[PLATFORM_MAX_PATH])
 {
-	switch(GetRandomInt(0, view_as<int>(LMCModelSectionType_Common)))
+	switch(GetRandomInt(0, LMCModelSectionType_Common))
 	{
 		case LMCModelSectionType_Human:
 			strcopy(sModel, sizeof(sModel), sHumanPaths[GetRandomInt(0, HUMAN_MODEL_PATH_SIZE)]);
