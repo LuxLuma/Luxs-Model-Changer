@@ -22,7 +22,7 @@
 #define _LMCCore_included
 
 
-#define LMCCore_version "3.1.0"
+#define LMCCore_version "3.1.0c"
 
 
 /**
