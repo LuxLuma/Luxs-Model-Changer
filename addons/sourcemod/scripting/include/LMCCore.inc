@@ -22,7 +22,7 @@
 #define _LMCCore_included
 
 
-#define LMCCore_version "3.1.0"
+#define LMCCore_version "3.1.0c"
 
 
 /**
@@ -104,7 +104,7 @@ forward void LMC_OnClientModelDestroyed(int iClient, int iEntity);
 *   @param  ...			Variable number of format parameters.
 *   @return char[192]	Resulting string. Note: output buffer is hardly limited.
 */
-stock char[] Translate(int iClient, const char[] format, any ...)
+stock char[] LMC_Translate(int iClient, const char[] format, any ...)
 {
 	char buffer[192];
 	SetGlobalTransTarget(iClient);
@@ -120,12 +120,12 @@ stock char[] Translate(int iClient, const char[] format, any ...)
 *   @param  ...			Variable number of format parameters.
 *   @return char[192]	Resulting string. Note: output buffer is hardly limited.
 */
-stock char[] TranslateNoColor(int iClient, const char[] format, any ...)
+stock char[] LMC_TranslateNoColor(int iClient, const char[] format, any ...)
 {
 	char buffer[192];
 	SetGlobalTransTarget(iClient);
 	VFormat(buffer, sizeof(buffer), format, 3);
-	RemoveColor(buffer, sizeof(buffer));
+	LMC_RemoveColor(buffer, sizeof(buffer));
 	return buffer;
 }
 
@@ -137,12 +137,12 @@ stock char[] TranslateNoColor(int iClient, const char[] format, any ...)
 *   @param  ...			Variable number of format parameters.
 *   @no return
 */
-stock void CPrintToChat(int iClient, const char[] format, any ...)
+stock void LMC_CPrintToChat(int iClient, const char[] format, any ...)
 {
     char buffer[192];
     SetGlobalTransTarget(iClient);
     VFormat(buffer, sizeof(buffer), format, 3);
-    ReplaceColor(buffer, sizeof(buffer));
+    LMC_ReplaceColor(buffer, sizeof(buffer));
     PrintToChat(iClient, "\x01%s", buffer);
 }
 
@@ -153,7 +153,7 @@ stock void CPrintToChat(int iClient, const char[] format, any ...)
 *   @param  ...			Variable number of format parameters.
 *   @no return
 */
-stock void CPrintToChatAll(const char[] format, any ...)
+stock void LMC_CPrintToChatAll(const char[] format, any ...)
 {
     char buffer[192];
     for( int i = 1; i <= MaxClients; i++ )
@@ -162,7 +162,7 @@ stock void CPrintToChatAll(const char[] format, any ...)
         {
             SetGlobalTransTarget(i);
             VFormat(buffer, sizeof(buffer), format, 2);
-            ReplaceColor(buffer, sizeof(buffer));
+            LMC_ReplaceColor(buffer, sizeof(buffer));
             PrintToChat(i, "\x01%s", buffer);
         }
     }
@@ -175,7 +175,7 @@ stock void CPrintToChatAll(const char[] format, any ...)
 *   @param  maxLen		Maximum length of string buffer (includes NULL terminator).
 *   @no return
 */
-stock void ReplaceColor(char[] message, int maxLen)
+stock void LMC_ReplaceColor(char[] message, int maxLen)
 {
     ReplaceString(message, maxLen, "{white}", "\x01", false);
     ReplaceString(message, maxLen, "{cyan}", "\x03", false);
@@ -190,7 +190,7 @@ stock void ReplaceColor(char[] message, int maxLen)
 *   @param  maxLen		Maximum length of string buffer (includes NULL terminator).
 *   @no return
 */
-stock void RemoveColor(char[] message, int maxLen)
+stock void LMC_RemoveColor(char[] message, int maxLen)
 {
     ReplaceString(message, maxLen, "{white}", "", false);
     ReplaceString(message, maxLen, "{cyan}", "", false);
@@ -205,7 +205,7 @@ stock void RemoveColor(char[] message, int maxLen)
 *   @param  ...			Variable number of format parameters.
 *   @no return
 */
-stock void CPrintHintTextToAll(const char[] format, any ...)
+stock void LMC_CPrintHintTextToAll(const char[] format, any ...)
 {
     char buffer[192];
     for( int i = 1; i <= MaxClients; i++ )
@@ -226,7 +226,7 @@ stock void CPrintHintTextToAll(const char[] format, any ...)
 *   @param  ...			Variable number of format parameters.
 *   @no return
 */
-stock void CPrintCenterTextAll(const char[] format, any ...)
+stock void LMC_CPrintCenterTextAll(const char[] format, any ...)
 {
     char buffer[192];
     for( int i = 1; i <= MaxClients; i++ )

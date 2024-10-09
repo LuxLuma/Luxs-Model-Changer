@@ -64,8 +64,7 @@ public void OnPluginStart()
 	CreateConVar("lmcl4d1settransmit_version", PLUGIN_VERSION, "LMCL4D1SetTransmit_version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
 }
 
-
-public Action HideModel(int iEntity, int iClient)
+Action HideModel(int iEntity, int iClient)
 {
 	if(IsFakeClient(iClient))
 		return Plugin_Continue;
@@ -238,7 +237,7 @@ public void TP_OnThirdPersonChanged(int iClient, bool bIsThirdPerson)
 	bThirdPerson[iClient] = bIsThirdPerson;
 }
 
-public int SetTransmit(Handle plugin, int numParams)
+int SetTransmit(Handle plugin, int numParams)
 {
 	if(numParams < 3)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
@@ -261,7 +260,9 @@ public int SetTransmit(Handle plugin, int numParams)
 	{
 		iHiddenOwner[iEntity] = GetClientUserId(iClient);
 		SDKHookEx(iEntity, SDKHook_SetTransmit, HideModel);
-		return;
+		return 0;
 	}
 	SDKUnhook(iEntity, SDKHook_SetTransmit, HideModel);
+
+	return 0;
 }

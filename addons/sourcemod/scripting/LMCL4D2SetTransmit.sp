@@ -27,7 +27,7 @@
 #define PLUGIN_NAME "LMCL4D2SetTransmit"
 #define PLUGIN_VERSION "1.0.3"
 
-enum ZOMBIECLASS
+enum /*ZOMBIECLASS*/
 {
 	ZOMBIECLASS_SMOKER = 1,
 	ZOMBIECLASS_BOOMER,
@@ -68,8 +68,7 @@ public void OnPluginStart()
 	CreateConVar("lmcl4d2settransmit_version", PLUGIN_VERSION, "LMCL4D2SetTransmit_version", FCVAR_DONTRECORD|FCVAR_NOTIFY);
 }
 
-
-public Action HideModel(int iEntity, int iClient)
+Action HideModel(int iEntity, int iClient)
 {
 	if(IsFakeClient(iClient))
 		return Plugin_Continue;
@@ -334,7 +333,7 @@ public void TP_OnThirdPersonChanged(int iClient, bool bIsThirdPerson)
 	bThirdPerson[iClient] = bIsThirdPerson;
 }
 
-public int SetTransmit(Handle plugin, int numParams)
+int SetTransmit(Handle plugin, int numParams)
 {
 	if(numParams < 3)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
@@ -357,7 +356,9 @@ public int SetTransmit(Handle plugin, int numParams)
 	{
 		iHiddenOwner[iEntity] = GetClientUserId(iClient);
 		SDKHook(iEntity, SDKHook_SetTransmit, HideModel);
-		return;
+		return 0;
 	}
 	SDKUnhook(iEntity, SDKHook_SetTransmit, HideModel);
+
+	return 0;
 }

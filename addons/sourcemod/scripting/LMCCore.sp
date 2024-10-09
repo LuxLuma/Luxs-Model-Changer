@@ -25,7 +25,7 @@
 
 //Cannot really add crazy face toggle without making unnecessary checks
 
-#define PLUGIN_VERSION "3.1.0"
+#define PLUGIN_VERSION "3.1.0c"
 
 //https://github.com/alliedmodders/hl2sdk/blob/0ef5d3d482157bc0bb3aafd37c08961373f87bfd/public/const.h#L281-L298
 // entity effects
@@ -114,7 +114,7 @@ public void OnPluginStart()
 	HookEvent("player_spawn", ePlayerSpawn, EventHookMode_Pre);
 }
 
-public void eConvarChanged(Handle hCvar, const char[] sOldVal, const char[] sNewVal)
+void eConvarChanged(Handle hCvar, const char[] sOldVal, const char[] sNewVal)
 {
 	CvarsChanged();
 }
@@ -124,7 +124,7 @@ void CvarsChanged()
 	g_bAggressiveChecks = GetConVarInt(hCvar_AggressiveChecks) > 0;
 }
 
-public void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
+void ePlayerSpawn(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if(iClient < 1 || iClient > MaxClients)
@@ -292,7 +292,9 @@ public void OnGameFrame()
 			}
 		}
 		else if(g_bAggressiveChecks && !IsValidEntRef(iHiddenEntityRef[iClient]))
+		{
 			SetEntityRenderMode(iClient, RENDER_NORMAL);
+		}
 		
 		static int iModelIndex[MAXPLAYERS+1] = {-1, ...};
 		if(iModelIndex[iClient] != GetEntProp(iClient, Prop_Data, "m_nModelIndex", 2))
@@ -341,7 +343,7 @@ public void OnGameFrame()
 }
 
 
-public int GetOverlayModel(Handle plugin, int numParams)
+int GetOverlayModel(Handle plugin, int numParams)
 {
 	if(numParams < 1)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
@@ -377,11 +379,10 @@ public int SetOverlayModel(Handle plugin, int numParams)
 	if(sModel[0] == '\0')
 		ThrowNativeError(SP_ERROR_PARAM, "Error Empty String");
 	
-	
 	return BeWitched(iClient, sModel, false);
 }
 
-public int SetEntityOverlayModel(Handle plugin, int numParams)
+int SetEntityOverlayModel(Handle plugin, int numParams)
 {
 	if(numParams < 2)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
@@ -406,7 +407,7 @@ public int SetEntityOverlayModel(Handle plugin, int numParams)
 	return BeWitchOther(iEntity, sModel);
 }
 
-public int GetEntityOverlayModel(Handle plugin, int numParams)
+int GetEntityOverlayModel(Handle plugin, int numParams)
 {
 	if(numParams < 1)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
@@ -431,7 +432,7 @@ public int GetEntityOverlayModel(Handle plugin, int numParams)
 	return EntRefToEntIndex(iHiddenEntity[iEntity]);
 }
 
-public int ResetRenderMode(Handle plugin, int numParams)
+int ResetRenderMode(Handle plugin, int numParams)
 {
 	if(numParams < 1)
 		ThrowNativeError(SP_ERROR_PARAM, "Invalid numParams");
@@ -448,8 +449,9 @@ public int ResetRenderMode(Handle plugin, int numParams)
 			ThrowNativeError(SP_ERROR_ABORTED, "Client is not ingame %i", iEntity);
 	
 	ResetRender(iEntity);
-}
 
+	return 0;
+}
 
 public void OnEntityDestroyed(int iEntity)
 {
@@ -492,7 +494,7 @@ public void OnClientDisconnect(int iClient)
 	iHiddenIndex[iClient] = -1;
 }
 
-public void eSetColour(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
+void eSetColour(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if(iClient < 1 || iClient > MaxClients || !IsClientInGame(iClient))
@@ -504,7 +506,7 @@ public void eSetColour(Handle hEvent, const char[] sEventName, bool bDontBroadca
 	SetEntityRenderMode(iClient, RENDER_NONE);
 }
 
-public void eTeamChange(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
+void eTeamChange(Handle hEvent, const char[] sEventName, bool bDontBroadcast)
 {
 	int iClient = GetClientOfUserId(GetEventInt(hEvent, "userid"));
 	if(iClient < 1 || iClient > MaxClients || !IsClientInGame(iClient))
@@ -524,7 +526,9 @@ static bool IsValidEntRef(int iEntRef)
 
 
 //deprecated stuff
-public int HideOverlayModel(Handle plugin, int numParams)
+int HideOverlayModel(Handle plugin, int numParams)
 {
 	ThrowNativeError(SP_ERROR_NOT_RUNNABLE, "Deprecated function not longer included in LMC since \"2.0.3\" use older build if you want to use this function.");
+
+	return 0;
 }
